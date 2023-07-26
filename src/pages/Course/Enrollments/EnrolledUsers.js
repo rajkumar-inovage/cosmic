@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Alert,
@@ -22,17 +22,18 @@ import {
   Snackbar,
 } from "@mui/material";
 import { serialize } from "object-to-formdata";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import BASE_URL from "../../Utils/baseUrl";
-import token from "../../Utils/token";
-import Network from "../../Utils/network";
+import BASE_URL from "../../../Utils/baseUrl";
+import token from "../../../Utils/token";
+import Network from "../../../Utils/network";
 import { Helmet } from "react-helmet";
-import UserList from "../../components/Users";
-import theme from "../../configs/theme";
-import SidebarLeft from "../../components/Sidebar/SidebarLeft";
+import EnrolledUserList from "../../../components/Course/Enrollments/EnrolledUserList";
+import theme from "../../../configs/theme";
+import SidebarLeft from "../../../components/Sidebar/SidebarLeft";
 
-const Users = () => {
+const EnrolledUsers = () => {
+  const { courseGuid } = useParams();
   const {
     control,
     register,
@@ -43,7 +44,7 @@ const Users = () => {
   const {
     primary: { main: primaryColor },
   } = theme.palette;
-  const [allUsers, setAllUsers] = useState("");
+  const [users, setUsser] = useState("");
   const [searchTitle, setSearchTitle] = useState("");
   const [loading, setLoading] = useState(true);
   const [alertOpen, setAlertOpen] = useState(null);
@@ -54,18 +55,21 @@ const Users = () => {
   myHeaders.append("Authorization", `Bearer ${token}`);
   myHeaders.append("Network", `${Network}`);
 
-  // Fetch meetings list
+  // Fetch users list
   useEffect(() => {
     const fetchUserList = async () => {
       const requestOptions = {
-        method: "GET",
+        method: "POST",
         headers: myHeaders,
         redirect: "follow",
       };
       try {
-        const response = await fetch(`${BASE_URL}/users/list`, requestOptions);
+        const response = await fetch(
+          `${BASE_URL}/course/enrolments/${courseGuid}`,
+          requestOptions
+        );
         const result = await response.json();
-        setAllUsers(result.payload);
+        setUsser(result.payload);
         setLoading(false);
       } catch (error) {
         console.log("error", error);
@@ -77,8 +81,8 @@ const Users = () => {
 
   // Search Users
   const filteredUsers =
-  allUsers &&
-  allUsers.data.filter((user) => {
+    users &&
+    users.filter((user) => {
       const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
       const searchValue = searchTitle.toLowerCase();
       return fullName.includes(searchValue);
@@ -183,114 +187,10 @@ const Users = () => {
     }
   };
 
-  // Bulk Archive function on submit
-  const handleBulkArchiveUser = async () => {
-    setActionConfirmOpen(false);
-    const formData = serialize();
-    selectedUsers.forEach((value, index) => {
-      formData.append(`users[${index}]`, value);
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formData,
-      redirect: "follow",
-    };
-    try {
-      const res = await fetch(`${BASE_URL}/users/archive`, requestOptions);
-      const result = await res.json();
-      setAlertOpen(true);
-      if (result.success === true) {
-        setIsActionSuccess(true);
-        setTimeout(() => {
-          setAlertOpen(false);
-          window.location.reload(true);
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          setAlertOpen(false);
-        }, 3000);
-      }
-      setActionConfirmOpen(false);
-    } catch (error) {
-      console.error(error);
-      throw new Error(`Failed to post status: ${error.message}`);
-    }
-  };
-
-   // Bulk Deactivate function on submit
-   const handleBulkDeactivateUser = async () => {
-    setActionConfirmOpen(false);
-    const formData = serialize();
-    selectedUsers.forEach((value, index) => {
-      formData.append(`users[${index}]`, value);
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formData,
-      redirect: "follow",
-    };
-    try {
-      const res = await fetch(`${BASE_URL}/users/deactivate`, requestOptions);
-      const result = await res.json();
-      setAlertOpen(true);
-      if (result.success === true) {
-        setIsActionSuccess(true);
-        setTimeout(() => {
-          setAlertOpen(false);
-          window.location.reload(true);
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          setAlertOpen(false);
-        }, 3000);
-      }
-      setActionConfirmOpen(false);
-    } catch (error) {
-      console.error(error);
-      throw new Error(`Failed to post status: ${error.message}`);
-    }
-  };
-
-   // Bulk Activate function on submit
-   const handleBulkActivateUser = async () => {
-    setActionConfirmOpen(false);
-    const formData = serialize();
-    selectedUsers.forEach((value, index) => {
-      formData.append(`users[${index}]`, value);
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formData,
-      redirect: "follow",
-    };
-    try {
-      const res = await fetch(`${BASE_URL}/users/activate`, requestOptions);
-      const result = await res.json();
-      setAlertOpen(true);
-      if (result.success === true) {
-        setIsActionSuccess(true);
-        setTimeout(() => {
-          setAlertOpen(false);
-          window.location.reload(true);
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          setAlertOpen(false);
-        }, 3000);
-      }
-      setActionConfirmOpen(false);
-    } catch (error) {
-      console.error(error);
-      throw new Error(`Failed to post status: ${error.message}`);
-    }
-  };
   return (
     <>
       <Helmet>
-        <title>Users</title>
+        <title>Enrolled Users</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
         <SidebarLeft />
@@ -303,47 +203,23 @@ const Users = () => {
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {selectedAction && selectedAction === "delete"
-              ? "Confirm Delete"
-              : selectedAction && selectedAction === "archive"
-              ? "Confirm Archive"
-              : selectedAction && selectedAction === "deactivate"
-              ? "Confirm Deactivate"
-              : selectedAction && selectedAction === "active"
-              ? "Confirm Activate"
+            {selectedAction && selectedAction === "unenrolluser"
+              ? "Confirm Unenroll"
               : ""}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              {selectedAction && selectedAction === "delete"
-                ? "Are you sure you want to delete selected users?"
-                : selectedAction && selectedAction === "archive"
-                ? "Are you sure you want to archive selected users?"
-                : selectedAction && selectedAction === "active"
-                ? "Are you sure you want to activate selected users?"
-                : selectedAction && selectedAction === "deactivate"
-                ? "Are you sure you want to deactivate selected users?"
-                : ""}
+              {selectedAction && selectedAction === "unenrolluser"
+                ? "Are you sure you want to unenroll selected users?"
+                :  ""}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={actionConfirmClose} color="primary">
               Cancel
             </Button>
-            {selectedAction && selectedAction === "delete" ? (
+            {selectedAction && selectedAction === "unenrolluser" ? (
               <Button onClick={handleBulkDeleteUser} color="primary" autoFocus>
-                Confirm
-              </Button>
-            ) : selectedAction && selectedAction === "archive" ? (
-              <Button onClick={handleBulkArchiveUser} color="primary" autoFocus>
-                Confirm
-              </Button>
-            ) : selectedAction && selectedAction === "active" ? (
-              <Button onClick={handleBulkActivateUser} color="primary" autoFocus>
-                Confirm
-              </Button>
-            ) : selectedAction && selectedAction === "deactivate" ? (
-              <Button onClick={handleBulkDeactivateUser} color="primary" autoFocus>
                 Confirm
               </Button>
             ) : (
@@ -362,55 +238,31 @@ const Users = () => {
             anchorOrigin={{ vertical: "top", horizontal: "center" }}
           >
             <>
-            {selectedAction && selectedAction === "delete" ? (
-              <Alert
-                severity={isActionSuccess === true ? "success" : "warning"}
-              >
-                {isActionSuccess === true
-                  ? "Users Deleted Successfully"
-                  : "User not deleted. At Least one user to be selected."}
-              </Alert>
-            ) : selectedAction && selectedAction === "archive" ? (
-              <Alert
-                severity={isActionSuccess === true ? "success" : "warning"}
-              >
-                {isActionSuccess === true
-                  ? "Users Archived Successfully"
-                  : "User not archived. At Least one user to be selected."}
-              </Alert>
-            ) : selectedAction && selectedAction === "active" ? (
-              <Alert
-                severity={isActionSuccess === true ? "success" : "warning"}
-              >
-                {isActionSuccess === true
-                  ? "Users Activated Successfully"
-                  : "User not activated. At Least one user to be selected."}
-              </Alert>
-            ) : selectedAction && selectedAction === "deactivate" ? (
-              <Alert
-                severity={isActionSuccess === true ? "success" : "warning"}
-              >
-                {isActionSuccess === true
-                  ? "Users Deactivated Successfully"
-                  : "User not deactivated. At Least one user to be selected."}
-              </Alert>
-            ) : (
-              ""
-              )}
-              </>
+              {selectedAction && selectedAction === "unenrolluser" ? (
+                <Alert
+                  severity={isActionSuccess === true ? "success" : "warning"}
+                >
+                  {isActionSuccess === true
+                    ? "Users unenrolled Successfully"
+                    : "User not unenrolled. At Least one user to be selected."}
+                </Alert>
+              ) : ("")
+                
+              }
+            </>
           </Snackbar>
         </Grid>
         <Box sx={{ flexGrow: 1, p: 3, mt: 5 }}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 600 }}>
-                Users
+                Enrolled Users
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
-              <Button variant="contained">
+              <Button variant="contained" className="custom-button">
                 <Link href="/user/create" color="inherit" underline="none">
-                  Add User
+                  Enroll User
                 </Link>
               </Button>
             </Grid>
@@ -471,28 +323,10 @@ const Users = () => {
                                 defaultValue=""
                               >
                                 <MenuItem
-                                  value="active"
+                                  value="unenrolluser"
                                   onClick={handleBulkConfirmOpen}
                                 >
-                                  Active
-                                </MenuItem>
-                                <MenuItem
-                                  value="deactivate"
-                                  onClick={handleBulkConfirmOpen}
-                                >
-                                  Deactivate
-                                </MenuItem>
-                                <MenuItem
-                                  value="archive"
-                                  onClick={handleBulkConfirmOpen}
-                                >
-                                  Archive
-                                </MenuItem>
-                                <MenuItem
-                                  value="delete"
-                                  onClick={handleBulkConfirmOpen}
-                                >
-                                  Delete
+                                  Unenroll User
                                 </MenuItem>
                               </Select>
                             )}
@@ -502,7 +336,7 @@ const Users = () => {
                     </Grid>
                     {currentUsers &&
                       currentUsers.map((user, index) => (
-                        <UserList
+                        <EnrolledUserList
                           onUserSelect={handleUserSelect}
                           selectedUsers={selectedUsers}
                           key={index}
@@ -573,4 +407,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default EnrolledUsers;

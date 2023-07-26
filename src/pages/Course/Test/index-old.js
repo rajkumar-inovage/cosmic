@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Card,
@@ -23,12 +24,14 @@ import {
 import { Helmet } from "react-helmet";
 import { serialize } from "object-to-formdata";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
-import SidebarLeft from "../../components/Sidebar/SidebarLeft";
-import Course from "../../assets/images/Course.jpg";
-import BASE_URL from "../../Utils/baseUrl";
-import token from "../../Utils/token";
-import Network from "../../Utils/network";
-import theme from "../../configs/theme";
+import SidebarLeft from "../../../components/Sidebar/SidebarLeft";
+import Course from "../../../assets/images/Course.jpg";
+import BASE_URL from "../../../Utils/baseUrl";
+import token from "../../../Utils/token";
+import Network from "../../../Utils/network";
+import theme from "../../../configs/theme";
+import index from "../Lesson";
+import QuizIcon from "@mui/icons-material/Quiz";
 
 const options = [
   {
@@ -43,7 +46,8 @@ const options = [
 
 const ITEM_HEIGHT = 48;
 
-const Courses = () => {
+const Test = () => {
+  const { courseGuid } = useParams();
   const {
     primary: { main: primaryColor },
   } = theme.palette;
@@ -51,7 +55,7 @@ const Courses = () => {
     success: { main: successColor },
   } = theme.palette;
   // State Manage
-  const [courses, setCourses] = useState("");
+  const [tests, setTests] = useState("");
   const [loading, setLoading] = useState(true);
   const [searchTitle, setSearchTitle] = useState("");
   // Authorization
@@ -59,44 +63,47 @@ const Courses = () => {
   myHeaders.append("Authorization", `Bearer ${token}`);
   myHeaders.append("Network", `${Network}`);
 
-  // Fetch Course list
+  // Fetch Test list of this course
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchTests = async () => {
       const requestOptions = {
-        method: "GET",
+        method: "POST",
         headers: myHeaders,
         redirect: "follow",
       };
       try {
-        const response = await fetch(`${BASE_URL}/course/list`, requestOptions);
+        const response = await fetch(
+          `${BASE_URL}/course/get_tests/${courseGuid}`,
+          requestOptions
+        );
         const result = await response.json();
-        setCourses(result.payload.data);
+        setTests(result.payload.data);
         setLoading(false);
       } catch (error) {
         console.log("error", error);
         setLoading(false);
       }
     };
-    fetchCourses();
+    fetchTests();
   }, []);
 
   // Search Users
-  const filteredCourse =
-    courses &&
-    courses.filter((course) => {
-      const searchVal = `${course.title} ${course.description}`.toLowerCase();
+  const filteredTests =
+  tests &&
+  tests.filter((test) => {
+      const searchVal = `${test.title} ${test.details}`.toLowerCase();
       const searchValue = searchTitle.toLowerCase();
       return searchVal.includes(searchValue);
     });
 
   // Pagination here
   const [currentPage, setCurrentPage] = useState(1);
-  const [coursePerPage] = useState(10);
-  const lastIndex = currentPage * coursePerPage;
-  const firstIndex = lastIndex - coursePerPage;
-  const currentCourse = filteredCourse.slice(firstIndex, lastIndex);
+  const [testPerPage] = useState(3);
+  const lastIndex = currentPage * testPerPage;
+  const firstIndex = lastIndex - testPerPage;
+  const currentTest = filteredTests.slice(firstIndex, lastIndex);
   const totalPages = Math.ceil(
-    filteredCourse && filteredCourse.length / coursePerPage
+    filteredTests && filteredTests.length / testPerPage
   );
   const numbers = [...Array(totalPages + 1).keys()].slice(1);
 
@@ -116,12 +123,12 @@ const Courses = () => {
 
   // Action Button
   const [anchorEl, setAnchorEl] = useState(null);
-  const [currentCourseGuid, setCurrentCourseGuid] = useState(null);
+  const [currentTestGuid, setcurrentTestGuid] = useState(null);
   const open = Boolean(anchorEl);
 
   const handleClick = (event, id) => {
     setAnchorEl(event.currentTarget);
-    setCurrentCourseGuid(id);
+    setcurrentTestGuid(id);
   };
 
   const handleClose = () => {
@@ -148,7 +155,7 @@ const Courses = () => {
     };
     try {
       const res = await fetch(
-        `${BASE_URL}/course/delete/${currentCourseGuid}`,
+        `${BASE_URL}/course/delete/${currentTestGuid}`,
         requestOptions
       );
       const result = await res.json();
@@ -170,10 +177,11 @@ const Courses = () => {
       throw new Error(`Failed to post status: ${error.message}`);
     }
   };
+  console.log(tests);
   return (
     <>
       <Helmet>
-        <title>All Courses</title>
+        <title>All Test</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
         <SidebarLeft />
@@ -213,7 +221,7 @@ const Courses = () => {
         <Box sx={{ flexGrow: 1, p: 3, mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <h1>All Courses</h1>
+              <h1>All Test</h1>
             </Grid>
             <Grid item xs={6} sx={{ display: "flex", justifyContent: "right" }}>
               <Button
@@ -229,7 +237,7 @@ const Courses = () => {
             <Box sx={{ textAlign: "center", mt: 5 }}>
               <CircularProgress />
             </Box>
-          ) : courses && courses.length !== 0 ? (
+          ) : tests && tests.length !== 0 ? (
             <>
               <Grid container spacing={2} sx={{ mt: 3 }}>
                 <Grid item xs={12} md={4}>
@@ -249,10 +257,10 @@ const Courses = () => {
                 className="manage-course"
               >
                 <Grid item xs={12}>
-                  {currentCourse && currentCourse.length !== 0 ? (
+                  {currentTest && currentTest.length !== 0 ? (
                     <Card>
-                      {currentCourse &&
-                        currentCourse.map((course, index) => (
+                      {currentTest &&
+                        currentTest.map((course, index) => (
                           <Box sx={{ px: 3 }} key={index}>
                             <Grid
                               container
@@ -266,18 +274,14 @@ const Courses = () => {
                               <Grid
                                 item
                                 xs={12}
-                                md={1}
+                                md={0.5}
                                 sx={{
                                   display: { xs: "flex", md: "block" },
                                   justifyContent: { xs: "space-between" },
                                 }}
                               >
                                 <Box className="course-image">
-                                  <img
-                                    src={Course}
-                                    alt={course.title}
-                                    loading="lazy"
-                                  />
+                                  <QuizIcon />
                                 </Box>
                                 <Grid
                                   item
@@ -299,7 +303,6 @@ const Courses = () => {
                                     <MoreVertOutlinedIcon />
                                   </IconButton>
                                   <Menu
-                                    sx={{boxShadow: "0px 0px 7px -5px rgba(0,0,0,0.1)"}}
                                     id="long-menu1"
                                     MenuListProps={{
                                       "aria-labelledby": "long-button1",
@@ -315,7 +318,7 @@ const Courses = () => {
                                     }}
                                   >
                                     {options.map((option, index) => {
-                                      const linkUrl = `${option.link}/${currentCourseGuid}`;
+                                      const linkUrl = `${option.link}/${currentTestGuid}`;
                                       return (
                                         <MenuItem
                                           key={index}
@@ -340,7 +343,7 @@ const Courses = () => {
                                   </Menu>
                                 </Grid>
                               </Grid>
-                              <Grid item xs={12} md={4}>
+                              <Grid item xs={12} md={4.5}>
                                 <h3>
                                   <Link
                                     href={`/course/manage/${course.guid}`}
@@ -419,7 +422,7 @@ const Courses = () => {
                                     }}
                                   >
                                     {options.map((option, index) => {
-                                      const linkUrl = `${option.link}/${currentCourseGuid}`;
+                                      const linkUrl = `${option.link}/${currentTestGuid}`;
                                       return (
                                         <MenuItem
                                           key={index}
@@ -450,7 +453,7 @@ const Courses = () => {
                     </Card>
                   ) : (
                     <Alert sx={{ mt: 5 }} severity="error">
-                      Course not found!
+                      Test not found!
                     </Alert>
                   )}
                 </Grid>
@@ -461,7 +464,7 @@ const Courses = () => {
                 sx={{ mt: 5, justifyContent: "center" }}
               >
                 <Grid item>
-                  {filteredCourse && filteredCourse.length > coursePerPage ? (
+                  {filteredTests && filteredTests.length > testPerPage ? (
                     <Grid container spacing={2}>
                       <Grid
                         item
@@ -522,4 +525,4 @@ const Courses = () => {
   );
 };
 
-export default Courses;
+export default Test;

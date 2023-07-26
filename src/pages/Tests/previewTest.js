@@ -17,11 +17,11 @@ import { Helmet } from "react-helmet";
 import ReactHtmlParser from "react-html-parser";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CachedIcon from "@mui/icons-material/Cached";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import BASE_URL from "../../Utils/baseUrl";
 import CreatedBy from "../../Utils/createdBy";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const PreviewTest = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -164,7 +164,7 @@ const PreviewTest = () => {
         <title>Preview Test</title>
     </Helmet>
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <SidebarLeft />
       <Box sx={{ flexGrow: 1, p: 3 }}>
         <Grid
           container

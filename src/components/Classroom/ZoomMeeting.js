@@ -21,7 +21,7 @@ import ShareRoundedIcon from "@mui/icons-material/ShareRounded";
 import ReactHtmlParser from "react-html-parser";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
-import Network from "../../Utils/network"
+import Network from "../../Utils/network";
 
 // const extractHrefValue = (htmlString) => {
 //   const parser = new DOMParser();
@@ -33,7 +33,7 @@ import Network from "../../Utils/network"
 // };
 
 function extractHrefFromString(str) {
-  const regex = /(https?:\/\/[^\s]+)/g; // Regex pattern to match URLs
+  const regex = /<p>(https?:\/\/[^\s]+)<\/p>/g; // Regex pattern to match URLs
   const matches = str.match(regex); // Find all matches in the string
 
   if (matches && matches.length > 0) {
@@ -79,14 +79,17 @@ const ZoomMeeting = ({ item }) => {
       redirect: "follow",
     };
     try {
-      const res = await fetch(`${BASE_URL}/zoom/delete/${meetingId}`, requestOptions);
+      const res = await fetch(
+        `${BASE_URL}/zoom/delete/${meetingId}`,
+        requestOptions
+      );
       const statusResult = await res.json();
-      setAlertOpen(true)
+      setAlertOpen(true);
       if (statusResult.success === true) {
         setIsMeetingDeleted(true);
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
         setTestDeleted(statusResult.success);
       }
       setDeleteConfirmOpen(false);
@@ -95,56 +98,47 @@ const ZoomMeeting = ({ item }) => {
     }
   };
 
-  //const meetingUrl = extractHrefValue(item.details);
- 
   return (
     <>
-          <Dialog
-            open={deleteConfirmOpen}
-            onClose={handleDeleteConfirmClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
+      <Dialog
+        open={deleteConfirmOpen}
+        onClose={handleDeleteConfirmClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this meeting?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteConfirmClose} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={() =>
+              handleDeleteTest(selectedMeetingId, item.created_by, item.details)
+            }
+            color="primary"
+            autoFocus
           >
-            <DialogTitle id="alert-dialog-title">
-              {"Confirm Delete"}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                Are you sure you want to delete this meeting?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleDeleteConfirmClose} color="primary">
-                Cancel
-              </Button>
-              <Button
-                onClick={() =>
-                  handleDeleteTest(
-                    selectedMeetingId,
-                    item.created_by,
-                    item.details
-                  )
-                }
-                color="primary"
-                autoFocus
-              >
-                Delete
-              </Button>
-            </DialogActions>
-          </Dialog>
-          <Snackbar
-            open={alertOpen}
-            autoHideDuration={3000}
-            onClose={() => setIsMeetingDeleted(false)}
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          >
-            <Alert severity={isMeetingDeleted === true ? "success" : "warning"}>
-              {isMeetingDeleted === true
-                ? "Meeting deleted Successfully"
-                : "Meeting deleted failed"}
-            </Alert>
-          </Snackbar>
-      
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={() => setIsMeetingDeleted(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity={isMeetingDeleted === true ? "success" : "warning"}>
+          {isMeetingDeleted === true
+            ? "Meeting deleted Successfully"
+            : "Meeting deleted failed"}
+        </Alert>
+      </Snackbar>
 
       <Card className="zoom-meeting" sx={{ my: 3 }} key={item.guid}>
         <CardContent>
@@ -159,7 +153,8 @@ const ZoomMeeting = ({ item }) => {
                   fontFamily: "Arial",
                 }}
               >
-                {ReactHtmlParser(item.details)}
+                {item.title ? (item.title) : "Title not available"}
+                {/* {ReactHtmlParser(item.details)} */}
               </Box>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
@@ -189,7 +184,8 @@ const ZoomMeeting = ({ item }) => {
           >
             <Grid item>
               <Button
-                component={Link} to={`/meeting/edit/${item.guid}`}
+                component={Link}
+                to={`/meeting/edit/${item.guid}`}
                 color="warning"
                 sx={{
                   fontSize: 16,
@@ -218,7 +214,8 @@ const ZoomMeeting = ({ item }) => {
             </Grid>
             <Grid item>
               <Button
-               component={Link} to={`/meeting/share/${item.guid}`}
+                component={Link}
+                to={`/meeting/share/${item.guid}`}
                 color="success"
                 sx={{
                   fontSize: 16,
@@ -238,7 +235,7 @@ const ZoomMeeting = ({ item }) => {
                 variant="contained"
                 component={Link}
                 color="primary"
-                to={extractHrefFromString(item.details)}
+                href={extractHrefFromString(item.details)}
                 target="_blank"
               >
                 START

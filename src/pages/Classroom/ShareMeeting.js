@@ -18,10 +18,10 @@ import {
 } from "@mui/material";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const useStyles = makeStyles((theme) => ({
   gridContainer: {
@@ -147,7 +147,7 @@ const ShareMeeting = () => {
         <title>Share Meeting</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
-        <Sidebar />
+        <SidebarLeft />
         <Box sx={{ flexGrow: 1, p: 3 }}>
           <Grid
             container

@@ -18,14 +18,13 @@ import { useForm, Controller } from "react-hook-form";
 import { serialize } from "object-to-formdata";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-import Sidebar from "../../components/Sidebar/Sidebar";
 import FormTextField from "../../components/Common/formTextField";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import CreatedBy from "../../Utils/createdBy"
 import { Helmet } from "react-helmet";
 import Network from "../../Utils/network";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const StyledFormControl = styled(FormControl)({
   marginBottom: "16px",
@@ -112,7 +111,7 @@ const TestSetting = () => {
         <title>Test Setting</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
-        <Sidebar />
+        <SidebarLeft />
         <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 5 }}>
           <Grid container spacing={2}>
             <Grid item xs={6}>

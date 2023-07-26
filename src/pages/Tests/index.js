@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 //import parse from "html-react-parser";
 import { Helmet } from "react-helmet";
-import Sidebar from "../../components/Sidebar/Sidebar";
 // import BASE_URL from "../../Utils/baseUrl";
 // import Token from "../../Utils/token";
 // import axios from "axios";
@@ -25,6 +24,7 @@ import TestList from "../../components/Test/TestList";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network"
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 
 const Tests = () => {
@@ -98,7 +98,7 @@ const Tests = () => {
         <title>Tests</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <SidebarLeft />
       <Box sx={{ flexGrow: 1, p: 3, mt: 5 }}>
         <Grid container spacing={2}>
           <Grid item xs={6}>

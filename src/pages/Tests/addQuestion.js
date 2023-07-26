@@ -1,5 +1,5 @@
 import React, { useRef, useState,useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate,useLocation } from "react-router-dom";
 import {
   TextField,
   FormControl,
@@ -33,8 +33,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 //import DeleteIcon from "@mui/icons-material/Delete";
 import ErrorIcon from "@mui/icons-material/Error";
 import { serialize } from "object-to-formdata";
-
-import Sidebar from "../../components/Sidebar/Sidebar";
 //import TrueFalse from "../Tests/Type/trueFalse";
 import Essay from "../Tests/Type/essay";
 import FormEditorField from "../../components/Common/formEditorField";
@@ -44,6 +42,7 @@ import token from "../../Utils/token";
 import Network from "../../Utils/network";
 import CreatedBy from "../../Utils/createdBy"
 import { Helmet } from "react-helmet";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const StyledFormControl = styled(FormControl)({
   marginBottom: "16px",
@@ -53,6 +52,10 @@ const errorStyle = {
 };
 
 const AddQuestion = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const mtValue = params.get("mt");
+  console.log(mtValue)
   const { guid } = useParams();
   const { register, handleSubmit, control, setValue, watch, reset, formState: { errors } } = useForm({
     defaultValues: {
@@ -194,7 +197,7 @@ var requestOption = {
         <title>Add Question</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
-        <Sidebar />
+        <SidebarLeft />
         <Box sx={{ flexGrow: 1, p: 3}}>
           <Grid container spacing={2} sx={{ mt: 3 }}>
             <Grid item xs={6}>
@@ -203,11 +206,15 @@ var requestOption = {
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
-              <Button variant="contained">
+              {mtValue ?  <Button variant="contained">
+                <Link href={`/course/${mtValue}/test/list`} color="inherit" underline="none">
+                  Cancel
+                </Link>
+              </Button> :  <Button variant="contained">
                 <Link href="/test/list" color="inherit" underline="none">
                   Cancel
                 </Link>
-              </Button>
+              </Button>}
             </Grid>
           </Grid>
           <Grid

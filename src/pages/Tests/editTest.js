@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate,useLocation } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { Helmet } from "react-helmet";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import FormEditorField from "../../components/Common/formEditorField";
 import FormTextField from "../../components/Common/formTextField";
 import { serialize } from "object-to-formdata";
@@ -21,12 +20,16 @@ import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
 import CreatedBy from "../../Utils/createdBy"
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const StyledFormControl = styled(FormControl)({
   marginBottom: "16px",
 });
 
 const EditTest = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const mtValue = params.get("mt");
   const { guid } = useParams();
   const {
     handleSubmit,
@@ -71,7 +74,7 @@ const EditTest = () => {
       const result = await response.json();
       setIsTestCreated(true);
       setTimeout(() => {
-        navigate(`/test/add-question/${guid}`);
+        navigate(`/test/add-question/${guid}?mt=${mtValue}`);
       }, 1000);
       reset();
     } catch (error) {
@@ -103,7 +106,7 @@ const EditTest = () => {
         <title>Edit Test</title>
     </Helmet>
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <SidebarLeft />
       <Box sx={{ flexGrow: 1, p: 3 }}>
         <Grid
           container
@@ -138,11 +141,15 @@ const EditTest = () => {
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
-              <Button variant="contained">
+              {mtValue ? <Button variant="contained">
+                <Link href={`/course/${mtValue}/test/list`} color="inherit" underline="none">
+                  Cancel
+                </Link>
+              </Button> : <Button variant="contained">
                 <Link href="/test/list" color="inherit" underline="none">
                   Cancel
                 </Link>
-              </Button>
+              </Button>}
             </Grid>
         </Grid>
         <Grid container spacing={2} sx={{ mt: 3 }}>

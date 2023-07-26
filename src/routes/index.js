@@ -32,6 +32,18 @@ import EditUser from '../pages/Users/EditUser'
 import ManageCourse from "../pages/Course/ManageCourse"
 import Courses from "../pages/Course"
 import CreateCourse from "../pages/Course/CreateCourse"
+import UpdateCourse from "../pages/Course/UpdateCourse"
+import Lesson from "../pages/Course/Lesson"
+import CreateLesson from '../pages/Course/Lesson/CreateLesson'
+import OrganizeLesson from '../pages/Course/Lesson/OrganizeLesson'
+import Test from "../pages/Course/Test"
+import AddTests from '../pages/Course/Test/AddTests'
+import CreateCourseTest from "../pages/Course/Test/CreateCourseTest"
+import Meetings from "../pages/Course/Meetings"
+import AddCourseMeeting from "../pages/Course/Meetings/AddCourseMeeting"
+import CreateCourseMeeting from "../pages/Course/Meetings/Create"
+import CourseEnrollments from "../pages/Course/Enrollments/CourseEnrollments"
+import EnrolledUsers from "../pages/Course/Enrollments/EnrolledUsers"
 import Students from "../pages/Users/Students"
 
 
@@ -72,6 +84,18 @@ const AppRouter = () => {
         <Route path={'/course/manage/:courseGuid'} element={<ManageCourse />} />
         <Route path={'/course/list'} element={<Courses/>} />
         <Route path={'/course/create'} element={<CreateCourse />} />
+        <Route path={'/course/update/:courseGuid'} element={<UpdateCourse />} />
+        <Route path={'/course/:courseGuid/lessons'} element={<Lesson/>} />
+        <Route path={'/course/:courseGuid/lesson/create'} element={<CreateLesson/>} />
+        <Route path={'/course/:courseGuid/lesson/organize'} element={<OrganizeLesson/>} />
+        <Route path={'/course/:courseGuid/test/list'} element={<Test/>} />
+        <Route path={'/course/:courseGuid/test/add'} element={<AddTests/>} />
+        <Route path={'/course/:courseGuid/test/create'} element={<CreateCourseTest/>} />
+        <Route path={'/course/:courseGuid/meeting/list'} element={<Meetings/>} />
+        <Route path={'/course/:courseGuid/meeting/add'} element={<AddCourseMeeting/>} />
+        <Route path={'/course/:courseGuid/meeting/create'} element={<CreateCourseMeeting/>} />
+        <Route path={'/course/:courseGuid/enrollments'} element={<CourseEnrollments/>} />
+        <Route path={'/course/:courseGuid/enrolled-users'} element={<EnrolledUsers/>} />
         <Route path={'/user/students'} element={<Students/>}/>
       </Routes>
     </Router>

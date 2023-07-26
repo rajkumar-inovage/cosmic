@@ -19,13 +19,13 @@ import {
 } from "@mui/material";
 //import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
 import CreatedBy from "../../Utils/createdBy";
 import SummaryReport from "../../components/Test/SummaryReport";
 import DetailsReport from "../../components/Test/DetailsReport";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const SubmissionReports = () => {
   const { guid } = useParams();
@@ -108,7 +108,7 @@ const SubmissionReports = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      {sidebarVisible && <Sidebar />}
+      {sidebarVisible && <SidebarLeft />}
       <Box sx={{ flexGrow: 1, p: 3, mt: 5 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>

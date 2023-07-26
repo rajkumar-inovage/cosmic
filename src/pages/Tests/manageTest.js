@@ -23,23 +23,20 @@ import {
   DialogContent,
   DialogContentText,
 } from "@mui/material";
-import { useForm } from "react-hook-form";
 import { Helmet } from "react-helmet";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Switch from "@mui/material/Switch";
 import EditIcon from "@mui/icons-material/Edit";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { serialize } from "object-to-formdata";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const StyledFormControl = styled(FormControl)({
   marginBottom: "16px",
@@ -158,7 +155,7 @@ const ManageTest = () => {
         <title>Manage Test</title>
     </Helmet>
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <SidebarLeft />
       {test && (
         <Box sx={{ flexGrow: 1, p: 3 }}>
           <Grid container sx={{ mt: 5 }}>

@@ -11,22 +11,19 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Hidden,
   Link,
-  FormHelperText,
   Snackbar,
   Alert,
 } from "@mui/material";
 import { Helmet } from "react-helmet";
 import { MuiTelInput } from "mui-tel-input";
-import { Editor } from "@tinymce/tinymce-react";
 import { useForm, Controller } from "react-hook-form";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import BASE_URL from "../../Utils/baseUrl";
 import CreatedBy from "../../Utils/createdBy";
 import token from "../../Utils/token";
 import { serialize } from "object-to-formdata";
 import Network from "../../Utils/network";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const StyledFormControl = styled(FormControl)({
   marginBottom: "16px",
@@ -122,7 +119,7 @@ const CreateUser = () => {
         <title>Create User</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
-        <Sidebar />
+        <SidebarLeft />
         <Box sx={{ flexGrow: 1, p: 3 }}>
           <Grid
             container

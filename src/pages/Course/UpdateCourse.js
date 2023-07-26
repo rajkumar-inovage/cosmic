@@ -6,6 +6,7 @@ import {
   Typography,
   Grid,
   Button,
+  TextField,
   FormControl,
   InputLabel,
   Select,
@@ -15,8 +16,10 @@ import {
   Alert,
 } from "@mui/material";
 import { Helmet } from "react-helmet";
+import { MuiTelInput } from "mui-tel-input";
 import { useForm, Controller } from "react-hook-form";
 import BASE_URL from "../../Utils/baseUrl";
+import CreatedBy from "../../Utils/createdBy";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
 import { serialize } from "object-to-formdata";
@@ -25,25 +28,47 @@ import FormEditorField from "../../components/Common/formEditorField"
 import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 import CurrentUser from "../../Utils/CurrentUserGuid";
 
+const StyledFormControl = styled(FormControl)({
+  marginBottom: "16px",
+});
 
-const CreateCourse = () => {
+const UpdateCourse = () => {
   const { courseGuid } = useParams();
   const [alertOpen, setAlertOpen] = useState(null)
-  const [isCourseCreated, setIsCourseCreated] = useState(null)
+  const [isCourseUpdated, setIsCourseUpdated] = useState(null)
   const inputRef = useRef(null);
   const navigate = useNavigate();
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
       title: "",
       description: "",
       status: "",
-      created_by: CurrentUser
+      updated_by: CurrentUser
     },
   });
+
+  // Get current course details
+  useEffect(() => {
+    const fetchCurrentCourse = async () => {
+      const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+      const response = await fetch(
+        `${BASE_URL}/course/view/${courseGuid}`,
+        requestOptions
+      );
+      const courseData = await response.json();
+      reset(courseData.payload);
+    };
+    fetchCurrentCourse();
+  }, [reset]);
 
   // Authentication
   var myHeaders = new Headers();
@@ -54,40 +79,40 @@ const CreateCourse = () => {
   const handleFormSubmit = async (data) => {
     const formData = serialize(data);
     const requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: myHeaders,
       body: formData,
-      redirect: 'follow'
+      redirect: "follow",
     };
 
     try {
       const response = await fetch(
-        `${BASE_URL}/course/create`,
+        `${BASE_URL}/course/update/${courseGuid}`,
         requestOptions
       );
       const result = await response.json();
       setAlertOpen(true);
       if (result.success === true) {
-        setIsCourseCreated(true);
+        setIsCourseUpdated(true);
         setTimeout(() => {
           setAlertOpen(false);
           navigate(`/course/list`);
         }, 3000);
       } else {
-        setIsCourseCreated(false);
+        setIsCourseUpdated(false);
         setTimeout(() => {
           setAlertOpen(false);
         }, 3000);
       }
     } catch (error) {
-      setIsCourseCreated(false);
+      setIsCourseUpdated(false);
     }
   };
 
   return (
     <>
       <Helmet>
-        <title>Create Course</title>
+        <title>Update Course</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
         <SidebarLeft />
@@ -102,15 +127,15 @@ const CreateCourse = () => {
               <Snackbar
                 open={alertOpen}
                 autoHideDuration={3000}
-                onClose={() => setIsCourseCreated(false)}
+                onClose={() => setIsCourseUpdated(false)}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
               >
                 <Alert
-                  severity={isCourseCreated === true ? "success" : "warning"}
+                  severity={isCourseUpdated === true ? "success" : "warning"}
                 >
-                  {isCourseCreated === true
-                    ? "Course created Successfully"
-                    : "Course creation failled!"}
+                  {isCourseUpdated === true
+                    ? "Course updated Successfully"
+                    : "Course updation failled!"}
                 </Alert>
               </Snackbar>
             </Grid>
@@ -118,7 +143,7 @@ const CreateCourse = () => {
           <Grid container spacing={2} sx={{ my  :1 }}>
             <Grid item xs={6}>
               <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 600 }}>
-                Create Course
+                Update Course
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
@@ -178,7 +203,7 @@ const CreateCourse = () => {
                   sx={{ mt: 5 }}
                   className="custom-button"
                 >
-                  Create Course
+                  Update Course
                 </Button>
               </form>
             </Grid>
@@ -188,4 +213,4 @@ const CreateCourse = () => {
     </>
   );
 };
-export default CreateCourse;
+export default UpdateCourse;

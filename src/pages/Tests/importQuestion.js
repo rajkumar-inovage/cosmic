@@ -14,12 +14,12 @@ import { serialize } from "object-to-formdata";
 import ReactHtmlParser from "react-html-parser";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import EditIcon from "@mui/icons-material/Edit";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import EditQuestionPopup from "../../components/Test/editQuestionPopup";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
 import CreatedBy from "../../Utils/createdBy"
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const ImportQuestion = () => {
   const navigate = useNavigate();
@@ -116,7 +116,7 @@ const ImportQuestion = () => {
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        <Sidebar />
+        <SidebarLeft />
         <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 5 }}>
           <Grid container spacing={2}>
             <Grid item xs={6}>

@@ -19,11 +19,11 @@ import {
 import { Helmet } from 'react-helmet';
 import { Editor } from "@tinymce/tinymce-react";
 import { useForm } from "react-hook-form";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import BASE_URL from "../../Utils/baseUrl";
 import CreatedBy from "../../Utils/createdBy"
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const StyledFormControl = styled(FormControl)({
   marginBottom: "16px",
@@ -106,7 +106,7 @@ const CreateTest = () => {
     <>
       <Helmet><title>Create Test</title></Helmet>
       <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <SidebarLeft />
       <Box sx={{ flexGrow: 1, p: 3 }}>
         <Grid
           container

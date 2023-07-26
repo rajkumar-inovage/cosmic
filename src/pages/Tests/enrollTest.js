@@ -18,11 +18,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { serialize } from "object-to-formdata";
 import "react-datepicker/dist/react-datepicker.css";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
 import { Helmet } from "react-helmet";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const EnrollTest = () => {
   const { guid } = useParams();
@@ -122,7 +122,7 @@ const EnrollTest = () => {
         </title>
     </Helmet>
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <SidebarLeft />
       <Box sx={{ flexGrow: 1, px: 3 }}>
         <Grid container spacing={2} sx={{ mt: 5 }}>
           <Grid item xs={6}>

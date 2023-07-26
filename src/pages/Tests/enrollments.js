@@ -13,12 +13,12 @@ import {
   Alert,
   Link
 } from "@mui/material";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import EnrolledList from "../../components/Test/enrollments";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
 import { Helmet } from "react-helmet";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const Enrollments = () => {
   const { guid } = useParams();
@@ -107,7 +107,7 @@ const Enrollments = () => {
         <title>Enrollments</title>
     </Helmet>
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <SidebarLeft />
       <Box sx={{ flexGrow: 1, px: 3 }}>
         <Grid
           container={true}

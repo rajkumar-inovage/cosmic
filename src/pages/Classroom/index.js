@@ -10,13 +10,13 @@ import {
   Alert,
   CircularProgress,
 } from "@mui/material";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
 import ZoomMeeting from "../../components/Classroom/ZoomMeeting";
 import { Helmet } from "react-helmet";
 import theme from "../../configs/theme";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 
 const OnlineClasses = () => {
@@ -93,7 +93,7 @@ const OnlineClasses = () => {
         <title>Meetings</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
-        <Sidebar />
+        <SidebarLeft />
         <Box sx={{ flexGrow: 1, p: 3, mt: 5 }}>
           <Grid container spacing={2}>
             <Grid item xs={6}>

@@ -1,27 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { styled } from "@mui/material/styles";
+import { useParams} from "react-router-dom";
 import {
   Box,
   Typography,
   Grid,
   Button,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Hidden,
   Link,
-  FormHelperText,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import { Helmet } from "react-helmet";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 
 const ViewUser = () => {
@@ -56,7 +46,7 @@ const ViewUser = () => {
         <title>View User</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
-        <Sidebar />
+        <SidebarLeft />
         <Box sx={{ flexGrow: 1, p: 3 }}>
           <Grid container spacing={2} sx={{ mt: 3 }}>
             <Grid item xs={6}>

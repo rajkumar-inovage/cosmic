@@ -4,12 +4,12 @@ import { Box, Typography, Grid, Alert, Button, Link } from "@mui/material";
 import { useForm } from "react-hook-form";
 import ReactHtmlParser from "react-html-parser";
 import CachedIcon from "@mui/icons-material/Cached";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
 import CreatedBy from "../../Utils/createdBy"
 import { Helmet } from "react-helmet";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 
 const AllQuestions = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -83,7 +83,7 @@ const AllQuestions = () => {
         <title>All Questions</title>
     </Helmet>
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <SidebarLeft />
       <Box sx={{ flexGrow: 1, px: 3 }}>
         <Grid
           container

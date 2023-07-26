@@ -21,7 +21,7 @@
   border-radius: 0px;
 }
 @media (min-width:0){
-  .dashboard button, .dashboard .custom-button{
+  .dashboard button,body .custom-button{
     padding: 10px;
   }
   .dashboard .online-students .student-status {
@@ -85,7 +85,7 @@
   }
 }
 @media (min-width:768px){
-  .dashboard button,.dashboard .custom-button{
+  button, body .custom-button{
     padding: 10px 20px;
   }
   .dashboard .new-student-action {
@@ -96,12 +96,12 @@
   }
 }
 @media (min-width:1200px){
-  .dashboard button, .dashboard .custom-button{
+  .dashboard button,body .custom-button{
     padding: 10px 30px;
   }
 }
 @media (min-width:1400px){
-  .dashboard button, .dashboard .custom-button{
+  .dashboard button, body .custom-button{
     padding: 10px 50px;
   }
 }
