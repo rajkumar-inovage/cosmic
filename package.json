@@ -1,6 +1,6 @@
 {
   "homepage": "https://cosmicapp.netlify.app",
-  "name": "cosmic-web",
+  "name": "cosmic-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
