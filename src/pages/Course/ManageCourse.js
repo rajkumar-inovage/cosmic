@@ -25,18 +25,14 @@ import {
 } from "@mui/material";
 import { Helmet } from "react-helmet";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import Switch from "@mui/material/Switch";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import SettingsIcon from "@mui/icons-material/Settings";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 import ClassIcon from "@mui/icons-material/Class";
 import QuizIcon from "@mui/icons-material/Quiz";
-import ArchiveIcon from "@mui/icons-material/Archive";
 import PlayLessonIcon from "@mui/icons-material/PlayLesson";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";

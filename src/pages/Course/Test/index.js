@@ -22,16 +22,15 @@ import {
   Snackbar,
   Card,
 } from "@mui/material";
-import { serialize } from "object-to-formdata";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
+import { serialize } from "object-to-formdata";
 import BASE_URL from "../../../Utils/baseUrl";
 import token from "../../../Utils/token";
 import Network from "../../../Utils/network";
 import { Helmet } from "react-helmet";
 import theme from "../../../configs/theme";
 import SidebarLeft from "../../../components/Sidebar/SidebarLeft";
-import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { styled } from "@mui/material/styles";
@@ -456,12 +455,12 @@ const Test = () => {
 
         <Box sx={{ flexGrow: 1, p: 3, mt: 5 }}>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 600 }}>
                 Tests
               </Typography>
             </Grid>
-            <Grid item xs={6} sx={{ textAlign: "right" }}>
+            <Grid item xs={12} md={6} sx={{ display: { xs: "flex", md: "block" }, justifyContent: { xs: "space-between" }, textAlign: { md: "right" } }}>
               <Button variant="contained" className="custom-button">
                 <Link
                   href={`/course/${courseGuid}/test/add`}
@@ -514,7 +513,7 @@ const Test = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Grid item xs={2}>
+                    <Grid item xs={12} md={2}>
                       <FormControl sx={{ width: "100%" }}>
                         <InputLabel id="type-select-label">Action</InputLabel>
                         <Controller
@@ -683,7 +682,7 @@ const Test = () => {
                                     >
                                       <h3>
                                         <Link
-                                          href={`/course/manage/`}
+                                          href={`/test/manage/${test.guid}?ci=${courseGuid}`}
                                           sx={{
                                             textDecoration: "none",
                                             color: "inherit",
@@ -702,7 +701,7 @@ const Test = () => {
                                     >
                                       <h3>
                                         <Link
-                                          href={`/course/manage/`}
+                                          href={`/test/manage/${test.guid}?ci=${courseGuid}`}
                                           sx={{
                                             textDecoration: "none",
                                             color: "inherit",

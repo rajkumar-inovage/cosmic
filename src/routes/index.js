@@ -42,9 +42,10 @@ import CreateCourseTest from "../pages/Course/Test/CreateCourseTest"
 import Meetings from "../pages/Course/Meetings"
 import AddCourseMeeting from "../pages/Course/Meetings/AddCourseMeeting"
 import CreateCourseMeeting from "../pages/Course/Meetings/Create"
-import CourseEnrollments from "../pages/Course/Enrollments/CourseEnrollments"
 import EnrolledUsers from "../pages/Course/Enrollments/EnrolledUsers"
+import EnrollUsers from "../pages/Course/Enrollments/EnrollUser"
 import Students from "../pages/Users/Students"
+import Settings from "../pages/Auth/Settings/Index"
 
 
 
@@ -94,9 +95,10 @@ const AppRouter = () => {
         <Route path={'/course/:courseGuid/meeting/list'} element={<Meetings/>} />
         <Route path={'/course/:courseGuid/meeting/add'} element={<AddCourseMeeting/>} />
         <Route path={'/course/:courseGuid/meeting/create'} element={<CreateCourseMeeting/>} />
-        <Route path={'/course/:courseGuid/enrollments'} element={<CourseEnrollments/>} />
         <Route path={'/course/:courseGuid/enrolled-users'} element={<EnrolledUsers/>} />
+        <Route path={'/course/:courseGuid/enroll'} element={<EnrollUsers/>} />
         <Route path={'/user/students'} element={<Students/>}/>
+        <Route path={'/auth/settings'} element={<Settings/>}/>
       </Routes>
     </Router>
   )

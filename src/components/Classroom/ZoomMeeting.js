@@ -232,7 +232,8 @@ const ZoomMeeting = ({ item }) => {
           <Grid container spacing={2}>
             <Grid item xs={6} sx={{ mt: 3 }}>
               <Button
-                variant="contained"
+                variant="outlined"
+                className="custom-button"
                 component={Link}
                 color="primary"
                 href={extractHrefFromString(item.details)}

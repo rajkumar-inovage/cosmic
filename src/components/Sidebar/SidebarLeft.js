@@ -149,7 +149,7 @@ export default function SidebarLeft() {
     },
     {
       label: "Setting",
-      link: "/test/list",
+      link: "/auth/settings",
       menuIcon: <SettingsIcon />,
     },
     {

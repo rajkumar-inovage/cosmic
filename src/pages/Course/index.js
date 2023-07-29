@@ -404,6 +404,7 @@ const Courses = () => {
                                     <MoreVertOutlinedIcon />
                                   </IconButton>
                                   <Menu
+                                    className="demo"
                                     id="long-menu"
                                     MenuListProps={{
                                       "aria-labelledby": "long-button",

@@ -27,6 +27,7 @@ const StyledFormControl = styled(FormControl)({
 });
 
 const EditTest = () => {
+  // Query parameters
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const mtValue = params.get("mt");

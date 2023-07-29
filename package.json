@@ -1,7 +1,7 @@
 {
   "homepage": "https://cosmicapp.netlify.app",
-  "name": "cosmic-app",
-  "version": "1.0.0",
+  "name": "cosmic-web",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -25,6 +25,7 @@
     "html-react-parser": "^3.0.15",
     "http-proxy-middleware": "^2.0.6",
     "moment-timezone": "^0.5.43",
+    "mui-one-time-password-input": "^1.1.2",
     "mui-tel-input": "^3.2.2",
     "notistack": "^3.0.1",
     "object-to-formdata": "^4.4.2",
@@ -50,7 +51,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "CI=false react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

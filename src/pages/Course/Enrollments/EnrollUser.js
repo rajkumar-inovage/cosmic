@@ -22,7 +22,7 @@ import {
   Snackbar,
 } from "@mui/material";
 import { serialize } from "object-to-formdata";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import BASE_URL from "../../../Utils/baseUrl";
 import token from "../../../Utils/token";
@@ -32,8 +32,9 @@ import EnrolledUserList from "../../../components/Course/Enrollments/EnrolledUse
 import theme from "../../../configs/theme";
 import SidebarLeft from "../../../components/Sidebar/SidebarLeft";
 
-const EnrolledUsers = () => {
+const EnrollUsers = () => {
   const { courseGuid } = useParams();
+  const navigate = useNavigate();
   const {
     control,
     formState: { errors },
@@ -41,7 +42,7 @@ const EnrolledUsers = () => {
   const {
     primary: { main: primaryColor },
   } = theme.palette;
-  const [users, setUsser] = useState("");
+  const [allUsers, setAllUsers] = useState("");
   const [searchTitle, setSearchTitle] = useState("");
   const [loading, setLoading] = useState(true);
   // Authorization
@@ -78,7 +79,7 @@ const EnrolledUsers = () => {
     }
   }, [snackbarOpen]);
 
-  // Fetch users list
+  // Fetch unenrolled users list
   useEffect(() => {
     const fetchUserList = async () => {
       const requestOptions = {
@@ -88,11 +89,11 @@ const EnrolledUsers = () => {
       };
       try {
         const response = await fetch(
-          `${BASE_URL}/course/enrolments/${courseGuid}`,
+          `${BASE_URL}/course/notenroled/${courseGuid}`,
           requestOptions
         );
         const result = await response.json();
-        setUsser(result.payload);
+        setAllUsers(result.payload);
         setLoading(false);
       } catch (error) {
         console.log("error", error);
@@ -104,8 +105,8 @@ const EnrolledUsers = () => {
 
   // Search Users
   const filteredUsers =
-    users &&
-    users.filter((user) => {
+  allUsers &&
+  allUsers.filter((user) => {
       const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
       const searchValue = searchTitle.toLowerCase();
       return fullName.includes(searchValue);
@@ -175,8 +176,8 @@ const EnrolledUsers = () => {
     setActionConfirmOpen(false);
   };
 
-  // Bulk unenroll function on submit
-  const handleBulkUnenroll = async () => {
+  // Bulk enroll function on submit
+  const handleBulkEnroll = async () => {
     setActionConfirmOpen(false);
     const formData = serialize();
     selectedUsers.forEach((value, index) => {
@@ -189,18 +190,18 @@ const EnrolledUsers = () => {
       redirect: "follow",
     };
     try {
-      const res = await fetch(`${BASE_URL}/course/unenrol/${courseGuid}`, requestOptions);
+      const res = await fetch(`${BASE_URL}/course/enrol/${courseGuid}`, requestOptions);
       const result = await res.json();
       setSnackbarSuccess(result.success)
       if (result.success === true) {
-        showSnackbar("success", "User Unenrolled Successfully");
+        showSnackbar("success", "User Enrolled Successfully");
         setTimeout(() => {
-          window.location.reload(true);
+          navigate(`/course/${courseGuid}/enrolled-users`);
         }, 1000);
       } else {
         showSnackbar(
           "warning",
-          "User Unenrolled failed, Atleast 1 item should be selected!"
+          "User enrolled failed, Atleast 1 item should be selected!"
         );
         setTimeout(() => {
         }, 3000);
@@ -234,14 +235,14 @@ const EnrolledUsers = () => {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-            Are you sure you want to unenroll selected users?
+            Are you sure you want to enroll selected users?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={actionConfirmClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleBulkUnenroll} color="primary" autoFocus>
+            <Button onClick={handleBulkEnroll} color="primary" autoFocus>
                 Confirm
               </Button>
           </DialogActions>
@@ -261,13 +262,13 @@ const EnrolledUsers = () => {
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 600 }}>
-                Enrolled Users
+                Enroll Users
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
               <Button variant="contained" className="custom-button">
-                <Link href={`/course/${courseGuid}/enroll`} color="inherit" underline="none">
-                  Enroll User
+                <Link href={`/course/${courseGuid}/enrolled-users`} color="inherit" underline="none">
+                  Back
                 </Link>
               </Button>
             </Grid>
@@ -331,7 +332,7 @@ const EnrolledUsers = () => {
                                   value="unenrolluser"
                                   onClick={handleBulkConfirmOpen}
                                 >
-                                  Unenroll User
+                                  Enroll Users
                                 </MenuItem>
                               </Select>
                             )}
@@ -347,7 +348,7 @@ const EnrolledUsers = () => {
                           key={index}
                           user={user}
                           courseGuid={courseGuid}
-                          action="unenrolled"
+                          action="enroll"
                         />
                       ))}
                   </Box>
@@ -414,4 +415,4 @@ const EnrolledUsers = () => {
   );
 };
 
-export default EnrolledUsers;
+export default EnrollUsers;

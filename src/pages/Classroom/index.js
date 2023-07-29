@@ -63,29 +63,30 @@ const OnlineClasses = () => {
       meeting.details.toLowerCase().includes(searchTitle.toLowerCase())
     );
 
-  // Pagination here
-  const [currentPage, setCurrentPage] = useState(1);
-  const [testsPerPage] = useState(6);
-  const lastIndex = currentPage * testsPerPage;
-  const firstIndex = lastIndex - testsPerPage;
-  const currentMeeting = filteredMeetings.slice(firstIndex, lastIndex);
-  const totalPages = Math.ceil(
-    filteredMeetings && filteredMeetings.length / testsPerPage
-  );
-  const numbers = [...Array(totalPages + 1).keys()].slice(1);
-  function prePage() {
-    if (currentPage !== firstIndex) {
-      setCurrentPage(currentPage - 1);
+    // Pagination here
+    const [currentPage, setCurrentPage] = useState(1);
+    const [testsPerPage] = useState(6);
+    const lastIndex = currentPage * testsPerPage;
+    const firstIndex = lastIndex - testsPerPage;
+    const currentMeeting =
+      filteredMeetings && filteredMeetings.slice(firstIndex, lastIndex);
+    const totalPages = Math.ceil(
+      (filteredMeetings && filteredMeetings.length) / testsPerPage
+    );
+    const numbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+    function prePage() {
+      if (currentPage !== firstIndex) {
+        setCurrentPage(currentPage - 1);
+      }
     }
-  }
-  function changeCPage(id) {
-    setCurrentPage(id);
-  }
-  function nextPage() {
-    if (currentPage !== lastIndex) {
-      setCurrentPage(currentPage + 1);
+    function changeCPage(id) {
+      setCurrentPage(id);
     }
-  }
+    function nextPage() {
+      if (currentPage !== lastIndex) {
+        setCurrentPage(currentPage + 1);
+      }
+    }
 
   return (
     <>

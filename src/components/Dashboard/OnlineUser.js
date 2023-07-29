@@ -80,57 +80,7 @@ const OnlineUser = () => {
               const lastInitial = user.last_name ? user.last_name[0] : "";
               const bgColor = generateColorCode(firstInitial + lastInitial);
               return (
-                // <Grid
-                //   key={index}
-                //   container
-                //   sx={{
-                //     borderBottom: "1px solid #B8B8B8",
-                //     py: 2,
-                //     alignItems: "center",
-                //     justifyContent: "space-between",
-                //   }}
-                // >
-                //   <Grid item xs={3}>
-                //     <Box className="online-students">
-                //       <Box
-                //         className="user-logo"
-                //         sx={{
-                //           fontSize: 20,
-                //           fontWeight: 500,
-                //           fontFamily: "Arial",
-                //           // backgroundColor: getRandomColor(),
-                //           backgroundColor: `${bgColor}`,
-                //           color: "#fff",
-                //           width: "56px",
-                //           height: "56px",
-                //           display: "flex",
-                //           alignItems: "center",
-                //           justifyContent: "center",
-                //           borderRadius: "50%",
-                //           position: "relative",
-                //           textTransform: "uppercase",
-                //         }}
-                //       >
-                //         <span
-                //           className="active-status"
-                //           style={{
-                //             backgroundColor:
-                //               user.status === "1" ? "#65C01E" : "#FF725E",
-                //           }}
-                //         ></span>
-                //         {firstInitial}
-                //         {lastInitial}
-                //       </Box>
-                //     </Box>
-                //   </Grid>
-                //   <Grid item xs={9} className="user-detail">
-                //     <h5>
-                //       {user.first_name} {user.last_name}
-                //     </h5>
-                //     <strong>User ID:</strong> {user.guid}
-                //   </Grid>
-                // </Grid>
-                <Online onlineUser={user} firstInitial={firstInitial} lastInitial={lastInitial} bgColor={bgColor}  />
+                <Online onlineUser={user} firstInitial={firstInitial} lastInitial={lastInitial} bgColor={bgColor} key={index}  />
               );
             })
           ) : (

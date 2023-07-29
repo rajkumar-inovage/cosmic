@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -43,6 +43,10 @@ const StyledFormControl = styled(FormControl)({
 });
 
 const ManageTest = () => {
+  // Query Parameters
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const queryValue = params.get("ci");
   const { guid } = useParams();
   const [questions, setQuestions] = useState([]);
   // Authorization Setup
@@ -159,10 +163,24 @@ const ManageTest = () => {
       {test && (
         <Box sx={{ flexGrow: 1, p: 3 }}>
           <Grid container sx={{ mt: 5 }}>
-            <Grid item>
+            <Grid item xs={6}>
                 <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 600 }}>
                   Manage ({test.title})
                 </Typography>
+              </Grid>
+              <Grid item xs={6} sx={{textAlign:"right"}}>
+                {
+                  queryValue && queryValue ? (<Button variant="contained" className="custom-button">
+                  <Link href={`/course/${queryValue}/test/list`} color="inherit" underline="none">
+                    Back
+                  </Link>
+                </Button>) : (<Button variant="contained" className="custom-button">
+                <Link href={`/test/list`} color="inherit" underline="none">
+                  Back
+                </Link>
+              </Button>)
+                }
+              
               </Grid>
     
             <Grid

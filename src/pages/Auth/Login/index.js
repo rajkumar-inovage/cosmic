@@ -90,7 +90,6 @@ export default function Login() {
               {...register("username", { required: true })}
               helperText={errors.username && "Username is required"}
               autoComplete="username"
-              autoFocus
             />
             <TextField
               margin="normal"

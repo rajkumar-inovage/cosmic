@@ -15,20 +15,26 @@ import {
   DialogContent,
   DialogContentText,
 } from "@mui/material";
+import { useNavigate, Link } from "react-router-dom";
+import ReactHtmlParser from "react-html-parser";
 import BASE_URL from "../../../Utils/baseUrl";
 import token from "../../../Utils/token";
 import Network from "../../../Utils/network";
-import PersonOffIcon from '@mui/icons-material/PersonOff';
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { styled } from "@mui/material/styles";
-import {useNavigate } from "react-router-dom";
-const EnrolledUserList = ({
-  user,
-  onUserSelect,
-  selectedUsers,
-  courseGuid,
-  action,
-}) => {
+
+const ViewIcon = styled(RemoveRedEyeRoundedIcon)(({ theme }) => ({
+  color: theme.palette.primary.main, // Replace 'primary' with the desired theme color
+}));
+const EditIcon = styled(EditRoundedIcon)(({ theme }) => ({
+  color: theme.palette.warning.main, // Replace 'primary' with the desired theme color
+}));
+const DeleteIcon = styled(DeleteRoundedIcon)(({ theme }) => ({
+  color: theme.palette.danger.main, // Replace 'primary' with the desired theme color
+}));
+const ExistingMeeting = ({ user, onUserSelect, selectedUsers }) => {
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}`);
   myHeaders.append("Network", `${Network}`);
@@ -42,7 +48,6 @@ const EnrolledUserList = ({
     }
     return color;
   };
-  const navigate = useNavigate();
 
   function generateColorCode(str) {
     const charCode = str.charCodeAt(0);
@@ -52,35 +57,6 @@ const EnrolledUserList = ({
     return `rgb(${red}, ${green}, ${blue})`;
   }
   const bgColor = generateColorCode(firstInitial + lastInitial);
-
-  // State variables for Snackbar
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSuccess, setSnackbarSuccess] = useState(null);
-
-  // Function to show the Snackbar
-  const showSnackbar = (severity, message) => {
-    setSnackbarMessage(message);
-    setSnackbarOpen(true);
-  };
-
-  // Function to hide the Snackbar
-  const hideSnackbar = () => {
-    setSnackbarOpen(false);
-  };
-
-  // UseEffect to close the Snackbar after a certain duration
-  useEffect(() => {
-    if (snackbarOpen) {
-      const snackbarTimeout = setTimeout(() => {
-        hideSnackbar();
-      }, 3000); // Snackbar will be visible for 3 seconds (3000 ms)
-
-      return () => {
-        clearTimeout(snackbarTimeout);
-      };
-    }
-  }, [snackbarOpen]);
 
   const [isUserDeleted, setIsUserDeleted] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -95,73 +71,31 @@ const EnrolledUserList = ({
     setDeleteConfirmOpen(false);
   };
 
-  // Unenroll function on submit
-  const handleUnenrollSingleUser = async (id) => {
-    var formdata = new FormData();
-    formdata.append("users[0]", id);
+  // Delete function on submit
+  const handleDeleteUser = async () => {
     setDeleteConfirmOpen(false);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
-      body: formdata,
       redirect: "follow",
     };
     try {
       const res = await fetch(
-        `${BASE_URL}/course/unenrol/${courseGuid}`,
+        `${BASE_URL}/users/delete/${selectedUserId}`,
         requestOptions
       );
       const result = await res.json();
-      setSnackbarSuccess(result.success);
+      setAlertOpen(true);
       if (result.success === true) {
-        showSnackbar("success", "User Unenrolled Successfully");
+        setIsUserDeleted(true);
         setTimeout(() => {
+          setAlertOpen(false);
           window.location.reload(true);
         }, 1000);
       } else {
-        showSnackbar(
-          "warning",
-          "User Unenrolled failed, Atleast 1 item should be selected!"
-        );
-        setTimeout(() => {}, 3000);
-      }
-      setActionConfirmOpen(false);
-      console.log(result);
-    } catch (error) {
-      console.error(error);
-      throw new Error(`Failed to post status: ${error.message}`);
-    }
-  };
-
-  // Enroll function on submit
-  const handleEnrollSingleUser = async (id) => {
-    var formdata = new FormData();
-    formdata.append("users[0]", id);
-    setDeleteConfirmOpen(false);
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
-    };
-    try {
-      const res = await fetch(
-        `${BASE_URL}/course/enrol/${courseGuid}`,
-        requestOptions
-      );
-      const result = await res.json();
-      setSnackbarSuccess(result.success);
-      if (result.success === true) {
-        showSnackbar("success", "User Enrolled Successfully");
         setTimeout(() => {
-          navigate(`/course/${courseGuid}/enrolled-users`);
-        }, 1000);
-      } else {
-        showSnackbar(
-          "warning",
-          "User Enrolled failed, Atleast 1 item should be selected!"
-        );
-        setTimeout(() => {}, 3000);
+          setAlertOpen(false);
+        }, 3000);
       }
       setActionConfirmOpen(false);
       console.log(result);
@@ -174,17 +108,15 @@ const EnrolledUserList = ({
   return (
     <>
       <Snackbar
-        open={snackbarOpen}
+        open={alertOpen}
         autoHideDuration={3000}
-        onClose={hideSnackbar}
+        onClose={() => setIsUserDeleted(false)}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert
-          severity={
-            snackbarSuccess && snackbarSuccess === true ? "success" : "warning"
-          }
-        >
-          {snackbarMessage}
+        <Alert severity={isUserDeleted === true ? "success" : "warning"}>
+          {isUserDeleted === true
+            ? "Users Deleted Successfully"
+            : "User not deleted."}
         </Alert>
       </Snackbar>
       <Dialog
@@ -193,39 +125,27 @@ const EnrolledUserList = ({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Confirmation</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {
-              action && action === "enroll" ? ("Are you sure you want to Enroll this user?") : ("Are you sure you want to Unenroll this user?")
-            }
+            Are you sure you want to delete this user?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={actionConfirmClose} color="primary">
             Cancel
           </Button>
-          {action && action === "enroll" ? (
-            <Button
-              onClick={() => handleEnrollSingleUser(selectedUserId)}
-              color="primary"
-              autoFocus
-            >
-              Confirm
-            </Button>
-          ) : (
-            <Button
-              onClick={() => handleUnenrollSingleUser(selectedUserId)}
-              color="primary"
-              autoFocus
-            >
-              Confirm
-            </Button>
-          )}
+          <Button
+            onClick={() => handleDeleteUser(selectedUserId)}
+            color="primary"
+            autoFocus
+          >
+            Confirm
+          </Button>
         </DialogActions>
       </Dialog>
       <Grid item xs={12} className="user-items">
-        <Card className="user-listing listing" sx={{ my: 3 }} key={`item`}>
+        <Card className="user-listing" sx={{ my: 3 }} key={`item`}>
           <CardContent style={{ paddingBottom: "15px" }}>
             <Grid container spacing={2} className="user-list-details">
               <Grid item xs={0} lg={1.5} className="user-selection">
@@ -304,33 +224,44 @@ const EnrolledUserList = ({
                       {user.guid}
                     </Box>
                     <Box className="action-btn">
-                      {action && action === "enroll" ? (
-                        <Button
-                          onClick={() => handleConfirmOpen(user.guid)}
-                          color="success"
-                          sx={{
-                            fontSize: 16,
-                            fontWeight: 500,
-                            fontFamily: "Arial",
-                          }}
-                        >
-                          <PersonAddIcon sx={{mr:1}} />
-                          Enroll
-                        </Button>
-                      ) : (
-                        <Button
-                          onClick={() => handleConfirmOpen(user.guid)}
-                          color="secondary"
-                          sx={{
-                            fontSize: 16,
-                            fontWeight: 500,
-                            fontFamily: "Arial",
-                          }}
-                        >
-                            <PersonOffIcon sx={{mr:1}}/>
-                          Unenroll
-                        </Button>
-                      )}
+                      <Button
+                        component={Link}
+                        to={`/user/view/${user.guid}`}
+                        color="primary"
+                        sx={{
+                          fontSize: 16,
+                          fontWeight: 500,
+                          fontFamily: "Arial",
+                        }}
+                      >
+                        <ViewIcon />
+                        View
+                      </Button>
+                      <Button
+                        component={Link}
+                        to={`/user/edit/${user.guid}`}
+                        color="warning"
+                        sx={{
+                          fontSize: 16,
+                          fontWeight: 500,
+                          fontFamily: "Arial",
+                        }}
+                      >
+                        <EditIcon />
+                        Edit
+                      </Button>
+                      <Button
+                        onClick={() => handleConfirmOpen(user.guid)}
+                        color="danger"
+                        sx={{
+                          fontSize: 16,
+                          fontWeight: 500,
+                          fontFamily: "Arial",
+                        }}
+                      >
+                        <DeleteIcon />
+                        Delete
+                      </Button>
                     </Box>
                   </Grid>
                 </Grid>
@@ -339,8 +270,9 @@ const EnrolledUserList = ({
           </CardContent>
         </Card>
       </Grid>
+
     </>
   );
 };
 
-export default EnrolledUserList;
+export default ExistingMeeting;

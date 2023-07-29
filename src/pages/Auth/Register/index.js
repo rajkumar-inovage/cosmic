@@ -128,7 +128,7 @@ export default function Register() {
   };
   return (
     <>
-      {settingData && settingData.allow_user_registration === "true" ? (
+      {settingData && settingData.allow_user_registration === "false" ? (
         <>
           <Grid
             container

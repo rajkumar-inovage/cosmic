@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -27,6 +27,10 @@ const StyledFormControl = styled(FormControl)({
 });
 
 const EditMeeting = () => {
+    // Query Parameters
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const mtValue = params.get("ci");
   const { meetingGuid } = useParams();
   // state initialization
   const [isMeetingCreated, setIsMeetingCreated] = useState(null);
@@ -140,10 +144,15 @@ const EditMeeting = () => {
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
-              <Button variant="contained">
-                <Link href="/online-classes" color="inherit" underline="none">
+              <Button variant="contained" className="custom-button">
+                {
+                  mtValue && mtValue ? (<Link href={`/course/${mtValue}/meeting/list`} color="inherit" underline="none">
                   Cancel
-                </Link>
+                </Link>) : (<Link href="/online-classes" color="inherit" underline="none">
+                  Cancel
+                </Link>)
+                }
+                
               </Button>
             </Grid>
           </Grid>

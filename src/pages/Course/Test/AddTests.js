@@ -209,7 +209,7 @@ const AddTests = () => {
   return (
     <>
       <Helmet>
-        <title>Add Tests</title>
+        <title>Add Existing Tests</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
         <SidebarLeft />
@@ -477,7 +477,7 @@ const AddTests = () => {
                 </>
               ) : (
                 <Alert sx={{ mt: 5 }} severity="error">
-                  All Test added!
+                  Test not found or all added earlier!
                 </Alert>
               )}
             </>
