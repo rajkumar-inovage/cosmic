@@ -101,7 +101,6 @@ export default function SidebarLeft() {
   const currentPathname = location.pathname;
   const pathParts = currentPathname.split('/');
   const firstPath = pathParts[1];
-  console.log(firstPath === "" ? "empty" : "no")
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(true);
