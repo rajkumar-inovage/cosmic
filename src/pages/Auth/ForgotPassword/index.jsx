@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import { serialize } from "object-to-formdata";
-import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   TextField,
@@ -29,7 +27,6 @@ export default function ForgotPassword() {
     register,
     control,
     setValue,
-    watch,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -40,7 +37,7 @@ export default function ForgotPassword() {
       password: "",
     },
   });
-  const token = watch("token");
+  //const token = watch("token");
   // Authorization Setup
   var myHeaders = new Headers();
   //myHeaders.append("Authorization", `Bearer ${token}`);
@@ -78,9 +75,9 @@ export default function ForgotPassword() {
   // OTP States
   const [otpGenerated, setOtpGenerated] = useState("");
   const [tokenGenerated, setTokenGenerated] = useState("");
-  const handleChange = (newValue) => {
-    setOtpGenerated(newValue);
-  };
+  // const handleChange = (newValue) => {
+  //   setOtpGenerated(newValue);
+  // };
   // Stepper Start
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());

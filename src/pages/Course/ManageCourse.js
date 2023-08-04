@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
+import ReactHtmlParser from "html-react-parser";
 import {
   Box,
   Typography,
@@ -91,8 +92,7 @@ const ManageCourse = () => {
       );
       const testresult = await res.json();
       setTest(testresult && testresult.payload);
-      //console.log(testresult.payload.status);
-      setTestStatus(testresult && testresult.payload.status);
+      setTestStatus(testresult.payload && testresult.payload.status);
     };
     fetchTest();
   }, []);
@@ -172,7 +172,6 @@ const ManageCourse = () => {
   // Snackbar
   const [isTestPublished, setIsTestPublished] = useState(null);
 
-  console.log(currentCourse);
   return (
     <>
       <Helmet>
@@ -261,7 +260,7 @@ const ManageCourse = () => {
                   <Typography variant="h4">{currentCourse.title}</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography>{currentCourse.description}</Typography>
+                <Typography>{ReactHtmlParser(currentCourse.description)}</Typography>
                 </Grid>
                 {/* Lessons */}
                 <Grid item xs={12} md={6}>

@@ -25,9 +25,14 @@ import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network"
 import SidebarLeft from "../../components/Sidebar/SidebarLeft";
+import theme from "../../configs/theme";
 
 
+const {
+  primary: { main: primaryColor },
+} = theme.palette;
 const Tests = () => {
+  console.log(token)
   const [tests, setTests] = useState([]);
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -42,7 +47,7 @@ const Tests = () => {
         }
       );
       const testData = await response.json();
-      setTests(testData.payload.data);
+      setTests(testData.payload && testData.payload.data);
     };
     fetchTests();
   }, []);
@@ -61,7 +66,7 @@ const Tests = () => {
 
   // Search data here
   const [searchTitle, setSearchTitle] = useState("");
-  const filteredTests = tests.filter(
+  const filteredTests = tests && tests.filter(
     (test) =>
       test.title.toLowerCase().includes(searchTitle.toLowerCase()) ||
       test.details.toLowerCase().includes(searchTitle.toLowerCase())
@@ -172,45 +177,56 @@ const Tests = () => {
                 ))}
               </Grid>
             </Grid>
-            <Grid container spacing={2}>
-              <Grid
-                item
-                sx={{
-                  textAlign: "center",
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "100%",
-                }}
-              >
-                <ButtonGroup
-                  color="primary"
-                  aria-label="outlined primary button group"
-                >
-                  <Button
-                    onClick={prePage}
-                    {...(currentPage === 1 && { disabled: true })}
-                  >
-                    PREV
-                  </Button>
-                  {numbers && numbers.map((n, i) => (
-                    <Button
-                      className={`${currentPage === n ? "active" : ""}`}
-                      key={i}
-                      onClick={() => changeCPage(n)}
-                    >
-                      {n}
-                    </Button>
-                  ))}
-
-                  <Button
-                    onClick={nextPage}
-                    {...(currentPage === totalPages && { disabled: true })}
-                  >
-                    NEXT
-                  </Button>
-                </ButtonGroup>
-              </Grid>
-            </Grid>
+              
+              {/* Pagination */}
+              {filteredTests && filteredTests.length > testsPerPage ? (
+                    <Grid container spacing={2}>
+                      <Grid
+                        item
+                        sx={{
+                          textAlign: "center",
+                          display: "flex",
+                          justifyContent: "center",
+                          width: "100%",
+                          marginTop: "30px",
+                        }}
+                      >
+                        <ButtonGroup
+                          color="primary"
+                          aria-label="outlined primary button group"
+                          className="pagination-button"
+                        >
+                          <Button
+                            onClick={prePage}
+                            disabled={currentPage === 1}
+                          >
+                            PREV
+                          </Button>
+                          {numbers.map((n, i) => (
+                            <Button
+                              className={currentPage === n ? "active" : ""}
+                              key={i}
+                              onClick={() => changeCPage(n)}
+                              style={{
+                                backgroundColor:
+                                  currentPage === n ? primaryColor : "",
+                              }}
+                            >
+                              {n}
+                            </Button>
+                          ))}
+                          <Button
+                            onClick={nextPage}
+                            disabled={currentPage === totalPages}
+                          >
+                            NEXT
+                          </Button>
+                        </ButtonGroup>
+                      </Grid>
+                    </Grid>
+                  ) : (
+                    ""
+                  )}
           </>
         ) : (
           <Grid container spacing={2}>

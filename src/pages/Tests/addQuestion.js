@@ -23,6 +23,7 @@ import {
   RadioGroup,
   Radio,
   Snackbar,
+  Alert,
 } from "@mui/material";
 import { Editor } from "@tinymce/tinymce-react";
 import { styled } from "@mui/material/styles";
@@ -55,7 +56,6 @@ const AddQuestion = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const mtValue = params.get("mt");
-  console.log(mtValue)
   const { guid } = useParams();
   const { register, handleSubmit, control, setValue, watch, reset, formState: { errors } } = useForm({
     defaultValues: {
@@ -161,7 +161,7 @@ const AddQuestion = () => {
         setIsTestCreated(true);
         setTimeout(() => {
           setIsTestCreated(false);
-        }, 1000);
+        }, 3000);
         reset();
       } catch (error) {
         setIsTestCreated(false);
@@ -225,22 +225,14 @@ var requestOption = {
           >
             <Grid item>
               <Snackbar
-                severity="success"
+                //severity={isTestCreated === true ? "success" : "warning"}
                 open={isTestCreated}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                autoHideDuration={50000}
+                autoHideDuration={2000}
                 onClose={() => setIsTestCreated(false)}
-                sx={{
-                  backgroundColor: `${
-                    isTestCreated === true ? "#008000" : "#ff0000"
-                  }`,
-                }}
-                message={
-                  isTestCreated === true
-                    ? "Test created successfully!"
-                    : "Failed to create test"
-                }
-              />
+              >
+              <Alert severity={isTestCreated === true ? "success" : "warning"}>{isTestCreated === true ? "Question created successfully." : "Question cretion failled!"}</Alert>
+              </Snackbar>
             </Grid>
           </Grid>
           <Grid container spacing={2} sx={{ mt: 0 }}>

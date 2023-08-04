@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, {useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { serialize } from "object-to-formdata";
-import { useParams, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
 import {
   TextField,
   Snackbar,
@@ -14,8 +14,11 @@ import {
 } from "@mui/material";
 import illustartion from "../../../assets/images/Illustration.png";
 import BASE_URL from "../../../Utils/baseUrl";
+import Network from "../../../Utils/network";
+import Recaptchav3 from "../../../Utils/reCaptchav3"
 
 export default function Login() {
+  const recaptchaRef = useRef(null);
   const navigate = useNavigate();
   const {
     register,
@@ -26,17 +29,21 @@ export default function Login() {
       device_name: "device",
     },
   });
+  const myHeaders = new Headers();
+  myHeaders.append("Network", `${Network}`);
   const [token, setToken] = useState('');
   const [open, setOpen] = useState(false);
   const [isUserloggedIn, setIsUserloggedIn] = useState(null);
 
   const submitLoginForm = async (data) => {
+    //const recaptchaValue = await recaptchaRef.current.executeAsync();
     try {
       const formData = serialize(data);
       const requestOptions = {
-        method: "POST",
+        method: 'POST',
+        headers: myHeaders,
         body: formData,
-        redirect: "follow",
+        redirect: 'follow'
       };
       const response = await fetch(
         `${BASE_URL}/auth/login`,
@@ -48,9 +55,10 @@ export default function Login() {
         localStorage.setItem('token', result.payload.token);
         setToken(data.token);
         setIsUserloggedIn(true);
+        const redirectUrl = '/';
         setTimeout(() => {
-          navigate(`/`);
-        }, 3000);
+          window.location.href = redirectUrl; 
+        }, 2000);
       } else {
         setIsUserloggedIn(false);
       }
@@ -101,7 +109,10 @@ export default function Login() {
               autoComplete="current-password"
             />
             <Grid container>
-              <Grid item xs>
+              <Grid item xs={12}>
+              <ReCAPTCHA ref={recaptchaRef} sitekey={Recaptchav3} size="invisible" />
+              </Grid>
+              <Grid item xs={12}>
                 <Link href="/auth/forgot-password" variant="body2">
                   Forgot password?
                 </Link>
@@ -109,6 +120,7 @@ export default function Login() {
             </Grid>
             <Button
               type="submit"
+              className="custom-button"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
@@ -133,7 +145,7 @@ export default function Login() {
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert severity={isUserloggedIn === true ? "success" : "warning"}>
-            {isUserloggedIn === true ? "Login Successfull" : "Login Failed"}
+            {isUserloggedIn === true ? "Login Successfull" : "Invalid Credential"}
           </Alert>
         </Snackbar>
       </Grid>

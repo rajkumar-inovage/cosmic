@@ -1,6 +1,6 @@
 {
   "homepage": "https://cosmicapp.netlify.app",
-  "name": "cosmic-web",
+  "name": "cosmic-webapp",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -34,6 +34,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-datepicker": "^4.11.0",
     "react-dom": "^18.2.0",
+    "react-google-recaptcha": "^3.1.0",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.43.9",
     "react-html-parser": "^2.0.2",

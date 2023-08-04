@@ -110,7 +110,11 @@ const HomePage = () => {
       <Box sx={{ display: "flex" }}>
         <SidebarLeft />
         <Box sx={{ flexGrow: 1, px: 3, mt: 5 }} className="dashboard">
-          <AllCourses courses={courses} />
+        <Grid container  sx={{ mt: 5 }}>
+            <Grid item xs={12}>
+            <AllCourses courses={courses} />
+            </Grid>
+          </Grid>
           {/* Test and Online classes */}
           <Grid container spacing={4} sx={{ mt: 5 }}>
             <Grid item xs={12} md={6}>
