@@ -43,7 +43,7 @@ const AllCourses = () => {
       try {
         const response = await fetch(`${BASE_URL}/course/list`, requestOptions);
         const result = await response.json();
-        setCourses(result.payload.data);
+        setCourses(result.payload);
         setLoading(false);
       } catch (error) {
         console.log("error", error);
@@ -114,9 +114,9 @@ const AllCourses = () => {
                 modules={[Pagination]}
                 className="mySwiper"
               >
-                {courses && courses.length !== 0 ? (
+                {courses && courses.data.length !== 0 ? (
                   courses &&
-                  courses.map((course, index) => (
+                  courses.data.map((course, index) => (
                     <SwiperSlide key={index}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} md={6} className="course-image">

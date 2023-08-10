@@ -26,6 +26,7 @@ import token from "../../Utils/token";
 import Network from "../../Utils/network"
 import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 import theme from "../../configs/theme";
+import CheckTokenValid from "../../components/Redirect/CheckTokenValid"
 
 
 const {
@@ -99,6 +100,7 @@ const Tests = () => {
   //console.log(data);
   return (
     <>
+      <CheckTokenValid/>
     <Helmet>
         <title>Tests</title>
       </Helmet>
@@ -112,7 +114,7 @@ const Tests = () => {
             </Typography>
           </Grid>
           <Grid item xs={6} sx={{ textAlign: "right" }}>
-            <Button variant="contained">
+            <Button variant="contained" className="custom-button">
               <Link href="/test/create" color="inherit" underline="none">
                 Create Test
               </Link>

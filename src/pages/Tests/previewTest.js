@@ -10,6 +10,7 @@ import {
   Snackbar,
   Alert,
   ButtonGroup,
+  Link
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { Helmet } from "react-helmet";
@@ -236,10 +237,13 @@ console.log(questions)
         <Box sx={{ flexGrow: 1, p: 3 }}>
           <Grid container spacing={0} sx={{ mt: 5 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 600 }}>
                   {test && test.title}
                 </Typography>
+              </Grid>
+              <Grid item xs={6} sx={{textAlign:"right"}}>
+                <Button className="custom-button" variant="contained" component={Link} href={`/test/manage/${guid}`}>Back</Button>
               </Grid>
             </Grid>
           </Grid>

@@ -29,6 +29,7 @@ import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
 import theme from "../../configs/theme";
+import CheckTokenValid from "../../components/Redirect/CheckTokenValid"
 
 const options = [
   {
@@ -172,6 +173,7 @@ const Courses = () => {
   };
   return (
     <>
+      <CheckTokenValid/>
       <Helmet>
         <title>All Courses</title>
       </Helmet>
@@ -210,6 +212,7 @@ const Courses = () => {
               : "Course not deleted."}
           </Alert>
         </Snackbar>
+        
         <Box sx={{ flexGrow: 1, p: 3, mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={6}>

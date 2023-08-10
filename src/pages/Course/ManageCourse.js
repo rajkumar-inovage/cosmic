@@ -260,7 +260,7 @@ const ManageCourse = () => {
                   <Typography variant="h4">{currentCourse.title}</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                <Typography>{ReactHtmlParser(currentCourse.description)}</Typography>
+                  <Typography>{ReactHtmlParser(currentCourse.description)}</Typography>
                 </Grid>
                 {/* Lessons */}
                 <Grid item xs={12} md={6}>

@@ -135,7 +135,7 @@ const CreateCourse = () => {
                   <Grid item xs={12} md={10} sx={{ mt: 3 }}>
                   <FormTextField
                       control={control}
-                      label="Title"
+                      label="Title sasfsfsfs asdadadad"
                       variant="outlined"
                       name="title"
                       pattern="[A-Za-z]{1,}"

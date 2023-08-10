@@ -1,16 +1,19 @@
 import React from "react";
-//import token from "../../Utils/token";
+import token from "../../Utils/token";
 import BASE_URL from "../../Utils/baseUrl";
+import Network from "../../Utils/network";
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const CheckTokenValid = () => {
-  const token = '726ea82af534eb4b12e63fc1594bd2abd35f0ee2036b6bc38d57b5f769d6601f';
-  const [isTokenValid, setIsTokenValid] = React.useState("");
+  const navigate = useNavigate();
+  //const [isTokenValid, setIsTokenValid] = React.useState(false);
   const fetchTokenDetails = React.useRef(async () => {
     const myHeaders = new Headers();
     myHeaders.append(
       "Authorization",
       `Bearer ${token}`
     );
+    myHeaders.append("Network", `${Network}`);
     const requestOptions = {
       method: "GET",
       headers: myHeaders,
@@ -23,7 +26,10 @@ const CheckTokenValid = () => {
       );
       const result = await response.json();
       console.log(result);
-      setIsTokenValid(result)
+      if (result.success !== true) {
+        navigate("/auth/login");
+      }
+      
     } catch (error) {
       console.log("error", error);
     }
@@ -31,14 +37,7 @@ const CheckTokenValid = () => {
   React.useEffect(() => {
     fetchTokenDetails.current();
   }, []);
-  //console.log(isTokenValid);
-  return (
-    <>
-      <p>Token: {token}</p>
-      <p>Token Validation:  {isTokenValid.message}</p>
-    </>
-    
-  );
+  return null;
 };
 
 export default CheckTokenValid;

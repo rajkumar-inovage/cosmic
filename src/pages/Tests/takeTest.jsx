@@ -11,6 +11,7 @@ import {
   Box,
   RadioGroup,
   FormGroup,
+  Link,
   FormControl,
   FormControlLabel,
   Radio,
@@ -20,11 +21,18 @@ import {
   Snackbar,
   Alert,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
+
 } from "@mui/material";
 import { Editor } from "@tinymce/tinymce-react";
 import TestSidebar from "../../components/Test/TestSidebar";
 import TestInstruction from "../../components/Test/testInstruction";
 import { Helmet } from "react-helmet";
+import Timer from "../../components/Test/Timer";
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 
 const StyledFormControl = styled(FormControl)({
   marginBottom: "16px",
@@ -51,15 +59,16 @@ const TakeTest = () => {
   var myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}`);
   myHeaders.append("Network", `${Network}`);
-  const requestOption = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow",
-  };
   // Fetch Test Details
+  const timerDuration = 10;
   const [test, setTest] = useState([]);
   useEffect(() => {
     const fetchTest = async () => {
+      const requestOption = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
       const response = await fetch(
         `${BASE_URL}/tests/view/${guid}`,
         requestOption
@@ -76,6 +85,11 @@ const TakeTest = () => {
   const [testData, setTestData] = useState([]);
   useEffect(() => {
     const fetchQuestion = async () => {
+      const requestOption = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
       const response = await fetch(
         `${BASE_URL}/tests/preview/${guid}/1`,
         requestOption
@@ -89,18 +103,18 @@ const TakeTest = () => {
   const startTestSubmit = () => {
     alert("Test started");
   };
-  function generateToken(length) {
+  function generateSessionID(length) {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let token = "";
+    let sessionID = "";
     for (let i = 0; i < length; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
-      token += characters[randomIndex];
+      sessionID += characters[randomIndex];
     }
-    return token;
+    return sessionID;
   }
   const handleClickStart = () => {
-    const set_Session = generateToken(36);
+    const set_Session = generateSessionID(36);
     setShowInstruction(false);
     setShowQuestions(true);
     localStorage.setItem("set_session", set_Session);
@@ -124,51 +138,67 @@ const TakeTest = () => {
     setCheckConfirmValue(value);
   };
 
+  // Test auto submit when duration completed
+  const [timerExpired, setTimerExpired] = useState(false);
+  const handleTimerExpired = () => {
+    setTimerExpired(true);
+    onTestSubmit(); // Call the existing onSubmit function to submit the test
+  };
+
+  // Thanks after test submitted
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+
   // Test Submission
+  const resultType = test.settings && test.settings.show_result;
   const [open, setOpen] = useState(false);
   const [isTestSubmited, setIsTestSubmited] = useState(null);
   const session = localStorage.getItem("set_session");
-  const onSubmit = async () => {
+  const onTestSubmit = async () => {
     const formData = new FormData();
     testData.forEach((item, index) => {
-      const answerKey = `answer[${item.ID}]`;
+      const answerKey = `answer[${item.guid}]`;
       const choices = selectedOptions && selectedOptions[index];
-
-      if (!choices) {
-        formData.append(answerKey, "");
-      } else {
+      if (choices) {
         const choiceValues = Object.entries(choices)
           .filter(([key, value]) => value)
           .map(([key]) => `choice_${key}`)
           .join(",");
-        formData.append(answerKey, choiceValues);
+
+        if (choiceValues) {
+          formData.append(answerKey, choiceValues);
+        }
       }
     });
     formData.append("set_session", session);
     formData.append("user_guid", CreatedBy);
-    var requestOptions = {
+    const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: formData,
       redirect: "follow",
     };
+
     try {
       const response = await fetch(
         `${BASE_URL}/tests/submit_test/${guid}`,
         requestOptions
       );
       const result = await response.json();
-      setIsTestSubmited(true);
-      setOpen(true);
-      setTimeout(() => {
-        setOpen(false);
-        navigate(`/test/report/${guid}`);
-      }, 3000);
+      if (result.success === true) {
+        setIsTestSubmited(true);
+        if (resultType === "immediately") {
+          setOpen(true);
+          setTimeout(() => {
+            navigate(`/test/report/${guid}`);
+          }, 2000);
+        } else {
+          setDialogOpen(true);
+        }
+      }
     } catch (error) {
       setIsTestSubmited(false);
     }
   };
-
   const handleNext = () => {
     setCurrentQuestion(currentQuestion + 1);
     setSidebarOptions(selectedOptions);
@@ -213,7 +243,6 @@ const TakeTest = () => {
   const handleReviewLater = (event) => {
     setChecked(event.target.checked);
   };
-
   const renderOptions = (choices) => {
     return testData[currentQuestion].question_type === "mcmc" ? (
       <>
@@ -323,13 +352,25 @@ const TakeTest = () => {
       </>
     );
   };
+
   //console.log(sidebarOptions);
   return (
     <>
       <Helmet>
         <title>Take Test</title>
       </Helmet>
-      <Box sx={{ display: "flex" }}>
+      <Dialog open={dialogOpen} >
+        
+        <DialogContent>
+        <Typography fullwidth sx={{textAlign:"center"}}><CheckCircleOutlinedIcon color="success" sx={{fontSize:50}} /></Typography>
+          <DialogTitle color="success">Test submitted successfully.</DialogTitle>
+          <Typography fullwidth sx={{textAlign:"center", pb:3}}>Result will publish after review.</Typography>
+          <DialogActions sx={{alignItems:"center", justifyContent:"center"}} fullwidth>
+          <Button className="custom-button" variant="outlined" component={Link} href={`/test/list`}>Go To Tests</Button>
+        </DialogActions>
+        </DialogContent>
+      </Dialog>
+      <Box sx={{ display: "flex", marginTop: "-50px" }}>
         <Box sx={{ flexGrow: 1, px: 3 }}>
           <Grid container spacing={2}>
             <Snackbar
@@ -345,10 +386,16 @@ const TakeTest = () => {
               </Alert>
             </Snackbar>
           </Grid>
-          <Grid container spacing={2} sx={{ mt: 5 }}>
-            <Grid item xs={6}>
-              <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 600 }}>
+          <Grid container sx={{ mt: 5 }}>
+            <Grid item xs={11} sx={{ display: "flex" }}>
+              <Typography
+                variant="h1"
+                component="h5"
+                sx={{ fontSize: 30, fontWeight: 600 }}
+              >
                 {test.title}
+              </Typography>
+              <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 600 }}>
                 {!showInstruction ? (
                   <span style={{ marginLeft: "15px" }}>
                     ({currentQuestion + 1}/{testData.length})
@@ -359,7 +406,7 @@ const TakeTest = () => {
               </Typography>
             </Grid>
             {!showInstruction ? (
-              <Grid item xs={6} sx={{ textAlign: "right" }}>
+              <Grid item xs={1} sx={{ textAlign: "right" }}>
                 {TestsidebarVisible ? (
                   <TestSidebar
                     data={testData}
@@ -371,6 +418,30 @@ const TakeTest = () => {
             ) : (
               ""
             )}
+          </Grid>
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography
+                variant="h1"
+                component="h5"
+                sx={{ fontSize: 30, fontWeight: 600, display: "flex" }}
+              >
+                {!showInstruction &&
+                test.settings &&
+                test.settings.show_timer === "true" ? (
+                  <>
+                    <Timer
+                      durationInSeconds={
+                        test.settings && test.settings.test_duration
+                      }
+                      onTimerExpired={handleTimerExpired}
+                    />
+                  </>
+                ) : (
+                  ""
+                )}
+              </Typography>
+            </Grid>
           </Grid>
           <Grid container={true} sx={{ mt: 5 }}>
             {showInstruction && (
@@ -387,6 +458,7 @@ const TakeTest = () => {
                 </span>
                 <Grid item xs={12} sx={{ mt: 5 }}>
                   <Button
+                    className="custom-button"
                     variant="contained"
                     color="primary"
                     onClick={handleClickStart}
@@ -397,8 +469,11 @@ const TakeTest = () => {
                 </Grid>
               </form>
             )}
-            {showQuestions && (
-              <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+            {showQuestions && !timerExpired && (
+              <form
+                onSubmit={handleSubmit(onTestSubmit)}
+                style={{ width: "100%" }}
+              >
                 {testData[currentQuestion] && (
                   <h2>{ReactHtmlParser(testData[currentQuestion].question)}</h2>
                 )}
@@ -420,6 +495,7 @@ const TakeTest = () => {
                 >
                   {currentQuestion > 0 && (
                     <Button
+                      className="custom-button"
                       type="button"
                       variant="contained"
                       color="primary"
@@ -430,6 +506,7 @@ const TakeTest = () => {
                   )}
                   {currentQuestion < testData.length - 1 ? (
                     <Button
+                      className="custom-button"
                       type="button"
                       variant="contained"
                       color="primary"
@@ -441,7 +518,12 @@ const TakeTest = () => {
                   ) : (
                     ""
                   )}
-                  <Button variant="contained" color="success" type="submit">
+                  <Button
+                    className="custom-button"
+                    variant="contained"
+                    color="success"
+                    type="submit"
+                  >
                     Submit
                   </Button>
                 </Grid>
