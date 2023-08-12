@@ -5,6 +5,7 @@ import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import CreatePassword from "../pages/Auth/CreatePassword";
+import Notfound from "../pages/404"
 import Tests from "../pages/Tests/index";
 import CreateTest from "../pages/Tests/createTest";
 import EditTest from "../pages/Tests/editTest";
@@ -39,6 +40,9 @@ import Lesson from "../pages/Course/Lesson";
 import CreateLesson from "../pages/Course/Lesson/CreateLesson";
 import OrganizeLesson from "../pages/Course/Lesson/OrganizeLesson";
 import Test from "../pages/Course/Test";
+import Categories from "../pages/Tests/Categories"
+import AllCategoryTests from "../pages/Tests/Categories/AllCategoryTests"
+import LinkTestCategory from "../pages/Tests/Categories/LinkTestCategory"
 import AddTests from "../pages/Course/Test/AddTests";
 import CreateCourseTest from "../pages/Course/Test/CreateCourseTest";
 import Meetings from "../pages/Course/Meetings";
@@ -49,6 +53,7 @@ import EnrollUsers from "../pages/Course/Enrollments/EnrollUser";
 import Students from "../pages/Users/Students";
 import Settings from "../pages/Auth/Settings/Index";
 import RedirectLogic from "../components/Redirect/RedirectLogic";
+import MyAccount from "../../src/pages/MyAccount"
 
 
 const AppRouter = () => {
@@ -61,6 +66,7 @@ const AppRouter = () => {
         <Route path={"/auth/register"} element={<Register />} />
         <Route path={"/auth/forgot-password"} element={<ForgotPassword />} />
         <Route path={"/auth/create-password"} element={<CreatePassword />} />
+        <Route path={"/404"} element={<Notfound />} />
         <Route path={"/test/list"} element={<Tests />} />
         <Route path={"/test/create"} element={<CreateTest />} />
         <Route path={"/test/edit/:guid"} element={<EditTest />} />
@@ -80,6 +86,9 @@ const AppRouter = () => {
         <Route path={"/test/report/:guid"} element={<SubmissionReports />} />
         <Route path={"/test/submission-report/:guid"} element={<Report />} />
         <Route path={"/test/all-submissions/:guid"} element={<AllSubmissions />} />
+        <Route path={"/category/list"} element={<Categories />} />
+        <Route path={"/category/tests/:guid"} element={<AllCategoryTests />} />
+        <Route path={"/category/link-test/:guid"} element={<LinkTestCategory />} />
         <Route path={"/online-classes"} element={<OnlineClasses />} />
         <Route path={"/meeting/create"} element={<CreateMeeting />} />
         <Route path={"/meeting/edit/:meetingGuid"} element={<EditMeeting />} />
@@ -134,6 +143,7 @@ const AppRouter = () => {
         <Route path={"/course/:courseGuid/enroll"} element={<EnrollUsers />} />
         <Route path={"/user/students"} element={<Students />} />
         <Route path={"/auth/settings"} element={<Settings />} />
+        <Route path={"/my-account"} element={<MyAccount />} />
       </Routes>
     </Router>
   );

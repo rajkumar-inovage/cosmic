@@ -1,4 +1,4 @@
-//const Network = 'dev369';
-const Network = 'cosmic';
+const Network = 'dev369';
+//const Network = 'cosmic';
 
 export default  Network;

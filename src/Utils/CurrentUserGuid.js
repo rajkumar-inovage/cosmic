@@ -1,3 +1,3 @@
-const CurrentUser = 'UR2';
+const CurrentUser = 'UR7';
 
 export default  CurrentUser;

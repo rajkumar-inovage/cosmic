@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Card,
@@ -21,33 +20,40 @@ import {
   DialogContentText,
   Typography,
 } from "@mui/material";
+import FormTextField from "../../../components/Common/formTextField";
 import { Helmet } from "react-helmet";
+import { useForm } from "react-hook-form";
 import { serialize } from "object-to-formdata";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import SidebarLeft from "../../../components/Sidebar/SidebarLeft";
-import Course from "../../../assets/images/Course.jpg";
 import BASE_URL from "../../../Utils/baseUrl";
 import token from "../../../Utils/token";
 import Network from "../../../Utils/network";
+import CreatedBy from "../../../Utils/createdBy";
 import theme from "../../../configs/theme";
-import index from "../Lesson";
-import QuizIcon from "@mui/icons-material/Quiz";
+import CheckTokenValid from "../../../components/Redirect/CheckTokenValid";
 
 const options = [
   {
-    label: "Manage",
-    link: "/course/manage",
+    label: "All Test",
+    link: "/category/tests",
   },
   {
-    label: "Update",
-    link: "/course/update",
-  },
+    label: "Link Test",
+    link: "/category/link-test",
+  }
 ];
 
-const ITEM_HEIGHT = 48;
-
-const Test = () => {
-  const { courseGuid } = useParams();
+const Categories = () => {
+  // reactHook Form
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const [formData, setFormData] = useState({
+    title: "",
+  });
   const {
     primary: { main: primaryColor },
   } = theme.palette;
@@ -55,17 +61,18 @@ const Test = () => {
     success: { main: successColor },
   } = theme.palette;
   // State Manage
-  const [tests, setTests] = useState("");
+  const [allCatecories, setAllCatecories] = useState("");
   const [loading, setLoading] = useState(true);
   const [searchTitle, setSearchTitle] = useState("");
+
   // Authorization
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}`);
   myHeaders.append("Network", `${Network}`);
 
-  // Fetch Test list of this course
+  // Fetch Category list
   useEffect(() => {
-    const fetchTests = async () => {
+    const fetchItems = async () => {
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
@@ -73,37 +80,37 @@ const Test = () => {
       };
       try {
         const response = await fetch(
-          `${BASE_URL}/course/get_tests/${courseGuid}`,
+          `${BASE_URL}/tests/categories`,
           requestOptions
         );
         const result = await response.json();
-        setTests(result.payload.data);
+        setAllCatecories(result.payload);
         setLoading(false);
       } catch (error) {
         console.log("error", error);
         setLoading(false);
       }
     };
-    fetchTests();
+    fetchItems();
   }, []);
 
   // Search Users
-  const filteredTests =
-  tests &&
-  tests.filter((test) => {
-      const searchVal = `${test.title} ${test.details}`.toLowerCase();
+  const filteredItems =
+    allCatecories &&
+    allCatecories.filter((item) => {
+      const searchVal = `${item.title} ${item.category_id}`.toLowerCase();
       const searchValue = searchTitle.toLowerCase();
       return searchVal.includes(searchValue);
     });
 
   // Pagination here
   const [currentPage, setCurrentPage] = useState(1);
-  const [testPerPage] = useState(3);
-  const lastIndex = currentPage * testPerPage;
-  const firstIndex = lastIndex - testPerPage;
-  const currentTest = filteredTests.slice(firstIndex, lastIndex);
+  const [itemPerPage] = useState(10);
+  const lastIndex = currentPage * itemPerPage;
+  const firstIndex = lastIndex - itemPerPage;
+  const currentItems = filteredItems.slice(firstIndex, lastIndex);
   const totalPages = Math.ceil(
-    filteredTests && filteredTests.length / testPerPage
+    filteredItems && filteredItems.length / itemPerPage
   );
   const numbers = [...Array(totalPages + 1).keys()].slice(1);
 
@@ -123,21 +130,22 @@ const Test = () => {
 
   // Action Button
   const [anchorEl, setAnchorEl] = useState(null);
-  const [currentTestGuid, setcurrentTestGuid] = useState(null);
+  const [currentItemGuid, setCurrentItemGuid] = useState(null);
   const open = Boolean(anchorEl);
 
   const handleClick = (event, id) => {
     setAnchorEl(event.currentTarget);
-    setcurrentTestGuid(id);
+    setCurrentItemGuid(id);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  // Delete
+  // Actions
   const [alertOpen, setAlertOpen] = useState(null);
   const [isActionSuccess, setIsActionSuccess] = useState(null);
+  const [actionMessage, setActionMessage] = useState(null);
   const [actionConfirmOpen, setActionConfirmOpen] = useState(false);
   const handleConfirmOpen = () => {
     setActionConfirmOpen(true);
@@ -146,16 +154,19 @@ const Test = () => {
     setActionConfirmOpen(false);
   };
   // Delete function on submit
-  const handleBulkDeleteUser = async () => {
+  const handleBulkDelete = async () => {
     setActionConfirmOpen(false);
+    var formData = new FormData();
+    formData.append("categories[0]", currentItemGuid )
     const requestOptions = {
-      method: "DELETE",
+      method: "POST",
       headers: myHeaders,
+      body: formData,
       redirect: "follow",
     };
     try {
       const res = await fetch(
-        `${BASE_URL}/course/delete/${currentTestGuid}`,
+        `${BASE_URL}/tests/delete_categories`,
         requestOptions
       );
       const result = await res.json();
@@ -177,58 +188,169 @@ const Test = () => {
       throw new Error(`Failed to post status: ${error.message}`);
     }
   };
+
+  // Create popup open
+  const [itemCreate, setItemCreate] = useState("");
+  const handleCreate = () => {
+    setActionConfirmOpen(true);
+    setItemCreate("create");
+  };
+
+  //  Create Category submit action
+  const handleCreateCategory = async (data) => {
+    const formData = serialize(data);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formData,
+      redirect: "follow",
+    };
+    try {
+      const response = await fetch(
+        `${BASE_URL}/tests/create_category`,
+        requestOptions
+      );
+      const result = await response.json();
+      setAlertOpen(true);
+      if (result.success === true) {
+        const newCategory = {
+          category_id: result.payload.category_id,
+          title: data.title,
+          created_by: CreatedBy,
+          // Add any other properties you want
+        };
+
+        setAllCatecories([...allCatecories, newCategory]);
+        setActionMessage("Category created successfully.");
+        setActionConfirmOpen(false);
+        setIsActionSuccess(true);
+        setTimeout(() => {
+          setAlertOpen(false);
+        }, 3000);
+      } else {
+        setIsActionSuccess(false);
+        setActionMessage(result.message.title);
+        setTimeout(() => {
+          setAlertOpen(false);
+        }, 3000);
+      }
+    } catch (error) {
+      setIsActionSuccess(false);
+    }
+  };
   return (
     <>
+      <CheckTokenValid />
       <Helmet>
-        <title>All Test</title>
+        <title>All Categories</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
         <SidebarLeft />
-        <Dialog
-          open={actionConfirmOpen}
-          onClose={actionConfirmClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Are you sure you want to delete this course?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={actionConfirmClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleBulkDeleteUser} color="primary" autoFocus>
-              Confirm
-            </Button>
-          </DialogActions>
-        </Dialog>
+        {itemCreate === "create" ? (
+          <Dialog
+            open={actionConfirmOpen}
+            onClose={actionConfirmClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            fullWidth
+            sx={{ maxWidth: "600px", margin: "0px auto" }}
+          >
+            <DialogTitle id="alert-dialog-title" sx={{ pb: 0 }}>
+              Create Category
+            </DialogTitle>
+            <DialogContent>
+              <form onSubmit={handleSubmit(handleCreateCategory)}>
+                <Grid container spacing={2} sx={{ mt: 2 }}>
+                  <Grid item xs={12} sx={{ mb: 2 }}>
+                    <FormTextField
+                      control={control}
+                      label="Title"
+                      variant="outlined"
+                      name="title"
+                      pattern="[A-Za-z]{1,}"
+                      required
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
+                <DialogActions
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Button
+                    onClick={actionConfirmClose}
+                    color="primary"
+                    variant="outlined"
+                    className="custom-button"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    color="primary"
+                    variant="contained"
+                    className="custom-button"
+                  >
+                    Create
+                  </Button>
+                </DialogActions>
+              </form>
+            </DialogContent>
+          </Dialog>
+        ) : (
+          <Dialog
+            open={actionConfirmOpen}
+            onClose={actionConfirmClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Are you sure you want to delete this category?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={actionConfirmClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleBulkDelete} color="primary" autoFocus>
+                Confirm
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
+
         <Snackbar
           open={alertOpen}
           autoHideDuration={3000}
           onClose={() => setIsActionSuccess(false)}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
-          <Alert severity={isActionSuccess === true ? "success" : "warning"}>
-            {isActionSuccess === true
-              ? "Course Deleted Successfully"
-              : "Course not deleted."}
-          </Alert>
+          {itemCreate && itemCreate === "create" ? (
+            <Alert severity={isActionSuccess === true ? "success" : "warning"}>
+              {actionMessage}
+            </Alert>
+          ) : (
+            <Alert severity={isActionSuccess === true ? "success" : "warning"}>
+              {isActionSuccess === true
+                ? "Category Deleted Successfully"
+                : "Category not deleted."}
+            </Alert>
+          )}
         </Snackbar>
+
         <Box sx={{ flexGrow: 1, p: 3, mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <h1>All Test</h1>
+              <h1>All Categories</h1>
             </Grid>
             <Grid item xs={6} sx={{ display: "flex", justifyContent: "right" }}>
               <Button
-                component={Link}
-                href={`/course/create/`}
+                className="custom-button"
                 variant="contained"
+                onClick={handleCreate}
               >
-                Add Course
+                Create New
               </Button>
             </Grid>
           </Grid>
@@ -236,13 +358,13 @@ const Test = () => {
             <Box sx={{ textAlign: "center", mt: 5 }}>
               <CircularProgress />
             </Box>
-          ) : tests && tests.length !== 0 ? (
+          ) : allCatecories && allCatecories.length !== 0 ? (
             <>
               <Grid container spacing={2} sx={{ mt: 3 }}>
                 <Grid item xs={12} md={4}>
                   <TextField
-                    label="Search by title and description"
-                    placeholder="Search by title"
+                    label="Search by title and ID"
+                    placeholder="Search by title and ID"
                     value={searchTitle}
                     onChange={(e) => setSearchTitle(e.target.value)}
                     sx={{ width: "100%" }}
@@ -256,10 +378,10 @@ const Test = () => {
                 className="manage-course"
               >
                 <Grid item xs={12}>
-                  {currentTest && currentTest.length !== 0 ? (
+                  {currentItems && currentItems.length !== 0 ? (
                     <Card>
-                      {currentTest &&
-                        currentTest.map((course, index) => (
+                      {currentItems &&
+                        currentItems.map((item, index) => (
                           <Box sx={{ px: 3 }} key={index}>
                             <Grid
                               container
@@ -279,8 +401,30 @@ const Test = () => {
                                   justifyContent: { xs: "space-between" },
                                 }}
                               >
-                                <Box className="course-image">
-                                  <QuizIcon />
+                                <Box
+                                  className="course-title"
+                                  sx={{ display: "flex", alignItems: "center" }}
+                                >
+                                  {index + 1 + (currentPage - 1) * itemPerPage}-
+                                  <Typography
+                                    component="h3"
+                                    variant="h6"
+                                    sx={{
+                                      ml: 1,
+                                      fontWeight: "500",
+                                      display: { xs: "block", md: "none" },
+                                    }}
+                                  >
+                                    <Link
+                                      href={`/category/tests/${item.guid}`}
+                                      sx={{
+                                        textDecoration: "none",
+                                        color: "inherit",
+                                      }}
+                                    >
+                                      {item.title}
+                                    </Link>
+                                  </Typography>
                                 </Box>
                                 <Grid
                                   item
@@ -295,13 +439,17 @@ const Test = () => {
                                     aria-expanded={open ? "true" : undefined}
                                     aria-haspopup="true"
                                     onClick={(event) =>
-                                      handleClick(event, course.guid)
+                                      handleClick(event, item.guid)
                                     }
                                     className="no-pd"
                                   >
                                     <MoreVertOutlinedIcon />
                                   </IconButton>
                                   <Menu
+                                    sx={{
+                                      boxShadow:
+                                        "0px 0px 7px -5px rgba(0,0,0,0.1)",
+                                    }}
                                     id="long-menu1"
                                     MenuListProps={{
                                       "aria-labelledby": "long-button1",
@@ -309,15 +457,9 @@ const Test = () => {
                                     anchorEl={anchorEl}
                                     open={open}
                                     onClose={handleClose}
-                                    PaperProps={{
-                                      style: {
-                                        maxHeight: ITEM_HEIGHT * 4.5,
-                                        width: "20ch",
-                                      },
-                                    }}
                                   >
                                     {options.map((option, index) => {
-                                      const linkUrl = `${option.link}/${currentTestGuid}`;
+                                      const linkUrl = `${option.link}/${currentItemGuid}`;
                                       return (
                                         <MenuItem
                                           key={index}
@@ -343,23 +485,30 @@ const Test = () => {
                                 </Grid>
                               </Grid>
                               <Grid item xs={12} md={4.5}>
-                                <h3>
+                                <Typography
+                                  component="h3"
+                                  variant="h6"
+                                  sx={{
+                                    fontWeight: "500",
+                                    display: { xs: "none", md: "block" },
+                                  }}
+                                >
                                   <Link
-                                    href={`/course/manage/${course.guid}`}
+                                    href={`/category/tests/${item.guid}`}
                                     sx={{
                                       textDecoration: "none",
                                       color: "inherit",
                                     }}
                                   >
-                                    {course.title}
+                                    {item.title}
                                   </Link>
-                                </h3>
+                                </Typography>
                               </Grid>
                               <Grid item xs={12} md={3}>
-                                <h4>{course.created_by}</h4>
+                                <h4>{item.created_by}</h4>
                               </Grid>
                               <Grid item xs={12} md={2}>
-                                {course.status === "0" ? (
+                                {item.status === "0" ? (
                                   <Typography
                                     variant="span"
                                     component="span"
@@ -367,7 +516,7 @@ const Test = () => {
                                   >
                                     Unpublished
                                   </Typography>
-                                ) : course.status === "1" ? (
+                                ) : item.status === "1" ? (
                                   <Typography
                                     variant="span"
                                     component="span"
@@ -398,14 +547,13 @@ const Test = () => {
                                     }
                                     aria-expanded={open ? "true" : undefined}
                                     aria-haspopup="true"
-                                    onClick={(event) =>
-                                      handleClick(event, course.guid)
-                                    }
+                                    onClick={(event) => handleClick(event, item.guid)}
                                     className="no-pd"
                                   >
                                     <MoreVertOutlinedIcon />
                                   </IconButton>
                                   <Menu
+                                    className="demo"
                                     id="long-menu"
                                     MenuListProps={{
                                       "aria-labelledby": "long-button",
@@ -413,15 +561,9 @@ const Test = () => {
                                     anchorEl={anchorEl}
                                     open={open}
                                     onClose={handleClose}
-                                    PaperProps={{
-                                      style: {
-                                        maxHeight: ITEM_HEIGHT * 4.5,
-                                        width: "20ch",
-                                      },
-                                    }}
                                   >
                                     {options.map((option, index) => {
-                                      const linkUrl = `${option.link}/${currentTestGuid}`;
+                                      const linkUrl = `${option.link}/${currentItemGuid}`;
                                       return (
                                         <MenuItem
                                           key={index}
@@ -452,7 +594,7 @@ const Test = () => {
                     </Card>
                   ) : (
                     <Alert sx={{ mt: 5 }} severity="error">
-                      Test not found!
+                      Category not found!
                     </Alert>
                   )}
                 </Grid>
@@ -463,7 +605,7 @@ const Test = () => {
                 sx={{ mt: 5, justifyContent: "center" }}
               >
                 <Grid item>
-                  {filteredTests && filteredTests.length > testPerPage ? (
+                  {filteredItems && filteredItems.length > itemPerPage ? (
                     <Grid container spacing={2}>
                       <Grid
                         item
@@ -515,7 +657,7 @@ const Test = () => {
             </>
           ) : (
             <Alert sx={{ mt: 5 }} severity="error">
-              Course not found!
+              Category not found!
             </Alert>
           )}
         </Box>
@@ -524,4 +666,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default Categories;
