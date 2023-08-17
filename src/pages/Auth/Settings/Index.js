@@ -1,36 +1,31 @@
 import React from "react";
 import {
   Box,
+  Card,
   Typography,
   Grid,
   Button,
   Link,
+  Tab,
+  InputLabel,
+  Divider,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import BASE_URL from "../../../Utils/baseUrl";
-import token from "../../../Utils/token";
-import Network from "../../../Utils/network";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 import { Helmet } from "react-helmet";
 import SidebarLeft from "../../../components/Sidebar/SidebarLeft";
+import CommonSettings from "./CommonSettings";
+import RegistrationSettings from "./RegistrationSettings"
+import ThemeSettings from "./ThemeSettings"
 
 const Index = () => {
-  const {
-    control,
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-  const navigate = useNavigate();
-  // Authorization
-  const myHeaders = new Headers();
-  myHeaders.append("Authorization", `Bearer ${token}`);
-  myHeaders.append("Network", `${Network}`);
 
- 
+  const [tabValue, setTabValue] = React.useState("1");
+  const handleChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
-  
   return (
     <>
       <Helmet>
@@ -53,9 +48,49 @@ const Index = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid container spacing={2} sx={{ mt: 3 }}>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12}>
-             Setting body
+              <Box sx={{ width: "100%", typography: "body1" }}>
+                <TabContext value={tabValue}>
+                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <TabList
+                      onChange={handleChange}
+                      aria-label="lab API tabs example"
+                    >
+                      <Tab label="Theme" value="1" />
+                      <Tab label="Authentication" value="2" />
+                    </TabList>
+                  </Box>
+                  <TabPanel value="1">
+                    <Box>
+                      <InputLabel>Change accent color</InputLabel>
+                      <ThemeSettings />
+                    </Box>
+                  </TabPanel>
+                  <TabPanel value="2" sx={{ p: 0 }}>
+                    <Grid container spacing={2} sx={{ p: 0, mt: 2 }}>
+                      <Grid item xs={12} md={6}>
+                        <Card sx={{ p: 3 }}>
+                          <Typography component="h6" variant="h5">
+                            Common Settings
+                          </Typography>
+                          <Divider />
+                          <CommonSettings/>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Card sx={{ p: 3 }}>
+                          <Typography component="h6" variant="h5">
+                            Registration Fields
+                          </Typography>
+                          <Divider />
+                          <RegistrationSettings/>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </TabPanel>
+                </TabContext>
+              </Box>
             </Grid>
           </Grid>
         </Box>

@@ -54,7 +54,8 @@ const CreateUser = () => {
   // Phone Number
   const [value, setValue] = React.useState("");
   const handleChangePhone = (newValue) => {
-    setValue(newValue);
+    const cleanedValue = newValue.replace(/\s/g, '');
+    setValue(cleanedValue);
   };
   //
   const navigate = useNavigate();
@@ -79,18 +80,20 @@ const CreateUser = () => {
 
     fetchLocation();
   }, []);
+  
 
   const [emailError, setEmailError] = useState(null);
   const [MobileError, setMobileError] = useState(null);
   const handleFormSubmit = async (data) => {
     const formData = serialize(data);
+    const cleanedPhoneNumber = value.replace(/[+\s]/g, '');
+    formData.append('mobile', cleanedPhoneNumber);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: formData,
       redirect: "follow",
     };
-
     try {
       const response = await fetch(`${BASE_URL}/users/add`, requestOptions);
       const result = await response.json();
@@ -155,10 +158,8 @@ const CreateUser = () => {
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
-              <Button variant="contained">
-                <Link href="/user/list" color="inherit" underline="none">
+              <Button variant="contained" component={Link} href="/user/list" className="custom-button">
                   Cancel
-                </Link>
               </Button>
             </Grid>
           </Grid>
@@ -261,7 +262,7 @@ const CreateUser = () => {
                         fullWidth
                         label="Mobile No"
                         defaultCountry={countryCode}
-                        {...register("mobile", { required: true })}
+                        required
                         helperText={
                           errors.mobile && "Mobile number is required"
                         }
