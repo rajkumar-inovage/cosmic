@@ -88,10 +88,16 @@ const OnlineClasses = () => {
         setCurrentPage(currentPage + 1);
       }
     }
+    // function extractUrlFromHtml(htmlContent) {
+    //   const urlPattern = /https?:\/\/\S+(?=<\/p>)/; // Match URL until </p>
+    //   const match = htmlContent.match(urlPattern);
+    //   return match ? match[0] : "";
+    // }
+  
     function extractUrlFromHtml(htmlContent) {
-      const urlPattern = /https?:\/\/\S+(?=<\/p>)/; // Match URL until </p>
-      const match = htmlContent.match(urlPattern);
-      return match ? match[0] : "";
+      const urlPattern = /https?:\/\/[^\s<]+/g; // Match all URLs in the text
+      const matches = htmlContent.match(urlPattern);
+      return matches || [];
     }
   return (
     <>
@@ -137,8 +143,9 @@ const OnlineClasses = () => {
                     {currentMeeting &&
                       currentMeeting.map((item, index) => {
                         const extractedUrl = extractUrlFromHtml(item.details);
+                        console.log(extractedUrl)
                         return (
-                          <ZoomMeeting key={index} item={item} extractedUrl={extractedUrl} />
+                          <ZoomMeeting key={index} item={item} extractedUrl={extractedUrl[0]} />
                         )
                           
                       })}
