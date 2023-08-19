@@ -95,8 +95,10 @@ const OnlineClasses = () => {
     // }
   
     function extractUrlFromHtml(htmlContent) {
+      // Remove HTML anchor tags and then extract URLs
+      const cleanedHtml = htmlContent.replace(/<a\b[^>]*>(.*?)<\/a>/gi, '$1');
       const urlPattern = /https?:\/\/[^\s<]+/g; // Match all URLs in the text
-      const matches = htmlContent.match(urlPattern);
+      const matches = cleanedHtml.match(urlPattern);
       return matches || [];
     }
   return (

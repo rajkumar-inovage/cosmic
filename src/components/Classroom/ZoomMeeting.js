@@ -32,16 +32,6 @@ import Network from "../../Utils/network";
 //   }
 // };
 
-function extractHrefFromString(str) {
-  const regex = /<p>(https?:\/\/[^\s]+)<\/p>/g; // Regex pattern to match URLs
-  const matches = str.match(regex); // Find all matches in the string
-
-  if (matches && matches.length > 0) {
-    return matches[0]; // Return the first match (the URL)
-  }
-
-  return null; // Return null if no match found
-}
 
 const ZoomMeeting = ({ item, extractedUrl }) => {
   // Configuration
