@@ -23,15 +23,6 @@ import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
 
-// const extractHrefValue = (htmlString) => {
-//   const parser = new DOMParser();
-//   const doc = parser.parseFromString(htmlString, "text/html");
-//   const linkElement = doc.querySelector("a");
-//   if (linkElement) {
-//     return linkElement.getAttribute("href");
-//   }
-// };
-
 
 const ZoomMeeting = ({ item, extractedUrl }) => {
   // Configuration

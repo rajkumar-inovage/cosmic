@@ -88,11 +88,6 @@ const OnlineClasses = () => {
         setCurrentPage(currentPage + 1);
       }
     }
-    // function extractUrlFromHtml(htmlContent) {
-    //   const urlPattern = /https?:\/\/\S+(?=<\/p>)/; // Match URL until </p>
-    //   const match = htmlContent.match(urlPattern);
-    //   return match ? match[0] : "";
-    // }
   
     function extractUrlFromHtml(htmlContent) {
       // Remove HTML anchor tags and then extract URLs
@@ -145,7 +140,6 @@ const OnlineClasses = () => {
                     {currentMeeting &&
                       currentMeeting.map((item, index) => {
                         const extractedUrl = extractUrlFromHtml(item.details);
-                        console.log(extractedUrl)
                         return (
                           <ZoomMeeting key={index} item={item} extractedUrl={extractedUrl[0]} />
                         )
