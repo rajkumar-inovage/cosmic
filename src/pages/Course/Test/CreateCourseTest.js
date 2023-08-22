@@ -19,16 +19,15 @@ import { useForm, Controller } from "react-hook-form";
 import BASE_URL from "../../../Utils/baseUrl";
 import token from "../../../Utils/token";
 import Network from "../../../Utils/network";
+import CreatedBy from "../../../Utils/createdBy";
 import FormTextField from "../../../components/Common/formTextField";
 import FormEditorField from "../../../components/Common/formEditorField";
 import SidebarLeft from "../../../components/Sidebar/SidebarLeft";
-import CurrentUser from "../../../Utils/CurrentUserGuid";
 
 // Date Time picker
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
-import CreatedBy from "../../../Utils/createdBy";
 
 const CreateCourseTest = () => {
   const { courseGuid } = useParams();
@@ -48,7 +47,7 @@ const CreateCourseTest = () => {
       type: "evaluated",
       start_date: "",
       end_date: "",
-      created_by: CurrentUser,
+      created_by: CreatedBy,
     },
   });
 
@@ -92,7 +91,7 @@ const CreateCourseTest = () => {
           const newTestID = result.payload.test_guid;
           setTestGuid(newTestID);
           setAlertOpen(false);
-          navigate(`/test/add-question/${newTestID}?mt=${courseGuid}`);
+          navigate(`/course/test/add-question/${newTestID}?mt=${courseGuid}`);
         }, 3000);
       } else {
         setErrorValue(result.message.end_date || result.message.start_date || result.message.title || result.message.type || result.message.details || result.message.created_by)
@@ -216,7 +215,6 @@ const CreateCourseTest = () => {
                   <Grid item xs={12} md={6} sx={{ mt: 2 }}>
                     <LocalizationProvider
                       dateAdapter={AdapterDayjs}
-                      className="demo  "
                     >
                       <Controller
                         name="end_date"

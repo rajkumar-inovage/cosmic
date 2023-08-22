@@ -121,14 +121,8 @@ const TestSetting = () => {
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
-              <Button variant="contained">
-                <Link
-                  href={`/test/manage/${guid}`}
-                  color="inherit"
-                  underline="none"
-                >
+              <Button className="custom-button" variant="contained" component={Link} href={`/test/manage/${guid}`}>
                   Cancel
-                </Link>
               </Button>
             </Grid>
           </Grid>
@@ -372,7 +366,7 @@ const TestSetting = () => {
                           />
                         </Grid>
                       </Grid>
-                      <Button variant="contained" type="submit">
+                      <Button variant="outlined" type="submit" className="custom-button">
                         Save Setting
                       </Button>
                     </form>

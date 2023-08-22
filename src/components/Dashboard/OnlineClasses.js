@@ -92,7 +92,7 @@ const OnlineClasses = () => {
           <Button
             className="custom-button"
             component={Link}
-            href={"/meeting/create"}
+            href={"/class/create"}
             variant="contained"
           >
             Add Online Class
@@ -108,8 +108,8 @@ const OnlineClasses = () => {
           ) : classes && classes.data.length !== 0 ? (
             classes &&
             classes.data.slice(0, 5).map((item, index) => {
-              const title = item.details.split(" ");
-              const truncatedTitle = title.slice(0, 5).join(" ");
+              const title = item.title.split(" ");
+              //const truncatedTitle = title.slice(0, 10).join(" ");
               const extractedUrl = extractUrlFromHtml(item.details);
               const exactUrl = ReactHtmlParser(extractedUrl);
               return (
@@ -118,34 +118,35 @@ const OnlineClasses = () => {
                   container
                   sx={{
                     borderBottom: "1px solid #B8B8B8",
-                    pb: 1,
+                    pb: 1.7,
                     pt: 0.5,
                     alignItems: "center",
                     justifyContent: "space-between",
-                    mt: 1.5,
+                    mt: 1.5
                   }}
                 >
                   <Box
                     sx={{
                       display: "flex",
                       alignItems: "baseline",
-                      justifyContent: "flex-start",
+                      justifyContent: "space-between",
                     }}
                   >
                     <Typography component="h3" variant="strong" sx={{display:"flex", alignItems:"baseline"}}>
                       Title:
-                      <span style={{ color: "#888888" }}>
+                      <span style={{ color: "#888888",paddingLeft:"5px" }}>
                         {" "}
-                        {ReactHtmlParser(truncatedTitle)}...
+                        {ReactHtmlParser(title)}
                       </span>
                     </Typography>
                     <HtmlTooltip
+                      className="dashboard-tooltip"
                       title={
                         <React.Fragment>
                           <Typography color="inherit">Details</Typography>
-                          <b>{"Meeting ID:"}</b> <em>{item.guid}</em>
+                          <b>{"Class ID:"}</b> <em>{item.guid}</em>
                           <br />
-                          <b>{"Meeting Details:"}</b> <em>{item.details}</em>
+                          <b>{"Class Details:"}</b> <em>{ReactHtmlParser(item.details)}</em>
                           <br />
                           <b>{"Created On:"}</b> <em>{item.created_on}</em>
                         </React.Fragment>
@@ -157,14 +158,14 @@ const OnlineClasses = () => {
                       />
                     </HtmlTooltip>
                   </Box>
-                  <Box sx={{display:"block", width:"100%"}}>
+                  <Box sx={{display:"block"}}>
                   <Button
                     sx={{ display: "inline-block" }}
                     variant="outlined"
                     component={Link}
                     href={extractedUrl}
                     target="_blank"
-                    rel="noopener noreferrer"
+                      rel="noopener noreferrer"
                   >
                     Start
                   </Button>

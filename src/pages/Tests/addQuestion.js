@@ -232,20 +232,12 @@ const AddQuestion = () => {
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
               {mtValue ? (
-                <Button variant="contained">
-                  <Link
-                    href={`/course/${mtValue}/test/list`}
-                    color="inherit"
-                    underline="none"
-                  >
-                    Cancel
-                  </Link>
+                <Button variant="contained" component={Link} className="custom-button" href={`/course/${mtValue}/test/list`}>
+                   Back
                 </Button>
               ) : (
-                <Button variant="contained">
-                  <Link href="/test/list" color="inherit" underline="none">
-                    Cancel
-                  </Link>
+                <Button variant="contained" component={Link} className="custom-button" href="/test/list">
+                    Back
                 </Button>
               )}
             </Grid>

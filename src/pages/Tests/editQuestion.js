@@ -57,7 +57,7 @@ const EditQuestion = () => {
   const params = new URLSearchParams(location.search);
   const mtValue = params.get("mt");
   const { guid } = useParams();
-  const [options, setOptions] = useState(["Choice1", "Choice2"]);
+  const { qid } = useParams();
   const {
     handleSubmit,
     control,
@@ -93,20 +93,65 @@ const EditQuestion = () => {
       },
       userfile: undefined,
       question: "",
-      question_type: "mcmc",
-      // correct_answer: [],
-      // choice: [],
-      // order: [],
+      question_type: "",
       feedback: "",
       answer_feedback: "",
       created_by: CreatedBy,
-      parent_id: undefined,
-      marks: "1",
-      neg_marks: "0",
-      time: "0",
     },
   });
-  const { question_type, parent_id, choice, userfile } = watch();
+  const { question_type, parent_id, choice, correct_answer, userfile } =
+    watch();
+
+  // Get current question
+  const [currentQuestion, setCurrentQuestion] = useState("");
+  useEffect(() => {
+    var requestOption = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    const fetchQuestion = async () => {
+      const res = await fetch(
+        `${BASE_URL}/tests/get_question/${qid}/1`,
+        requestOption
+      );
+      const questions = await res.json();
+      //console.log(testresult)
+      setCurrentQuestion(questions.payload);
+      reset(questions.payload);
+    };
+    fetchQuestion();
+  }, []);
+
+  useEffect(() => {
+    // Assuming fetchedData contains your fetched data
+    if (currentQuestion) {
+      // Set values for individual fields
+      setValue("question", currentQuestion.question);
+      setValue("question_type", currentQuestion.question_type);
+      setValue("marks", currentQuestion.marks);
+      setValue("neg_marks", currentQuestion.neg_marks);
+      setValue("time", currentQuestion.time);
+
+      // Set values for choice fields (assuming you have multiple choice questions)
+      if (currentQuestion && currentQuestion.choices) {
+        currentQuestion.choices.forEach((choice, index) => {
+          setValue(`choice[${index}]`, choice.choice);
+          setValue(`correct_answer[${index}]`, choice.correct_answer);
+        });
+      }
+    }
+  }, [currentQuestion, setValue]);
+  //const [options, setOptions] = useState(["Choice1", "Choice2"]);
+  const [options, setOptions] = useState([]);
+  useEffect(() => {
+    setOptions(
+      Array.from(
+        { length: choice && choice.length },
+        (_, index) => `Choice${index + 1}`
+      )
+    );
+  }, [choice]);
 
   // Upload file in question
   const [file, setFile] = useState(null);
@@ -178,48 +223,27 @@ const EditQuestion = () => {
     } else {
       try {
         const response = await fetch(
-          `${BASE_URL}/tests/create_question/${guid}`,
+          `${BASE_URL}/tests/create_question/${guid}/${qid}`,
           requestOptions
         );
         const result = await response.json();
         setIsTestCreated(true);
         setTimeout(() => {
           setIsTestCreated(false);
-          window.location.reload();
+          //window.location.reload();
         }, 1000);
         reset();
       } catch (error) {
         setIsTestCreated(false);
       }
     }
-    // const formData = serialize(data);
-    // console.log(formData);
   };
 
-  // Get parent question
-  var requestOption = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow",
-  };
-  const [parentQues, setPatentQues] = useState("");
-  useEffect(() => {
-    const fetchQuestion = async () => {
-      const res = await fetch(
-        `${BASE_URL}/tests/preview/${guid}/1`,
-        requestOption
-      );
-      const questions = await res.json();
-      //console.log(testresult)
-      setPatentQues(questions.payload);
-    };
-    fetchQuestion();
-  }, []);
   const filename = watch("userfile");
   return (
     <>
       <Helmet>
-        <title>Add Question</title>
+        <title>Edit Question</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
         <SidebarLeft />
@@ -227,25 +251,17 @@ const EditQuestion = () => {
           <Grid container spacing={2} sx={{ mt: 3 }}>
             <Grid item xs={6}>
               <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 600 }}>
-                Add Question
+                Edit Question
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
               {mtValue ? (
-                <Button variant="contained">
-                  <Link
-                    href={`/course/${mtValue}/test/list`}
-                    color="inherit"
-                    underline="none"
-                  >
+                <Button variant="contained" component={Link} href={`/course/${mtValue}/test/list`} className="custom-button">
                     Cancel
-                  </Link>
                 </Button>
               ) : (
-                <Button variant="contained">
-                  <Link href="/test/list" color="inherit" underline="none">
-                    Cancel
-                  </Link>
+                <Button variant="contained" component={Link} href="/test/list" className="custom-button">
+                  Cancel
                 </Button>
               )}
             </Grid>
@@ -403,80 +419,68 @@ const EditQuestion = () => {
                               Multi Choice Question
                             </Typography>
                             <FormGroup>
-                              {options.map((option, index) => (
-                                <div key={index}>
-                                  <input
-                                    type="hidden"
-                                    name={`order[${index}]`}
-                                    value={`order[${index}]`}
-                                  />
-                                  <Controller
-                                    control={control}
-                                    name={`correct_answer[${index}]`}
-                                    render={({ field }) => (
-                                      <FormControlLabel
-                                        control={
-                                          <Checkbox
-                                            name={`correct_answer[${index}]`}
-                                            control={control}
-                                            onChange={({
-                                              target: { checked },
-                                            }) => {
-                                              setValue(
-                                                `correct_answer[${index}]`,
-                                                checked ? "1" : "0"
-                                              );
-                                            }}
-                                            className="option-label"
-                                            value={option}
-                                          />
-                                        }
-                                        label={option}
-                                      />
-                                    )}
-                                  />
-                                  {/* <FormControlLabel
-                                    control={
-                                      <Checkbox
-                                        name={`correct_answer[${index}]`}
-                                        control={control}
-                                        onChange={({ target: { checked } }) => {
-                                          setValue(
-                                            `correct_answer[${index}]`,
-                                            checked ? "1" : "0"
-                                          );
-                                        }}
-                                        className="option-label"
-                                        value={option}
-                                      />
-                                    }
-                                    label={option}
-                                  /> */}
-                                  {/* <Button
-                                    sx={{ marginTop: "-10px" }}
-                                    onClick={() => handleDeleteOption(option)}
-                                  >
-                                    <DeleteIcon />
-                                  </Button> */}
-
-                                  <StyledFormControl sx={{ width: "100%" }}>
-                                    <Editor
-                                      control
-                                      name={`choice[${index}]`}
-                                      pattern="[A-Za-z]{1,}"
-                                      init={{
-                                        height: 250,
-                                      }}
-                                      onEditorChange={(content, editor) => {
-                                        setValue(`choice[${index}]`, content);
-                                      }}
+                              {options &&
+                                options.map((option, index) => (
+                                  <div key={index}>
+                                    {/* Your choice input fields go here */}
+                                    <input
+                                      type="hidden"
+                                      name={`order[${index}]`}
+                                      value={`order[${index}]`}
                                     />
-                                  </StyledFormControl>
-                                  <FormHelperText error={Boolean(errorcheck)}>
-                                    {errorcheck}
-                                  </FormHelperText>
-                                </div>
-                              ))}
+                                    <Controller
+                                      control={control}
+                                      name={`correct_answer[${index}]`}
+                                      render={({ field }) => (
+                                        <FormControlLabel
+                                          control={
+                                            <Checkbox
+                                              name={`correct_answer[${index}]`}
+                                              control={control}
+                                              onChange={({
+                                                target: { checked },
+                                              }) => {
+                                                setValue(
+                                                  `correct_answer[${index}]`,
+                                                  checked ? "1" : "0"
+                                                );
+                                              }}
+                                              className="option-label"
+                                              checked={
+                                                correct_answer &&
+                                                correct_answer[`${index}`] ===
+                                                  "1"
+                                                  ? true
+                                                  : false
+                                              }
+                                              // Check the correct_answer value for each option
+                                              value={option}
+                                            />
+                                          }
+                                          label={option}
+                                        />
+                                      )}
+                                    />
+                                    <StyledFormControl sx={{ width: "100%" }}>
+                                      <Editor
+                                        control
+                                        name={`choice[${index}]`}
+                                        pattern="[A-Za-z]{1,}"
+                                        init={{
+                                          height: 250,
+                                        }}
+                                        value={choice && choice[`${index}`]}
+                                        onEditorChange={(content, editor) => {
+                                          setValue(`choice[${index}]`, content);
+                                        }}
+                                      />
+                                    </StyledFormControl>
+                                    <FormHelperText error={Boolean(errorcheck)}>
+                                      {errorcheck}
+                                    </FormHelperText>
+                                  </div>
+                                ))}
+
                               <Button
                                 variant="outlined"
                                 sx={{ width: "150px" }}
@@ -495,6 +499,7 @@ const EditQuestion = () => {
                               label="Search"
                               name="parent_id"
                               value={parent_id}
+                              autoFocus
                               onChange={handleSearchChange}
                             />
                             {/* <TextField
@@ -621,8 +626,8 @@ const EditQuestion = () => {
                         ""
                       )}
 
-                      <Button variant="contained" type="submit">
-                        Save Question
+                      <Button variant="contained" type="submit" className="custom-button">
+                        Update Question
                       </Button>
                     </form>
                   </Grid>

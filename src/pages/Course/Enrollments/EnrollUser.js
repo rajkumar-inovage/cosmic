@@ -266,10 +266,8 @@ const EnrollUsers = () => {
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
-              <Button variant="contained" className="custom-button">
-                <Link href={`/course/${courseGuid}/enrolled-users`} color="inherit" underline="none">
+              <Button variant="contained" className="custom-button" component={Link} href={`/course/${courseGuid}/enrolled-users`}>
                   Back
-                </Link>
               </Button>
             </Grid>
           </Grid>
@@ -302,8 +300,15 @@ const EnrollUsers = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Grid item xs={6} sx={{ ml: 2, fontSize: "18px" }}>
-                        <Checkbox
+                      <Grid item xs={6} sx={{fontSize: "18px" }}>
+                          <ButtonGroup
+                          disableElevation
+                          variant="contained"
+                          aria-label="Disabled elevation buttons"
+                        >
+                          <Button variant="outlined">
+                              <Checkbox
+                                sx={{padding:"0"}}
                           checked={selectAll}
                           onChange={handleSelectAllUsers}
                           indeterminate={
@@ -311,10 +316,14 @@ const EnrollUsers = () => {
                             selectedUsers.length < filteredUsers.length
                           }
                         />
-                        Select All
+                          </Button>
+                          <Button onClick={handleBulkConfirmOpen}>
+                            Enroll User
+                          </Button>
+                        </ButtonGroup>
                       </Grid>
                       <Grid item xs={2}>
-                        <FormControl sx={{ width: "100%" }}>
+                        <FormControl sx={{ width: "100%", display:"none" }}>
                           <InputLabel id="type-select-label">Action</InputLabel>
                           <Controller
                             name="role"

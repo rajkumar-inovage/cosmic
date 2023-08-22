@@ -67,7 +67,10 @@ const ManageTest = () => {
   var myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}`);
   myHeaders.append("Network", `${Network}`);
+
   // Get current test details
+  const [alertOpen, setAlertOpen] = useState(null)
+  const [alertValue, setAlertValue] = useState(null)
   const [test, setTest] = useState([]);
   const [testStatus, setTestStatus] = useState("0");
   useEffect(() => {
@@ -145,8 +148,10 @@ const ManageTest = () => {
       );
       const statusResult = await res.json();
       //console.log(statusResult);
+      setAlertOpen(true)
       if (statusResult.success === true) {
         setTestDeleted(statusResult.success);
+        setAlertValue("Test deleted successfully")
       }
       setDeleteConfirmOpen(false);
       setTimeout(() => {
@@ -160,6 +165,18 @@ const ManageTest = () => {
 
   // Snackbar
   const [isTestPublished, setIsTestPublished] = useState(null);
+  const AllSec = test.settings && test.settings.test_duration;
+  function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    const formattedHours = hours.toString().padStart(2, "0");
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+    const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  }
+  const formattedTime = formatTime(AllSec);
+
   return (
     <>
       <Helmet>
@@ -177,26 +194,36 @@ const ManageTest = () => {
               </Grid>
               <Grid item xs={6} sx={{ textAlign: "right" }}>
                 {queryValue && queryValue ? (
-                  <Button variant="contained" className="custom-button">
-                    <Link
-                      href={`/course/${queryValue}/test/list`}
-                      color="inherit"
-                      underline="none"
-                    >
+                  <Button variant="contained" className="custom-button" component={Link} href={`/course/${queryValue}/test/list`} >
                       Back
-                    </Link>
                   </Button>
                 ) : (
-                  <Button variant="contained" className="custom-button">
-                    <Link href={`/test/list`} color="inherit" underline="none">
-                      Back
-                    </Link>
+                  <Button variant="contained" className="custom-button" component={Link} href={`/test/list`}>
+                    Back
                   </Button>
                 )}
               </Grid>
-
+              <Grid item xs={12}>
+                <Typography component="h5" variant="h5" sx={{fontSize:"18px"}}>
+                  <strong>Test Duration:</strong> {formattedTime} HH:MM:SS
+                </Typography>
+              </Grid>
               <Grid item sx={{ mt: 0, width: "100%" }} alignItems="center">
                 <Grid item xs={12}>
+                <Snackbar
+                    open={alertOpen}
+                    autoHideDuration={3000}
+                    onClose={() => setAlertOpen(false)}
+                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                  >
+                    <Alert
+                      severity={testDeleted === true ? "success" : "warning"}
+                    >
+                      {testDeleted === true
+                        ? alertValue
+                        : "Someting went wrong"}
+                    </Alert>
+                  </Snackbar>
                   <Snackbar
                     open={isTestPublished}
                     autoHideDuration={3000}
@@ -487,11 +514,28 @@ const ManageTest = () => {
                             name="status"
                             color="primary"
                           />
+                          <Box sx={{display:"flex", justifyContent:"start"}}>
                           <ListItemText
                             id="publish-unpublish"
                             primary="Publish"
                             sx={{ pl: 3 }}
                           />
+                          <HtmlTooltip
+                            className="dashboard-tooltip"
+                            title={
+                              <React.Fragment>
+                                <Typography color="inherit">
+                                  There should be minimum 1 question for publish this test.
+                                </Typography>
+                              </React.Fragment>
+                            }
+                            placement="right-start"
+                          >
+                            <InfoOutlinedIcon
+                              sx={{ color: "#B8B8B8", ml: 2, mb: 1 }}
+                            />
+                          </HtmlTooltip>
+                          </Box>
                         </ListItem>
                         <Divider variant="" component="li" />
                         <ListItem sx={{ pl: 0 }}>
@@ -518,6 +562,21 @@ const ManageTest = () => {
                             </ListItemIcon>
                             <ListItemText>Take Test</ListItemText>
                           </Link>
+                          <HtmlTooltip
+                            className="dashboard-tooltip"
+                            title={
+                              <React.Fragment>
+                                <Typography color="inherit">
+                                  You can take test if test published.
+                                </Typography>
+                              </React.Fragment>
+                            }
+                            placement="right-start"
+                          >
+                            <InfoOutlinedIcon
+                              sx={{ color: "#B8B8B8", ml: 2, mb: 1 }}
+                            />
+                          </HtmlTooltip>
                         </ListItem>
                         <Divider variant="" component="li" />
                         <ListItem sx={{ pl: 0 }}>
@@ -540,6 +599,7 @@ const ManageTest = () => {
                             <ListItemText>Edit</ListItemText>
                           </Link>
                           <HtmlTooltip
+                            className="dashboard-tooltip"
                             title={
                               <React.Fragment>
                                 <Typography color="inherit">
@@ -576,6 +636,7 @@ const ManageTest = () => {
                             <ListItemText>Settings</ListItemText>
                           </Link>
                           <HtmlTooltip
+                            className="dashboard-tooltip"
                             title={
                               <React.Fragment>
                                 <Typography color="inherit">
@@ -592,12 +653,14 @@ const ManageTest = () => {
                           </HtmlTooltip>
                         </ListItem>
                         <Divider variant="" component="li" />
-                        <ListItem sx={{
-                              width: "auto",
-                              display: "inline-flex",
-                          justifyContent: "flex-start",
-                          pl: 0
-                            }}>
+                        <ListItem
+                          sx={{
+                            width: "auto",
+                            display: "inline-flex",
+                            justifyContent: "flex-start",
+                            pl: 0,
+                          }}
+                        >
                           <Box
                             sx={{
                               width: "auto",
@@ -618,6 +681,7 @@ const ManageTest = () => {
                             <ListItemText>Delete</ListItemText>
                           </Box>
                           <HtmlTooltip
+                            className="dashboard-tooltip"
                             title={
                               <React.Fragment>
                                 <Typography color="inherit">

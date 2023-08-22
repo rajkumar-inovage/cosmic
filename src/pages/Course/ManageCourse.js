@@ -23,6 +23,7 @@ import {
   DialogContent,
   DialogContentText,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import { Helmet } from "react-helmet";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
@@ -30,7 +31,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import Switch from "@mui/material/Switch";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import ClassIcon from "@mui/icons-material/Class";
 import QuizIcon from "@mui/icons-material/Quiz";
@@ -38,8 +39,22 @@ import PlayLessonIcon from "@mui/icons-material/PlayLesson";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
+import CreatedBy from "../../Utils/createdBy";
 import SidebarLeft from "../../components/Sidebar/SidebarLeft";
-import CurrentUser from "../../Utils/CurrentUserGuid";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { tooltipClasses } from "@mui/material/Tooltip";
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#f5f5f9",
+    color: "rgba(0, 0, 0, 0.87)",
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: "1px solid #dadde9",
+  },
+}));
 
 const StyledFormControl = styled(FormControl)({
   marginBottom: "16px",
@@ -107,7 +122,7 @@ const ManageCourse = () => {
   const postStatus = async (newStatus) => {
     const formdata = new FormData();
     formdata.append("status", newStatus);
-    formdata.append("updated_by", CurrentUser);
+    formdata.append("updated_by", CreatedBy);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -260,10 +275,12 @@ const ManageCourse = () => {
                   <Typography variant="h4">{currentCourse.title}</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography>{ReactHtmlParser(currentCourse.description)}</Typography>
+                  <Typography>
+                    {ReactHtmlParser(currentCourse.description)}
+                  </Typography>
                 </Grid>
                 {/* Lessons */}
-                <Grid item xs={12} md={6}>
+                {/* <Grid item xs={12} md={6}>
                   <Card sx={{ p: 4 }}>
                     <Typography
                       variant="h2"
@@ -321,7 +338,7 @@ const ManageCourse = () => {
                       </List>
                     </Box>
                   </Card>
-                </Grid>
+                </Grid> */}
                 {/* Tests */}
                 <Grid item xs={12} md={6}>
                   <Card sx={{ p: 4 }}>
@@ -380,68 +397,8 @@ const ManageCourse = () => {
                         </ListItem>
                       </List>
                     </Box>
-                  </Card>
-                </Grid>
-                {/* Meetings */}
-                <Grid item xs={12} md={6}>
-                  <Card sx={{ p: 4 }}>
-                    <Typography
-                      variant="h2"
-                      style={{
-                        fontSize: "24px",
-                        lineHeight: "34px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      Meetings
-                    </Typography>
-                    <Box>
-                      <List>
-                        <ListItem sx={{ pl: 0 }}>
-                          <Link
-                            href={`/course/${courseGuid}/meeting/add`}
-                            color="inherit"
-                            underline="none"
-                            sx={{ display: "flex", alignItems: "center" }}
-                          >
-                            <ListItemIcon>
-                              <ClassIcon />
-                            </ListItemIcon>
-                            <ListItemText>Add Existing Meetings</ListItemText>
-                          </Link>
-                        </ListItem>
-                        <Divider variant="" component="li" />
-                        <ListItem sx={{ pl: 0 }}>
-                          <Link
-                            href={`/course/${courseGuid}/meeting/create`}
-                            color="inherit"
-                            underline="none"
-                            sx={{ display: "flex", alignItems: "center" }}
-                          >
-                            <ListItemIcon>
-                              <ControlPointIcon />
-                            </ListItemIcon>
-                            <ListItemText>Create New Meeting</ListItemText>
-                          </Link>
-                        </ListItem>
-                        <Divider variant="" component="li" />
-                        <ListItem sx={{ pl: 0 }}>
-                          <Link
-                            href={`/course/${courseGuid}/meeting/list`}
-                            color="inherit"
-                            underline="none"
-                            sx={{ display: "flex", alignItems: "center" }}
-                          >
-                            <ListItemIcon>
-                              <ListAltIcon />
-                            </ListItemIcon>
-                            <ListItemText>All Meetings</ListItemText>
-                          </Link>
-                        </ListItem>
-                      </List>
-                    </Box>
-                  </Card>
-                  {/* Enrollments */}
+                    </Card>
+                    {/* Enrollments */}
                   <Card sx={{ p: 4, mt: 3 }}>
                     <Typography
                       variant="h2"
@@ -472,9 +429,67 @@ const ManageCourse = () => {
                     </Box>
                   </Card>
                 </Grid>
-                {/* Settings */}
+                {/* Meetings */}
                 <Grid item xs={12} md={6}>
                   <Card sx={{ p: 4 }}>
+                    <Typography
+                      variant="h2"
+                      style={{
+                        fontSize: "24px",
+                        lineHeight: "34px",
+                        fontWeight: "500",
+                      }}
+                    >
+                      Classes
+                    </Typography>
+                    <Box>
+                      <List>
+                        <ListItem sx={{ pl: 0 }}>
+                          <Link
+                            href={`/course/${courseGuid}/class/add`}
+                            color="inherit"
+                            underline="none"
+                            sx={{ display: "flex", alignItems: "center" }}
+                          >
+                            <ListItemIcon>
+                              <ClassIcon />
+                            </ListItemIcon>
+                            <ListItemText>Add Existing Classes</ListItemText>
+                          </Link>
+                        </ListItem>
+                        <Divider variant="" component="li" />
+                        <ListItem sx={{ pl: 0 }}>
+                          <Link
+                            href={`/course/${courseGuid}/class/create`}
+                            color="inherit"
+                            underline="none"
+                            sx={{ display: "flex", alignItems: "center" }}
+                          >
+                            <ListItemIcon>
+                              <ControlPointIcon />
+                            </ListItemIcon>
+                            <ListItemText>Create New Class</ListItemText>
+                          </Link>
+                        </ListItem>
+                        <Divider variant="" component="li" />
+                        <ListItem sx={{ pl: 0 }}>
+                          <Link
+                            href={`/course/${courseGuid}/class/list`}
+                            color="inherit"
+                            underline="none"
+                            sx={{ display: "flex", alignItems: "center" }}
+                          >
+                            <ListItemIcon>
+                              <ListAltIcon />
+                            </ListItemIcon>
+                            <ListItemText>All Classes</ListItemText>
+                          </Link>
+                        </ListItem>
+                      </List>
+                    </Box>
+                    </Card>
+                     {/* Settings */}
+                     <Card sx={{ p: 4,mt: 3 }}>
                     <Typography
                       variant="h2"
                       style={{
@@ -487,8 +502,8 @@ const ManageCourse = () => {
                     </Typography>
                     <Box>
                       <List>
-                        <ListItem sx={{ pl: 0, pt:0 }}>
-                            <Switch
+                        <ListItem sx={{ pl: 0, pt: 0 }}>
+                          <Switch
                             checked={currentCourse.status === "1"}
                             onChange={() => {
                               const newStatus =
@@ -502,19 +517,19 @@ const ManageCourse = () => {
                             name="status"
                             color="primary"
                           />
-                            <ListItemText
-                              onClick={() => {
-                                const newStatus =
-                                  currentCourse.status === "0" ? "1" : "0";
-                                setCurrentCourse({
-                                  ...currentCourse,
-                                  status: newStatus,
-                                });
-                                postStatus(newStatus);
-                              }}
+                          <ListItemText
+                            onClick={() => {
+                              const newStatus =
+                                currentCourse.status === "0" ? "1" : "0";
+                              setCurrentCourse({
+                                ...currentCourse,
+                                status: newStatus,
+                              });
+                              postStatus(newStatus);
+                            }}
                             id="publish-unpublish"
                             primary="Publish"
-                            sx={{ pl: 3, m:0, cursor:"pointer" }}
+                            sx={{ pl: 3, m: 0, cursor: "pointer" }}
                           />
                         </ListItem>
                         <Divider variant="" component="li" />
@@ -523,39 +538,90 @@ const ManageCourse = () => {
                             href={`/course/update/${courseGuid}`}
                             color="inherit"
                             underline="none"
-                            sx={{ display: "flex", alignItems: "center" }}
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              pointerEvents:
+                                currentCourse && currentCourse.status === "1"
+                                  ? "none"
+                                  : "auto",
+                              opacity:
+                                currentCourse && currentCourse.status === "1"
+                                  ? "0.5"
+                                  : "1",
+                            }}
                           >
                             <ListItemIcon>
                               <EditIcon />
                             </ListItemIcon>
                             <ListItemText>Edit Course</ListItemText>
                           </Link>
+                            <HtmlTooltip
+                              className="dashboard-tooltip"
+                            title={
+                              <React.Fragment>
+                                <Typography color="inherit">
+                                  Edit feature will enable when course
+                                  unpublished.
+                                </Typography>
+                              </React.Fragment>
+                            }
+                            placement="right-start"
+                          >
+                            <InfoOutlinedIcon
+                              sx={{ color: "#B8B8B8", ml: 2, mb: 1 }}
+                            />
+                          </HtmlTooltip>
                         </ListItem>
                         <Divider variant="" component="li" />
-                        <ListItem
-                          sx={{ pl: 0, cursor: "pointer" }}
-                          onClick={() => handleDeleteConfirmOpen(courseGuid)}
-                        >
-                          <ListItemIcon>
-                            <DeleteIcon />
-                          </ListItemIcon>
-                          <ListItemText>Scrap Course</ListItemText>
+                        <ListItem sx={{ pl: 0 }}>
+                          <Box
+                            onClick={() => handleDeleteConfirmOpen(courseGuid)}
+                            sx={{
+                              pl: 0,
+                              cursor: "pointer",
+                              width: "auto",
+                              display: "inline-flex",
+                              justifyContent: "flex-start",
+                              pl: 0,
+                              cursor: "pointer",
+                              pointerEvents:
+                                currentCourse && currentCourse.status === "1"
+                                  ? "none"
+                                  : "auto",
+                              opacity:
+                                currentCourse && currentCourse.status === "1"
+                                  ? "0.5"
+                                  : "1",
+                            }}
+                          >
+                            <ListItemIcon>
+                              <ArchiveOutlinedIcon />
+                            </ListItemIcon>
+                            <ListItemText>Archive Course</ListItemText>
+                          </Box>
+
+                            <HtmlTooltip
+                              className="dashboard-tooltip"
+                            title={
+                              <React.Fragment>
+                                <Typography color="inherit">
+                                  Archive feature will enable when course
+                                  unpublished.
+                                </Typography>
+                              </React.Fragment>
+                            }
+                            placement="right-start"
+                          >
+                            <InfoOutlinedIcon
+                              sx={{ color: "#B8B8B8", ml: 2, mb: 1 }}
+                            />
+                          </HtmlTooltip>
                         </ListItem>
-                        {/* <Divider variant="" component="li" />
-                        <ListItem
-                          sx={{ pl: 0, cursor: "pointer" }}
-                          onClick={() =>
-                            handleDeleteConfirmOpen(test.courseGuid)
-                          }
-                        >
-                          <ListItemIcon>
-                            <ArchiveIcon />
-                          </ListItemIcon>
-                          <ListItemText>Archive</ListItemText>
-                        </ListItem> */}
                       </List>
                     </Box>
                   </Card>
+                  
                 </Grid>
               </Grid>
             </Box>

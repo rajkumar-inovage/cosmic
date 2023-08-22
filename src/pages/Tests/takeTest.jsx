@@ -24,7 +24,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  CircularProgress
 
 } from "@mui/material";
 import { Editor } from "@tinymce/tinymce-react";
@@ -83,6 +84,7 @@ const TakeTest = () => {
 
   // Get all questions
   const [testData, setTestData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchQuestion = async () => {
       const requestOption = {
@@ -96,6 +98,7 @@ const TakeTest = () => {
       );
       const test_Data = await response.json();
       setTestData(test_Data.payload);
+      setIsLoading(false);
     };
     fetchQuestion();
   }, []);
@@ -352,8 +355,19 @@ const TakeTest = () => {
       </>
     );
   };
+  // Check if questions.length === 0 and redirect if necessary
+  useEffect(() => {
+    if (!isLoading && testData.length === 0) {
+      console.log("Redirecting to manage test page...");
+      navigate(`/test/manage/${guid}`);
+    }
+  }, [testData, navigate, isLoading]);
 
-  //console.log(sidebarOptions);
+  if (isLoading) {
+    return <Box sx={{height:"70vh", display:"flex", alignItems:"center", justifyContent:"center"}}><CircularProgress/></Box>;
+  }
+
+  //console.log(testData);
   return (
     <>
       <Helmet>
@@ -474,8 +488,11 @@ const TakeTest = () => {
                 onSubmit={handleSubmit(onTestSubmit)}
                 style={{ width: "100%" }}
               >
+                {testData[currentQuestion] && testData[currentQuestion].parent_question &&(
+                  <h4>{ReactHtmlParser(testData[currentQuestion].parent_question)}</h4>
+                )}
                 {testData[currentQuestion] && (
-                  <h2>{ReactHtmlParser(testData[currentQuestion].question)}</h2>
+                  <h4>{ReactHtmlParser(testData[currentQuestion].question)}</h4>
                 )}
                 {/* Display options */}
                 {testData[currentQuestion] && (

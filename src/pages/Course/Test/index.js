@@ -574,7 +574,8 @@ const Test = () => {
                           )}
                         />
                       </FormControl>
-                      <HtmlTooltip
+                        <HtmlTooltip
+                          className="dashboard-tooltip"
                         title={
                           <React.Fragment>
                             <Typography color="inherit">Menu open when 1 item should be selected.</Typography>
@@ -737,7 +738,7 @@ const Test = () => {
                                     >
                                       <h3>
                                         <Link
-                                          href={`/test/manage/${test.guid}?ci=${courseGuid}`}
+                                          href={`/course/test/manage/${test.guid}?ci=${courseGuid}`}
                                           sx={{
                                             textDecoration: "none",
                                             color: "inherit",
@@ -771,7 +772,7 @@ const Test = () => {
                                         </Button>
                                         <Button
                                           component={Link}
-                                          href={`/test/edit/${test.guid}?mt=${courseGuid}`}
+                                          href={`/course/test/edit/${test.guid}?mt=${courseGuid}`}
                                           color="warning"
                                           sx={{
                                             fontSize: 16,

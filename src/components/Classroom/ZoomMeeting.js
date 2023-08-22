@@ -22,8 +22,6 @@ import ReactHtmlParser from "react-html-parser";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
-
-
 const ZoomMeeting = ({ item, extractedUrl }) => {
   // Configuration
   var myHeaders = new Headers();
@@ -89,7 +87,7 @@ const ZoomMeeting = ({ item, extractedUrl }) => {
         <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this meeting?
+            Are you sure you want to delete this online class?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -115,8 +113,8 @@ const ZoomMeeting = ({ item, extractedUrl }) => {
       >
         <Alert severity={isMeetingDeleted === true ? "success" : "warning"}>
           {isMeetingDeleted === true
-            ? "Meeting deleted Successfully"
-            : "Meeting deleted failed"}
+            ? "Online class deleted Successfully"
+            : "Online class deleted failed"}
         </Alert>
       </Snackbar>
 
@@ -139,7 +137,7 @@ const ZoomMeeting = ({ item, extractedUrl }) => {
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
               <Typography component="h4">
-                <strong style={{ paddingRight: "10px" }}>Meeting ID:</strong>
+                <strong style={{ paddingRight: "10px" }}>Class ID:</strong>
                 {item.guid}
               </Typography>
             </Grid>
@@ -165,7 +163,7 @@ const ZoomMeeting = ({ item, extractedUrl }) => {
             <Grid item>
               <Button
                 component={Link}
-                to={`/meeting/edit/${item.guid}`}
+                to={`/class/edit/${item.guid}`}
                 color="warning"
                 sx={{
                   fontSize: 16,
@@ -195,7 +193,7 @@ const ZoomMeeting = ({ item, extractedUrl }) => {
             <Grid item>
               <Button
                 component={Link}
-                to={`/meeting/share/${item.guid}`}
+                to={`/class/share/${item.guid}`}
                 color="success"
                 sx={{
                   fontSize: 16,
