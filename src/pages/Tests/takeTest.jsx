@@ -118,6 +118,7 @@ const TakeTest = () => {
   }
   const handleClickStart = () => {
     const set_Session = generateSessionID(36);
+    console.log(set_Session)
     setShowInstruction(false);
     setShowQuestions(true);
     localStorage.setItem("set_session", set_Session);
@@ -149,7 +150,7 @@ const TakeTest = () => {
   };
 
   // Thanks after test submitted
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   // Test Submission
   const resultType = test.settings && test.settings.show_result;
@@ -368,13 +369,13 @@ const TakeTest = () => {
   }
 
   //console.log(testData);
+  console.log(dialogOpen)
   return (
     <>
       <Helmet>
         <title>Take Test</title>
       </Helmet>
       <Dialog open={dialogOpen} >
-        
         <DialogContent>
         <Typography fullwidth sx={{textAlign:"center"}}><CheckCircleOutlinedIcon color="success" sx={{fontSize:50}} /></Typography>
           <DialogTitle color="success">Test submitted successfully.</DialogTitle>
@@ -437,15 +438,15 @@ const TakeTest = () => {
             <Grid item xs={12}>
               <Typography
                 variant="h1"
-                component="h5"
-                sx={{ fontSize: 30, fontWeight: 600, display: "flex" }}
+                component="div"
+                sx={{ fontSize: 24, fontWeight: 600, display: "flex" }}
               >
                 {!showInstruction &&
                 test.settings &&
                 test.settings.show_timer === "true" ? (
                   <>
                     <Timer
-                      durationInSeconds={
+                      durationInMinutes={
                         test.settings && test.settings.test_duration
                       }
                       onTimerExpired={handleTimerExpired}

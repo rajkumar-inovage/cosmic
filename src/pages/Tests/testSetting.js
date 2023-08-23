@@ -21,7 +21,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import FormTextField from "../../components/Common/formTextField";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
-import CreatedBy from "../../Utils/createdBy"
+import CreatedBy from "../../Utils/createdBy";
 import { Helmet } from "react-helmet";
 import Network from "../../Utils/network";
 import SidebarLeft from "../../components/Sidebar/SidebarLeft";
@@ -75,14 +75,14 @@ const TestSetting = () => {
 
   const { show_timer, show_result } = watch();
 
+  const [alertOpen, setAlertOpen] = useState(false);
   const [saveSetting, setSaveSetting] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null);
   // Authorization setup
-  myHeaders.append(
-    "Authorization",
-    `Bearer ${token}`
-  );
+  myHeaders.append("Authorization", `Bearer ${token}`);
   myHeaders.append("Network", `${Network}`);
   const handleSaveSetting = async (data) => {
+    data.test_duration = data.test_duration.trim();
     const formData = serialize(data);
     const requestOptions = {
       method: "POST",
@@ -95,17 +95,23 @@ const TestSetting = () => {
         `${BASE_URL}/tests/settings/${guid}`,
         requestOptions
       );
-      const saveResult = await res.json();
-      if (saveResult.success === true) {
-        setSaveSetting(saveResult.success);
+      const result = await res.json();
+      setAlertOpen(true);
+      if (result.success === true) {
+        setAlertMessage("Test setting saved successfully");
+        setSaveSetting(result.success);
+      } else {
+        setAlertMessage(
+          "Invalid input value, value should be number 1,2,3,4..."
+        );
       }
     } catch (error) {
       console.error(error);
       throw new Error(`Failed to post status: ${error.message}`);
     }
   };
-  
 
+  console.log(alertMessage);
   return (
     <>
       <Helmet>
@@ -121,8 +127,13 @@ const TestSetting = () => {
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
-              <Button className="custom-button" variant="contained" component={Link} href={`/test/manage/${guid}`}>
-                  Cancel
+              <Button
+                className="custom-button"
+                variant="contained"
+                component={Link}
+                href={`/test/manage/${guid}`}
+              >
+                Back
               </Button>
             </Grid>
           </Grid>
@@ -134,15 +145,13 @@ const TestSetting = () => {
           >
             <Grid item xs={12}>
               <Snackbar
-                open={saveSetting}
+                open={alertOpen}
                 autoHideDuration={3000}
-                onClose={() => setSaveSetting(false)}
+                onClose={() => setAlertOpen(false)}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
               >
                 <Alert severity={saveSetting === true ? "success" : "warning"}>
-                  {saveSetting === true
-                    ? "Test setting saved"
-                    : "Test setting failled"}
+                  {alertMessage}
                 </Alert>
               </Snackbar>
             </Grid>
@@ -185,11 +194,12 @@ const TestSetting = () => {
                           <FormControl sx={{ mt: 3, width: "100%" }}>
                             <FormTextField
                               control={control}
-                              label="Test Duration (in second)"
+                              label="Test Duration (in minutes)"
                               defaultValue="0"
                               variant="outlined"
-                              pattern="[A-Za-z]{1,}"
+                              pattern="[0-9]*"
                               name="test_duration"
+                              required
                             />
                           </FormControl>
                         </Grid>
@@ -347,26 +357,34 @@ const TestSetting = () => {
                                         On Date:
                                       </span>
                                       <DatePicker
-                                        value={
+                                        className="on-time-date"
+                                        selected={
                                           value === "on_date"
-                                            ? new Date()
+                                            ? watch("on_date")
+                                              ? new Date(watch("on_date"))
+                                              : null
                                             : null
                                         }
                                         onChange={(date) => {
                                           setValue("on_date", date);
                                         }}
                                         disabled={value !== "on_date"}
-                                        format="dd/MM/yyyy"
+                                        dateFormat="dd/MM/yyyy"
                                       />
                                     </div>
                                   }
                                 />
+                                {/* Display error message if needed */}
                               </RadioGroup>
                             )}
                           />
                         </Grid>
                       </Grid>
-                      <Button variant="outlined" type="submit" className="custom-button">
+                      <Button
+                        variant="outlined"
+                        type="submit"
+                        className="custom-button"
+                      >
                         Save Setting
                       </Button>
                     </form>

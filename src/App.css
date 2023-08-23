@@ -37,11 +37,21 @@
 /* .grecaptcha-badge {
   display: none !important;
 } */
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: auto;
+}
 #not-found-page .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper.MuiDrawer-paperAnchorLeft.MuiDrawer-paperAnchorDockedLeft{
   width: 0;
 }
 #not-found-page .css-1hjeidz-MuiPaper-root-MuiAppBar-root{
   width:100%;
+  margin-left: 0;
+}
+body#not-found-page header {
+  width: 100%;
   margin-left: 0;
 }
 #not-found-page .MuiBox-root.css-k008qs{
@@ -68,6 +78,15 @@ body .listing{
 
 body main {
   margin-top: 64px;
+}
+.on-time-date {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.2);
+  padding: 3px;
+  margin-left: 5px;
+}
+.MuiInputBase-root fieldset legend{
+  font-size: 15px;
 }
 
 body {

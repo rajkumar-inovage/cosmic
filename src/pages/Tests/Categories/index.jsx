@@ -36,11 +36,11 @@ import CheckTokenValid from "../../../components/Redirect/CheckTokenValid";
 const options = [
   {
     label: "All Test",
-    link: "/category/tests",
+    link: "/test/category/tests",
   },
   {
     label: "Link Test",
-    link: "/category/link-test",
+    link: "/test/category/link-test",
   }
 ];
 
@@ -416,7 +416,7 @@ const Categories = () => {
                                     }}
                                   >
                                     <Link
-                                      href={`/category/tests/${item.guid}`}
+                                      href={`/test/category/tests/${item.guid}`}
                                       sx={{
                                         textDecoration: "none",
                                         color: "inherit",
@@ -494,7 +494,7 @@ const Categories = () => {
                                   }}
                                 >
                                   <Link
-                                    href={`/category/tests/${item.guid}`}
+                                    href={`/test/category/tests/${item.guid}`}
                                     sx={{
                                       textDecoration: "none",
                                       color: "inherit",

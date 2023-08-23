@@ -94,9 +94,9 @@ const AppRouter = () => {
         <Route path={"/test/report/:guid"} element={<SubmissionReports />} />
         <Route path={"/test/submission-report/:guid"} element={<Report />} />
         <Route path={"/test/all-submissions/:guid"} element={<AllSubmissions />} />
-        <Route path={"/category/list"} element={<Categories />} />
-        <Route path={"/category/tests/:guid"} element={<AllCategoryTests />} />
-        <Route path={"/category/link-test/:guid"} element={<LinkTestCategory />} />
+        <Route path={"/test/category/list"} element={<Categories />} />
+        <Route path={"/test/category/tests/:guid"} element={<AllCategoryTests />} />
+        <Route path={"/test/category/link-test/:guid"} element={<LinkTestCategory />} />
         <Route path={"/online-classes"} element={<OnlineClasses />} />
         <Route path={"/class/create"} element={<CreateMeeting />} />
         <Route path={"/class/edit/:meetingGuid"} element={<EditMeeting />} />

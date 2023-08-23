@@ -11,6 +11,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import {tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import BASE_URL from "../../Utils/baseUrl";
@@ -89,14 +90,20 @@ const OnlineClasses = () => {
             justifyContent: "flex-end",
           }}
         >
+          <Link href={"/class/create"} sx={{ mr: 2 }}>
+            <AddCircleRoundedIcon
+              color="primary"
+              sx={{ width: "53px", height: "53px" }}
+            />
+          </Link>
           <Button
-            className="custom-button"
-            component={Link}
-            href={"/class/create"}
-            variant="contained"
-          >
-            Add Online Class
-          </Button>
+              variant="outlined"
+              className="custom-button"
+              component={Link}
+              href={`/online-classes`}
+            >
+              View All Classes
+            </Button>
         </Grid>
       </Grid>
       <Card sx={{ mt: 4.7 }}>
@@ -178,16 +185,6 @@ const OnlineClasses = () => {
               Classes not found!
             </Alert>
           )}
-          <Grid item xs={12} sx={{ mt: 3 }}>
-            <Button
-              variant="outlined"
-              className="custom-button"
-              component={Link}
-              href={`/online-classes`}
-            >
-              View All Classes
-            </Button>
-          </Grid>
         </Box>
       </Card>
     </>
