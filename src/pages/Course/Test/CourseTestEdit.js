@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate,useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -11,7 +11,7 @@ import {
   FormHelperText,
   Snackbar,
 } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { Helmet } from "react-helmet";
 import FormEditorField from "../../../components/Common/formEditorField";
 import FormTextField from "../../../components/Common/formTextField";
@@ -19,8 +19,13 @@ import { serialize } from "object-to-formdata";
 import BASE_URL from "../../../Utils/baseUrl";
 import token from "../../../Utils/token";
 import Network from "../../../Utils/network";
-import CreatedBy from "../../../Utils/createdBy"
+import CreatedBy from "../../../Utils/createdBy";
 import SidebarLeft from "../../../components/Sidebar/SidebarLeft";
+
+// Date Time picker
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 
 const StyledFormControl = styled(FormControl)({
   marginBottom: "16px",
@@ -32,35 +37,34 @@ const CourseTestEdit = () => {
   const params = new URLSearchParams(location.search);
   const mtValue = params.get("mt");
   const { guid } = useParams();
-  const {
-    handleSubmit,
-    control,
-    reset,
-  } = useForm({
+  const { handleSubmit, control, reset } = useForm({
     defaultValues: {
       title: "",
       details: "",
       status: "0",
-      created_by: {CreatedBy},
+      created_by: CreatedBy,
     },
   });
   const [isTestCreated, setIsTestCreated] = useState(null);
 
-  
-
-// Authorization Setup
+  // Authorization Setup
   var myHeaders = new Headers();
-  myHeaders.append(
-    "Authorization",
-    `Bearer ${token}`
-  );
+  myHeaders.append("Authorization", `Bearer ${token}`);
   myHeaders.append("Network", `${Network}`);
   const navigate = useNavigate();
+  const formData = new FormData();
 
   // update test in backend
   const [validationErrors, setValidationErrors] = useState({});
   const handleFormSubmit = async (data) => {
-    const formData = serialize(data);
+    const formattedStartDate = dayjs(data.start_date).format(
+      "YYYY-MM-DD HH:mm:ss"
+    );
+    const formattedEndDate = dayjs(data.end_date).format("YYYY-MM-DD HH:mm:ss");
+    formData.append("title", data.title);
+    formData.append("details", data.details);
+    formData.append("start_date", formattedStartDate);
+    formData.append("end_date", formattedEndDate);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -75,116 +79,173 @@ const CourseTestEdit = () => {
       const result = await response.json();
       setIsTestCreated(true);
       setTimeout(() => {
-        navigate(`/course/test/add-question/${guid}?mt=${mtValue}`);
+        navigate(`/course/test/manage/${guid}?ci=${mtValue}`);
       }, 1000);
       reset();
     } catch (error) {
       setValidationErrors(error.response.data);
       setIsTestCreated(false);
     }
- 
   };
   // Get current test details
   const [test, setTest] = useState([]);
   const requestOption = {
-    method: 'GET',
+    method: "GET",
     headers: myHeaders,
-    redirect: 'follow'
+    redirect: "follow",
   };
-  
-    useEffect(() => {
-      const fetchTest = async () => {
-        const response = await fetch(`${BASE_URL}/tests/view/${guid}`, requestOption);
-        const testData = await response.json();
-        setTest(testData.payload);
-        reset(testData.payload);
-      };
-      fetchTest();
-    }, [reset]);
+
+  useEffect(() => {
+    const fetchTest = async () => {
+      const response = await fetch(
+        `${BASE_URL}/tests/view/${guid}`,
+        requestOption
+      );
+      const testData = await response.json();
+      setTest(testData.payload);
+      reset(testData.payload);
+    };
+    fetchTest();
+  }, [reset]);
   return (
     <>
-    <Helmet>
+      <Helmet>
         <title>Edit Test</title>
-    </Helmet>
-    <Box sx={{ display: "flex" }}>
-      <SidebarLeft />
-      <Box sx={{ flexGrow: 1, p: 3 }}>
-        <Grid
-          container
-          spacing={2}
-          sx={{width: "100%" }}
-          alignItems="center"
-        >
-          <Grid item>
-            <Snackbar
-              severity="success"
-              open={isTestCreated}
-              anchorOrigin={{ vertical: "top", horizontal: "center" }}
-              autoHideDuration={50000}
-              onClose={() => setIsTestCreated(false)}
-              sx={{
-                backgroundColor: `${
-                  isTestCreated === true ? "#008000" : "#ff0000"
-                }`,
-              }}
-              message={
-                isTestCreated === true
-                  ? "Test created successfully!"
-                  : "Failed to create test"
-              }
-            />
+      </Helmet>
+      <Box sx={{ display: "flex" }}>
+        <SidebarLeft />
+        <Box sx={{ flexGrow: 1, p: 3 }}>
+          <Grid
+            container
+            spacing={2}
+            sx={{ width: "100%" }}
+            alignItems="center"
+          >
+            <Grid item>
+              <Snackbar
+                severity="success"
+                open={isTestCreated}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                autoHideDuration={50000}
+                onClose={() => setIsTestCreated(false)}
+                sx={{
+                  backgroundColor: `${
+                    isTestCreated === true ? "#008000" : "#ff0000"
+                  }`,
+                }}
+                message={
+                  isTestCreated === true
+                    ? "Test updated successfully!"
+                    : "Failed to update test"
+                }
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid container spacing={2} sx={{ mt: 5 }}>
+          <Grid container spacing={2} sx={{ mt: 5 }}>
             <Grid item xs={6}>
               <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 600 }}>
                 Edit Test
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
-              {mtValue ? <Button variant="contained" className="custom-button">
-                <Link href={`/course/${mtValue}/test/list`} color="inherit" underline="none">
-                  Cancel
-                </Link>
-              </Button> : <Button variant="contained" className="custom-button">
-                <Link href="/test/list" color="inherit" underline="none">
-                  Cancel
-                </Link>
-              </Button>}
+              {mtValue ? (
+                <Button
+                  variant="contained"
+                  className="custom-button"
+                  component={Link}
+                  href={`/course/${mtValue}/test/list`}
+                >
+                  Back
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  className="custom-button"
+                  component={Link}
+                  href="/test/list"
+                >
+                  Back
+                </Button>
+              )}
             </Grid>
-        </Grid>
-        <Grid container spacing={2} sx={{ mt: 3 }}>
-          <Grid item xs={12}>
-            <form onSubmit={handleSubmit(handleFormSubmit)}>
-              <input type="hidden" name="created_by" value={CreatedBy} />
-              <StyledFormControl sx={{ width: "100%" }}>
-                <FormTextField
-                  label="Title"
-                  control={control}
-                  name="title"
-                  variant="outlined"
-                  required
-                  pattern="[A-Za-z]{1,}"
-                />
-                {validationErrors.title && (
-                  <FormHelperText error>
-                    {validationErrors.title}
-                  </FormHelperText>
-                )}
-              </StyledFormControl>
-              <StyledFormControl sx={{ mt: 3, width: "100%" }}>
-                <Box sx={{pb:2, fontWeight:"500"}}>Details</Box>
-                <FormEditorField control={control} name="details" />
-              </StyledFormControl>
-
-              <Button variant="outlined" type="submit" className="custom-button">
-                Update Test
-              </Button>
-            </form>
           </Grid>
-        </Grid>
+          <Grid container spacing={2} sx={{ mt: 3 }}>
+            <Grid item xs={12}>
+              <form onSubmit={handleSubmit(handleFormSubmit)}>
+                <StyledFormControl sx={{ width: "100%" }}>
+                  <FormTextField
+                    label="Title"
+                    control={control}
+                    name="title"
+                    variant="outlined"
+                    required
+                    pattern="[A-Za-z]{1,}"
+                  />
+                  {validationErrors.title && (
+                    <FormHelperText error>
+                      {validationErrors.title}
+                    </FormHelperText>
+                  )}
+                </StyledFormControl>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6} sx={{ mt: 2 }}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <Controller
+                        name="start_date"
+                        control={control}
+                        defaultValue={dayjs()} // Set default value to current date and time
+                        rules={{ required: "Start date is required" }}
+                        render={({ field }) => (
+                          <DateTimePicker
+                            sx={{ width: "100%" }}
+                            {...field}
+                            label="Start Date"
+                            showTodayButton
+                            //error={!!errors.start_date}
+                            //helperText={errors.start_date?.message}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12} md={6} sx={{ mt: 2 }}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <Controller
+                        name="end_date"
+                        control={control}
+                        defaultValue={dayjs()} // Set default value to current date and time
+                        rules={{ required: "End date is required" }}
+                        render={({ field }) => (
+                          <DateTimePicker
+                            sx={{ width: "100%" }}
+                            {...field}
+                            label="End Date"
+                            showTodayButton
+                            //error={!!errors.end_date}
+                            //helperText={errors.end_date?.message}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                </Grid>
+                <StyledFormControl sx={{ mt: 3, width: "100%" }}>
+                  <Box sx={{ pb: 2, fontWeight: "500" }}>Details</Box>
+                  <FormEditorField control={control} name="details" />
+                </StyledFormControl>
+
+                <Button
+                  variant="outlined"
+                  type="submit"
+                  className="custom-button"
+                >
+                  Update Test
+                </Button>
+              </form>
+            </Grid>
+          </Grid>
+        </Box>
       </Box>
-    </Box>
     </>
   );
 };

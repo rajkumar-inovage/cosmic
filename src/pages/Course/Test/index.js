@@ -361,7 +361,7 @@ const Test = () => {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <Controller
                         name="start_date"
-                        control={control}
+                            control={control}
                         defaultValue={dayjs()} // Set default value to current date and time
                         rules={{ required: "Start date is required" }}
                         render={({ field }) => (
@@ -637,7 +637,7 @@ const Test = () => {
                             <Grid
                               item
                               xs={12}
-                              md={3}
+                              md={2.5}
                               sx={{ display: { xs: "none", md: "block" } }}
                             >
                               <Box>
@@ -647,17 +647,27 @@ const Test = () => {
                             <Grid
                               item
                               xs={12}
-                              md={3}
+                              md={2.5}
                               sx={{ display: { xs: "none", md: "block" } }}
                             >
                               <Box>
                                 <b>End Date</b>
                               </Box>
+                              </Grid>
+                              <Grid
+                              item
+                              xs={12}
+                              md={1.5}
+                              sx={{ display: { xs: "none", md: "block" } }}
+                            >
+                              <Box>
+                                <b>Type</b>
+                              </Box>
                             </Grid>
                             <Grid
                               item
                               xs={12}
-                              md={2}
+                              md={1.5}
                               sx={{ display: { xs: "none", md: "block" } }}
                             >
                               <b>Action</b>
@@ -749,13 +759,16 @@ const Test = () => {
                                       </h3>
                                     </Box>
                                   </Grid>
-                                  <Grid item xs={12} md={3}>
-                                    <Box>{sDate}</Box>
+                                  <Grid item xs={12} md={2.5}>
+                                    <Box><Typography component="strong" variant="b" sx={{display:{md:"none"}}}>Start Date: </Typography>{sDate}</Box>
                                   </Grid>
-                                  <Grid item xs={12} md={3}>
-                                    <Box>{eDate}</Box>
+                                  <Grid item xs={12} md={2.5}>
+                                    <Box><Typography component="strong" variant="b" sx={{display:{md:"none"}}}>End Date: </Typography>{eDate}</Box>
                                   </Grid>
-                                  <Grid item xs={12} md={2}>
+                                  <Grid item xs={12} md={1.5}>
+                                    <Box><Typography component="strong" variant="b" sx={{display:{md:"none"}}}>Type: </Typography>{test.type}</Box>
+                                  </Grid>
+                                  <Grid item xs={12} md={1.5}>
                                     <Grid item>
                                       <Box className="action-btn">
                                         <Button

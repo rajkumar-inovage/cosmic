@@ -135,7 +135,7 @@ export default function SidebarLeft() {
       [index]: !prevState[index],
     }));
   };
-  console.log(openSubmenus);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 1024) {
@@ -296,7 +296,7 @@ export default function SidebarLeft() {
                   >
                     <List component="div" disablePadding>
                       {item.submenus.map((submenuItem, submenuIndex) => (
-                        <ListItemButton onClick={() => toggleSubmenu(index)} component="a" href={submenuItem.link} sx={{
+                        <ListItemButton key={submenuIndex} onClick={() => toggleSubmenu(index)} component="a" href={submenuItem.link} sx={{
                           minHeight: 48,
                           justifyContent: open ? "initial" : "center",
                           px: 2.5,

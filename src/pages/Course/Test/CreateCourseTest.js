@@ -85,13 +85,14 @@ const CreateCourseTest = () => {
       const result = await response.json();
       setAlertOpen(true);
       if (result.success === true) {
-        setErrorValue("Test created successfully, please add questions in this test.")
+        setErrorValue("Test created successfully.")
         setIsTestCreated(true);
         setTimeout(() => {
           const newTestID = result.payload.test_guid;
           setTestGuid(newTestID);
           setAlertOpen(false);
-          navigate(`/course/test/add-question/${newTestID}?mt=${courseGuid}`);
+          //navigate(`/course/test/add-question/${newTestID}?mt=${courseGuid}`);
+          navigate(`/course/test/manage/${newTestID}?ci=${courseGuid}`)
         }, 3000);
       } else {
         setErrorValue(result.message.end_date || result.message.start_date || result.message.title || result.message.type || result.message.details || result.message.created_by)

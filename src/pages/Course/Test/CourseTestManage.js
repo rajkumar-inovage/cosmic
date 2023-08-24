@@ -424,7 +424,7 @@ const CourseTestManage = () => {
                     </Box>
                   </Card>
                 </Box>
-                <Box sx={{ mt: 3 }}>
+                <Box sx={{ mt: 3, display:"none" }}>
                   <Card sx={{ p: 4 }}>
                     <Typography
                       variant="h2"

@@ -12,6 +12,11 @@ import {
   RadioGroup,
   Radio,
   Snackbar,
+  Select,
+  InputLabel,
+  Menu,
+  MenuItem,
+  FormHelperText,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useForm, Controller } from "react-hook-form";
@@ -25,6 +30,7 @@ import CreatedBy from "../../Utils/createdBy";
 import { Helmet } from "react-helmet";
 import Network from "../../Utils/network";
 import SidebarLeft from "../../components/Sidebar/SidebarLeft";
+import { format } from "date-fns";
 
 const StyledFormControl = styled(FormControl)({
   marginBottom: "16px",
@@ -34,6 +40,14 @@ const TestSetting = () => {
   var myHeaders = new Headers();
   // Get current test details
   const [test, setTest] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(
+    test.on_date ? new Date(test.on_date) : null
+  );
+  // useEffect(() => {
+  //   if (test.on_date) {
+  //     setSelectedDate(new Date(test.on_date));
+  //   }
+  // }, [test.on_date]);
   const requestOption = {
     method: "GET",
     headers: myHeaders,
@@ -53,6 +67,7 @@ const TestSetting = () => {
     fetchTest();
   }, []);
   // End
+
   const {
     handleSubmit,
     control,
@@ -68,12 +83,16 @@ const TestSetting = () => {
       test_duration: test.test_duration,
       show_timer: test.show_timer,
       show_result: test.show_result,
-      on_date: test.on_date,
-      num_attempts: test.num_attempts,
+      //on_date: test.on_date,
+      on_date: test.on_date ? new Date(test.on_date) : null,
+      pass_marks_unit: "",
+      num_attempts: "",
     },
   });
 
-  const { show_timer, show_result } = watch();
+  const [validationErrors, setValidationErrors] = useState({});
+  const { show_timer, show_result, num_attempts, pass_marks_unit, on_date } =
+    watch();
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [saveSetting, setSaveSetting] = useState(null);
@@ -102,7 +121,13 @@ const TestSetting = () => {
         setSaveSetting(result.success);
       } else {
         setAlertMessage(
-          "Invalid input value, value should be number 1,2,3,4..."
+          result.message.marks_per_question
+            ? result.message.marks_per_question
+            : result.message.test_duration
+            ? "INVALID TEST DURATION VALUE"
+            : result.message.neg_marks_per_question
+            ? result.message.neg_marks_per_question
+            : result.message.pass_marks
         );
       }
     } catch (error) {
@@ -111,7 +136,7 @@ const TestSetting = () => {
     }
   };
 
-  console.log(alertMessage);
+  const attempts = Array.from({ length: 10 }, (_, index) => index + 1);
   return (
     <>
       <Helmet>
@@ -168,7 +193,7 @@ const TestSetting = () => {
                         value={CreatedBy}
                       />
                       <Grid container spacing={2}>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} sm={6} md={4}>
                           <StyledFormControl sx={{ mt: 3, width: "100%" }}>
                             <FormTextField
                               control={control}
@@ -179,18 +204,33 @@ const TestSetting = () => {
                             />
                           </StyledFormControl>
                         </Grid>
-                        <Grid item xs={12} md={6}>
-                          <StyledFormControl sx={{ mt: 3, width: "100%" }}>
-                            <FormTextField
-                              control={control}
-                              label="Number of attempts"
-                              defaultValue="1"
-                              variant="outlined"
+                        <Grid item xs={12} sm={6} md={4}>
+                          <FormControl sx={{ mt: 3, width: "100%" }}>
+                            <InputLabel id="select-label-attempt">
+                              Number of attempts
+                            </InputLabel>
+                            <Controller
                               name="num_attempts"
+                              control={control}
+                              defaultValue="" // Set your default value here for edit page
+                              render={({ field }) => (
+                                <Select
+                                  {...field}
+                                  labelId="select-label-attempt"
+                                  label="Number of attempts"
+                                >
+                                  <MenuItem value="0">0 (No Limit)</MenuItem>
+                                  {attempts.map((attempt, i) => (
+                                    <MenuItem key={i} value={attempt}>
+                                      {attempt}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              )}
                             />
-                          </StyledFormControl>
+                          </FormControl>
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} sm={6} md={4}>
                           <FormControl sx={{ mt: 3, width: "100%" }}>
                             <FormTextField
                               control={control}
@@ -199,11 +239,10 @@ const TestSetting = () => {
                               variant="outlined"
                               pattern="[0-9]*"
                               name="test_duration"
-                              required
                             />
                           </FormControl>
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} sm={6} md={4}>
                           <StyledFormControl sx={{ mt: 3, width: "100%" }}>
                             <FormTextField
                               control={control}
@@ -214,7 +253,7 @@ const TestSetting = () => {
                             />
                           </StyledFormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={6} md={4}>
                           <StyledFormControl sx={{ mt: 3, width: "100%" }}>
                             <FormTextField
                               control={control}
@@ -224,6 +263,30 @@ const TestSetting = () => {
                               name="pass_marks"
                             />
                           </StyledFormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                          <FormControl sx={{ mt: 3, width: "100%" }}>
+                            <InputLabel id="type-select-label-pass">
+                              Passing Mark Unit
+                            </InputLabel>
+                            <Controller
+                              name="pass_marks_unit"
+                              control={control}
+                              defaultValue="" // Set your default value here for edit page
+                              render={({ field }) => (
+                                <Select
+                                  {...field}
+                                  labelId="type-select-label-pass"
+                                  label="Passing Mark Unit"
+                                >
+                                  <MenuItem value="fixed">Fixed</MenuItem>
+                                  <MenuItem value="percentage">
+                                    Percentage
+                                  </MenuItem>
+                                </Select>
+                              )}
+                            />
+                          </FormControl>
                         </Grid>
                         <Grid item xs={12}>
                           <Typography
@@ -269,36 +332,6 @@ const TestSetting = () => {
                               </RadioGroup>
                             )}
                           />
-                          {/* <RadioGroup aria-label="options" name="show_timer">
-                            <FormControlLabel
-                              value="true"
-                              control={
-                                <Radio
-                                  onChange={({ target: { checked } }) => {
-                                    setValue(
-                                      "show_timer",
-                                      checked ? "true" : "false"
-                                    );
-                                  }}
-                                />
-                              }
-                              label="Yes"
-                            />
-                            <FormControlLabel
-                              value="false"
-                              control={
-                                <Radio
-                                  onChange={({ target: { checked } }) => {
-                                    setValue(
-                                      "show_timer",
-                                      checked ? "false" : "true"
-                                    );
-                                  }}
-                                />
-                              }
-                              label="No"
-                            />
-                          </RadioGroup> */}
                         </Grid>
                         <Grid item xs={12}>
                           <Typography
@@ -350,28 +383,37 @@ const TestSetting = () => {
                                   value="on_date"
                                   control={<Radio />}
                                   label={
-                                    <div
-                                      style={{ display: "flex", width: "100%" }}
+                                    <Box
+                                      sx={{ display: "flex", width: "100%" }}
                                     >
                                       <span style={{ minWidth: "max-content" }}>
                                         On Date:
                                       </span>
+                                      <span style={{ width: "inherit" }}>
+                                        {test.on_date}
+                                      </span>
                                       <DatePicker
                                         className="on-time-date"
-                                        selected={
-                                          value === "on_date"
-                                            ? watch("on_date")
-                                              ? new Date(watch("on_date"))
-                                              : null
-                                            : null
-                                        }
+                                        selected={selectedDate}
                                         onChange={(date) => {
-                                          setValue("on_date", date);
+                                          setSelectedDate(date);
+                                          setValue(
+                                            "on_date",
+                                            date
+                                              ? format(
+                                                  date,
+                                                  "dd-MM-yyyy HH:mm:ss"
+                                                )
+                                              : null
+                                          );
                                         }}
                                         disabled={value !== "on_date"}
-                                        dateFormat="dd/MM/yyyy"
+                                        showTimeSelect
+                                        timeFormat="HH:mm"
+                                        timeIntervals={15}
+                                        dateFormat="dd-MM-yyyy HH:mm"
                                       />
-                                    </div>
+                                    </Box>
                                   }
                                 />
                                 {/* Display error message if needed */}

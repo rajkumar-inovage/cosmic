@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
@@ -31,7 +31,6 @@ const StyledFormControl = styled(FormControl)({
 
 const CreateTest = () => {
   const {
-    control,
     handleSubmit,
     formState: { errors },
   } = useForm();
@@ -94,7 +93,7 @@ const CreateTest = () => {
           const newTestID = result.payload.guid;
           setGuid(newTestID);
           setAlertOpen(false)
-          navigate(`/test/add-question/${newTestID}`);
+          navigate(`/test/manage/${newTestID}`);
         }, 3000);
       }
       else {

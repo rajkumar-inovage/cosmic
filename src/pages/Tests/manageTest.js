@@ -205,6 +205,7 @@ const ManageTest = () => {
   }
   const formattedTime = formatDurationToHHMMSS(AllMinutes);
   console.log(myAttempts.remaining)
+  console.log(test)
   return (
     <>
       <Helmet>

@@ -37,12 +37,12 @@
 /* .grecaptcha-badge {
   display: none !important;
 } */
-footer {
-  position: absolute;
-  bottom: 0;
+/* footer {
+  position: fixed;
+  bottom:20px;
   width: 100%;
-  padding: auto;
-}
+  padding:5px;
+} */
 #not-found-page .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper.MuiDrawer-paperAnchorLeft.MuiDrawer-paperAnchorDockedLeft{
   width: 0;
 }
@@ -78,6 +78,7 @@ body .listing{
 
 body main {
   margin-top: 64px;
+  padding-bottom:100px;
 }
 .on-time-date {
   background: transparent;
