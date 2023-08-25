@@ -81,7 +81,6 @@ const ImportQuestion = () => {
           requestOptions
         );
         const saveResult = await res.json();
-console.log(saveResult)
         if (saveResult.success === true) {
           const questionsAll = saveResult.payload[0];
           setImportedQuestion(questionsAll);

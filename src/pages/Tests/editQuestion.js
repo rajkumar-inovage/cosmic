@@ -153,12 +153,14 @@ const EditQuestion = () => {
     );
   }, [choice]);
 
-  // Upload file in question
-  const [file, setFile] = useState(null);
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setValue("userfile", selectedFile);
-  };
+   // Upload file in question
+   const [file, setFile] = useState(null);
+   const handleFileChange = (e) => {
+     if (e.target.files.length > 0) {
+       const [selectedFile] = e.target.files;
+       setValue("userfile", selectedFile); 
+     }
+   }
   // End Upload file
   // Search Parent ID
   const handleSearchChange = (event) => {
@@ -210,6 +212,7 @@ const EditQuestion = () => {
       formdata.append(`choice[${i}]`, data.choice[i]);
       formdata.append(`correct_answer[${i}]`, data.correct_answer[i]);
     }
+    formdata.append("userfile", userfile);
     formdata.append("created_by", CreatedBy);
     var requestOptions = {
       method: "POST",
