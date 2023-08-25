@@ -395,7 +395,7 @@ const CourseTestManage = () => {
                         <Divider variant="" component="li" />
                         <ListItem sx={{ pl: 0 }}>
                           <Link
-                            href={`/test/preview-test/${guid}`}
+                            href={`/course/test/preview/${guid}`}
                             color="inherit"
                             underline="none"
                             sx={{ display: "flex", alignItems: "center" }}
@@ -522,7 +522,7 @@ const CourseTestManage = () => {
                         <Divider variant="" component="li" />
                         <ListItem sx={{ pl: 0 }}>
                           <Link
-                            href={`/test/edit/${guid}`}
+                            href={`/course/test/edit/${guid}?ci=${queryValue}`}
                             color="inherit"
                             underline="none"
                             sx={{

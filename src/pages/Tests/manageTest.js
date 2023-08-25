@@ -204,8 +204,7 @@ const ManageTest = () => {
     return `${hours}:${minutesFormatted}:${seconds}`;
   }
   const formattedTime = formatDurationToHHMMSS(AllMinutes);
-  console.log(myAttempts.remaining)
-  console.log(test)
+console.log(myAttempts)
   return (
     <>
       <Helmet>
@@ -403,7 +402,7 @@ const ManageTest = () => {
                       color: "#ffffff",
                     }}
                   >
-                    {test.stats && test.stats.attempts}
+                    {test.settings && test.settings.num_attempts === 0 ? "No limit" : test.settings && test.settings.num_attempts }
                   </Typography>
                   <Box
                     variant="p"
@@ -563,11 +562,11 @@ const ManageTest = () => {
                               display: "flex",
                               alignItems: "center",
                               pointerEvents:
-                                test.stats && test.stats.questions === 0 || myAttempts && myAttempts.remaining <= 0
+                              test.settings && test.settings.num_attempts < 0 || myAttempts && myAttempts.remaining <= 0
                                   ? "none"
                                   : "auto",
                               opacity:
-                                test.stats && test.stats.questions === 0 || myAttempts && myAttempts.remaining <= 0
+                              test.settings && test.settings.num_attempts < 0 || myAttempts && myAttempts.remaining <= 0
                                   ? "0.5"
                                   : "1",
                             }}

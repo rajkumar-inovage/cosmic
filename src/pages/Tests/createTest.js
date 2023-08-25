@@ -166,10 +166,8 @@ const CreateTest = () => {
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
-              <Button variant="contained">
-                <Link href="/test/list" color="inherit" underline="none">
-                  Cancel
-                </Link>
+              <Button variant="contained" component={Link} href="/test/list" className="custom-button">
+                Cancel
               </Button>
             </Grid>
           </Grid>
@@ -272,7 +270,7 @@ const CreateTest = () => {
                   />
                 </StyledFormControl>
 
-                <Button variant="contained" type="submit">
+                <Button variant="contained" type="submit" className="custom-button">
                   Save Test
                 </Button>
               </form>

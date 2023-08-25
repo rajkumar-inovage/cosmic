@@ -48,6 +48,8 @@ import CourseTestEdit from "../pages/Course/Test/CourseTestEdit";
 import AddCourseTestQues from "../pages/Course/Test/AddQuestions";
 import PreviewTestCourse from "../pages/Course/Test/PreviewTest";
 import CourseTestManage from "../pages/Course/Test/CourseTestManage"
+import CourseEditQuestion from "../pages/Course/Test/CourseEditQuestion"
+import CourseTestPreview from "../pages/Course/Test/CourseTestPreview"
 import CreateCourseTest from "../pages/Course/Test/CreateCourseTest";
 import Meetings from "../pages/Course/Meetings";
 import AddCourseMeeting from "../pages/Course/Meetings/AddCourseMeeting";
@@ -118,6 +120,8 @@ const AppRouter = () => {
         <Route path={"/course/create"} element={<CreateCourse />} />
         <Route path={"/course/test/edit/:guid"} element={<CourseTestEdit />} />
         <Route path={"/course/test/add-question/:guid"} element={<AddCourseTestQues />} />
+        <Route path={"/course/test/edit-question/:guid/:qid"} element={<CourseEditQuestion />} />
+        <Route path={"/course/test/preview/:guid"} element={<CourseTestPreview />} />
         <Route path={"/course/test/preview/:guid"} element={<PreviewTestCourse />} />
         <Route path={"/course/test/manage/:guid"} element={<CourseTestManage />} />
         <Route path={"/course/update/:courseGuid"} element={<UpdateCourse />} />

@@ -18,13 +18,13 @@ import ReactHtmlParser from "react-html-parser";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import CachedIcon from "@mui/icons-material/Cached";
-import BASE_URL from "../../Utils/baseUrl";
-import CreatedBy from "../../Utils/createdBy";
-import token from "../../Utils/token";
-import Network from "../../Utils/network";
-import SidebarLeft from "../../components/Sidebar/SidebarLeft";
+import BASE_URL from "../../../Utils/baseUrl";
+import CreatedBy from "../../../Utils/createdBy";
+import token from "../../../Utils/token";
+import Network from "../../../Utils/network";
+import SidebarLeft from "../../../components/Sidebar/SidebarLeft";
 
-const PreviewTest = () => {
+const CourseTestPreview = () => {
   // State variables for Snackbar
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -248,7 +248,7 @@ const PreviewTest = () => {
                   className="custom-button"
                   variant="contained"
                   component={Link}
-                  href={`/test/manage/${guid}`}
+                  href={`/course/test/manage/${guid}`}
                 >
                   Back
                 </Button>
@@ -398,7 +398,7 @@ const PreviewTest = () => {
                           />
                           <Button
                             component={Link}
-                            href={`/test/edit-question/${guid}/${question.guid}`}
+                            href={`/course/test/edit-question/${guid}/${question.guid}`}
                           >
                             <EditOutlinedIcon />
                           </Button>
@@ -462,4 +462,4 @@ const PreviewTest = () => {
     </>
   );
 };
-export default PreviewTest;
+export default CourseTestPreview;

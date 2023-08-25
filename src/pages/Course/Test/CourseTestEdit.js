@@ -23,6 +23,8 @@ import CreatedBy from "../../../Utils/createdBy";
 import SidebarLeft from "../../../components/Sidebar/SidebarLeft";
 
 // Date Time picker
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
@@ -36,6 +38,7 @@ const CourseTestEdit = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const mtValue = params.get("mt");
+  const courseId = params.get("ci");
   const { guid } = useParams();
   const { handleSubmit, control, reset } = useForm({
     defaultValues: {
@@ -79,7 +82,7 @@ const CourseTestEdit = () => {
       const result = await response.json();
       setIsTestCreated(true);
       setTimeout(() => {
-        navigate(`/course/test/manage/${guid}?ci=${mtValue}`);
+        navigate(`/course/test/manage/${guid}?ci=${courseId}`);
       }, 1000);
       reset();
     } catch (error) {
@@ -107,6 +110,7 @@ const CourseTestEdit = () => {
     };
     fetchTest();
   }, [reset]);
+  console.log(test);
   return (
     <>
       <Helmet>
@@ -148,25 +152,14 @@ const CourseTestEdit = () => {
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
-              {mtValue ? (
-                <Button
-                  variant="contained"
-                  className="custom-button"
-                  component={Link}
-                  href={`/course/${mtValue}/test/list`}
-                >
-                  Back
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  className="custom-button"
-                  component={Link}
-                  href="/test/list"
-                >
-                  Back
-                </Button>
-              )}
+              <Button
+                variant="contained"
+                className="custom-button"
+                component={Link}
+                href={`/course/test/manage/${guid}?ci=${courseId}`}
+              >
+                Back
+              </Button>
             </Grid>
           </Grid>
           <Grid container spacing={2} sx={{ mt: 3 }}>
@@ -187,7 +180,7 @@ const CourseTestEdit = () => {
                     </FormHelperText>
                   )}
                 </StyledFormControl>
-                <Grid container spacing={2}>
+                {/* <Grid container spacing={2} >
                   <Grid item xs={12} md={6} sx={{ mt: 2 }}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <Controller
@@ -228,7 +221,7 @@ const CourseTestEdit = () => {
                       />
                     </LocalizationProvider>
                   </Grid>
-                </Grid>
+                </Grid> */}
                 <StyledFormControl sx={{ mt: 3, width: "100%" }}>
                   <Box sx={{ pb: 2, fontWeight: "500" }}>Details</Box>
                   <FormEditorField control={control} name="details" />

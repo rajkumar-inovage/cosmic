@@ -59,8 +59,8 @@ const TestList = ({ item }) => {
               </Box>
             </Grid>
           </Grid>
-          <Grid container spacing={2} sx={{ py: 0 }}>
-            <Grid item xs={12} sx={{ py: 0 }}>
+          <Grid container sx={{ py: 0 }}>
+            <Grid item xs={12} sx={{ pt:0, display:"block", mt:0 }}>
               <Typography component="h5">
                 <strong>ID:</strong>
                 {item.guid}

@@ -369,7 +369,7 @@ const TakeTest = () => {
   }
 
   //console.log(testData);
-  console.log(dialogOpen)
+  console.log(testData)
   return (
     <>
       <Helmet>
@@ -495,6 +495,28 @@ const TakeTest = () => {
                 {testData[currentQuestion] && (
                   <h4>{ReactHtmlParser(testData[currentQuestion].question)}</h4>
                 )}
+                {(testData[currentQuestion] && testData[currentQuestion].file_hash !== null) ||
+                                  (testData[currentQuestion] &&
+                                    testData[currentQuestion].file_url_path !== null) ? (
+                                    <Box
+                                      sx={{ width: "100%", maxWidth: "500px" }}
+                                    >
+                                      <img
+                                          style={{
+                                          maxWidth:"100%",
+                                          height: "auto",
+                                        }}
+                                        src={
+                                          testData[currentQuestion] &&
+                                          testData[currentQuestion].file_url_path &&
+                                          testData[currentQuestion].file_hash &&
+                                          testData[currentQuestion].file_url_path + "/" + testData[currentQuestion].file_hash
+                                        } 
+                                      />
+                                    </Box>
+                                  ) : (
+                                    ""
+                                  )}
                 {/* Display options */}
                 {testData[currentQuestion] && (
                   <FormGroup>

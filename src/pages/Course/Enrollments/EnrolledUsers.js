@@ -326,7 +326,7 @@ const EnrolledUsers = () => {
                             />
                           </Button>
 
-                          <Button onClick={handleBulkConfirmOpen}>
+                          <Button sx={{opacity:selectedUsers.length !== 0 ? "1" : "0.5",pointerEvents:selectedUsers.length !== 0 ? "auto" : "none"}} onClick={handleBulkConfirmOpen}>
                             UnEnroll User
                           </Button>
                         </ButtonGroup>

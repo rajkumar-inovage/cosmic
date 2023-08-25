@@ -35,8 +35,8 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { styled } from "@mui/material/styles";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import dayjs from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { tooltipClasses } from "@mui/material/Tooltip";
 import { useTheme } from '@mui/material/styles';
@@ -64,6 +64,7 @@ const Test = () => {
   const { courseGuid } = useParams();
   const {
     control,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -72,7 +73,7 @@ const Test = () => {
       end_date: "",
     },
   });
-
+  const { start_date, end_date } = watch();
   const [tests, setTests] = useState("");
   const [searchTitle, setSearchTitle] = useState("");
   const [loading, setLoading] = useState(true);
@@ -339,12 +340,13 @@ const Test = () => {
         {/* Bulk Delete Confirmation popup */}
 
         <Dialog
+          className="enroll-date-outer"
           open={isConfirmOpen}
           onClose={actionConfirmClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">Confirm</DialogTitle>
+          <DialogTitle id="alert-dialog-title">{ selectedAction && selectedAction === "changeDate" ? "Select start and end date" : "Confirm"}</DialogTitle>
           <DialogContent>
             {selectedAction && selectedAction === "remove" ? (
               <DialogContentText id="alert-dialog-description">
@@ -357,7 +359,7 @@ const Test = () => {
             ) : (
               <form onSubmit={handleSubmit(handleChangeDate)}>
                 <Grid container spacing={2} sx={{ py: 3 }}>
-                  <Grid item xs={12} md={6}>
+                  {/* <Grid item xs={12} md={6}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <Controller
                         name="start_date"
@@ -396,7 +398,57 @@ const Test = () => {
                         )}
                       />
                     </LocalizationProvider>
-                  </Grid>
+                  </Grid> */}
+                      <Grid item xs={12} md={6}>
+                  <label>Start Date</label>
+                  <Controller
+                    fullWidth
+                    name="start_date"
+                    control={control}
+                    defaultValue={null}
+                    render={({ field }) => (
+                      <DatePicker
+                        className="enroll-date"
+                        sx={{ width: "100%" }}
+                        {...field}
+                        selected={field.value}
+                        onChange={(date) => {
+                          field.onChange(date);
+                        }}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        dateFormat="yyyy-MM-dd HH:mm:ss"
+                        placeholderText="YYYY-MM-DD HH:mm:ss" // Add the placeholder
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <label>End Date</label>
+                  <Controller
+                    fullWidth
+                    name="end_date"
+                    control={control}
+                    defaultValue={null}
+                    render={({ field }) => (
+                      <DatePicker
+                        className="enroll-date"
+                        sx={{ width: "100%" }}
+                        {...field}
+                        selected={field.value}
+                        onChange={(date) => {
+                          field.onChange(date); // Update the field value directly
+                        }}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        dateFormat="yyyy-MM-dd HH:mm:ss" // Set the desired display format
+                        placeholderText="YYYY-MM-DD HH:mm:ss" // Add the placeholder
+                      />
+                    )}
+                  />
+                </Grid>
                   <Grid item xs={6}>
                     <Button
                       onClick={actionConfirmClose}
@@ -413,7 +465,8 @@ const Test = () => {
                       variant="contained"
                       className="custom-button"
                       color="primary"
-                      autoFocus
+                          autoFocus
+                          disabled={!watch("start_date") || !watch("end_date")}
                     >
                       Change
                     </Button>
@@ -785,7 +838,7 @@ const Test = () => {
                                         </Button>
                                         <Button
                                           component={Link}
-                                          href={`/course/test/edit/${test.guid}?mt=${courseGuid}`}
+                                          href={`/course/test/edit/${test.guid}?ci=${courseGuid}`}
                                           color="warning"
                                           sx={{
                                             fontSize: 16,
