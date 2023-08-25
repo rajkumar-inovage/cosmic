@@ -58,6 +58,7 @@ const EditQuestion = () => {
   const mtValue = params.get("mt");
   const { guid } = useParams();
   const { qid } = useParams();
+  console.log(qid)
   const {
     handleSubmit,
     control,
