@@ -155,7 +155,7 @@ const AllQuestions = () => {
                         </Box>
                         {(question && question.file_hash !== null) ||
                         (question && question.file_url_path !== null) ? (
-                          <Box sx={{ width: "100%", maxWidth: "500px",ml:3 }}>
+                          <Box sx={{ width: "100%", maxWidth: "500px",ml:3   }}>
                             <img
                               style={{
                                 maxWidth: "100%",

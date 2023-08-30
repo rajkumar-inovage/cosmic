@@ -43,11 +43,13 @@ const ImportQuestion = () => {
   const [selectedQuestionId, setSelectedQuestionId] = useState("");
   const [questionDetails, setQuestionDetails] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const handleOpen = (index, question) => {
+  const handleOpen = (questionNumber, question) => {
     setOpenEditQuestion(true);
-    setSelectedQuestionId(index);
-    setQuestionDetails(index);
+    setSelectedQuestionId(questionNumber);
+    setQuestionDetails(questionNumber);
   };
+
+  console.log(openEditQuestion)
 
   // Upload file in question
   const handleFileChange = (e) => {
@@ -111,6 +113,75 @@ const ImportQuestion = () => {
   };
   const sampleFileUrl = "/path/to/sample/file.txt";
   const [selectedQ, setSelectedQ] = useState(undefined);
+  //console.log(importedQuestion)
+  
+  const Question = ({ questionData, questionNumber }) => {
+    const { question, parent_id, choice, question_type, correct_answer } = questionData;
+  console.log(questionData)
+    // Render parent question or child question
+    if (parent_id === 0 && question_type === "comp") {
+      // Render parent directions
+      return <Box className="parent-q"><strong>{question}</strong></Box>;
+    } else {
+      // Render child question
+      return (
+        <Box className="child-q" sx={{ mb: 3, mt: 2 }}>
+          <Box sx={{ display: "flex", alignItems:"center", fontWeight:500 }}>
+                      {questionNumber}. {ReactHtmlParser(question)}
+                      <Button
+                        onClick={() => {
+                          handleOpen(questionNumber);
+                          setSelectedQ(
+                            questionData &&
+                              Object.values(questionData)[questionNumber]
+                          );
+                        }}
+                      >
+                        <EditIcon />
+                      </Button>
+                    </Box>
+          
+          <ol style={{ listStyleType: "lower-alpha", paddingLeft: "20px", marginTop: "10px" }}>
+            {choice && choice.map((item, i) => (
+              <li
+                style={{ color: correct_answer[i] === 1 ? "#A6CD4E" : "" }}
+                key={i}
+              >
+                {ReactHtmlParser(item)}
+              </li>
+            ))}
+          </ol>
+        </Box>
+      );
+    }
+  };
+  
+  const QuestionList = ({ questionData }) => {
+    let childQuestionCounter = 0;
+  
+    return (
+      <Box className="demo2">
+        {questionData &&
+          Object.values(questionData).map((questionData, index) => {
+            if (questionData.parent_id === 0 && questionData.question_type === "comp") {
+              // Render parent directions
+              return <Question key={index} questionData={questionData} />;
+            } else {
+              // Increment child question counter and render child question
+              childQuestionCounter++;
+              return (
+                <Question
+                  key={index}
+                  questionData={questionData}
+                  questionNumber={`Q${childQuestionCounter}`}
+                />
+              );
+            }
+          })}
+      </Box>
+    );
+  };
+  console.log(selectedQ)
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -159,7 +230,7 @@ const ImportQuestion = () => {
                   type="file"
                   id="file-upload"
                   hidden
-                  helperText={errors.userfile && "File is required"}
+                  //helperText={errors.userfile && "File is required"}
                 />
                 <label
                   htmlFor="file-upload"
@@ -192,7 +263,7 @@ const ImportQuestion = () => {
                       </Grid>
                     ) : (
                       <Grid item>
-                        <Button variant="contained" type="submit">
+                        <Button variant="contained" type="submit" sx={{pointerEvents:selectedFile !== null ? "auto" : "none", opacity:selectedFile !== null ? "1" : "0.5"}}>
                           Upload & Preview
                         </Button>
                       </Grid>
@@ -208,51 +279,15 @@ const ImportQuestion = () => {
             </Grid>
           </Grid>
           <Grid container spacing={2} sx={{ mt: 0 }}>
-            {importedQuestion &&
-              Object.values(importedQuestion).map(
-                ({ question, choice, correct_answer }, index) => (
-                  <Grid item key={index} xs={12}>
-                    <Box sx={{ display: "flex" }}>
-                      {index + 1}. {ReactHtmlParser(question)}
-                      <Button
-                        onClick={() => {
-                          handleOpen(index);
-                          setSelectedQ(
-                            importedQuestion &&
-                              Object.values(importedQuestion)[index]
-                          );
-                        }}
-                      >
-                        <EditIcon />
-                      </Button>
-                    </Box>
-                    <ol
-                      style={{
-                        listStyleType: "lower-alpha",
-                        paddingLeft: "45px",
-                      }}
-                    >
-                      {choice &&
-                        choice.map((item, i) => (
-                          <li
-                            style={{
-                              color: correct_answer[i] === 1 ? "#A6CD4E" : "",
-                            }}
-                            key={i}
-                          >
-                            {ReactHtmlParser(item)}
-                          </li>
-                        ))}
-                    </ol>
-                  </Grid>
-                )
-              )}
+            <Grid item>
+            <QuestionList questionData={importedQuestion} />
+          </Grid>
           </Grid>
         </Box>
       </Box>
 
       <EditQuestionPopup
-        openEditQuestion={selectedQ !== undefined}
+        openEditQuestion={selectedQ}
         closePopup={() => {
           setSelectedQ(undefined);
         }}

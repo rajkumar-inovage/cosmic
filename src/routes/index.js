@@ -60,7 +60,6 @@ import Students from "../pages/Users/Students";
 import Settings from "../pages/Auth/Settings/Index";
 import RedirectLogic from "../components/Redirect/RedirectLogic";
 import MyAccount from "../../src/pages/Auth/MyAccount"
-//import Notfound from "../../src/pages/404"
 
 
 const AppRouter = () => {
