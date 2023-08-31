@@ -37,7 +37,7 @@ import FormEditorField from "../../components/Common/formEditorField";
 import FormTextField from "../../components/Common/formTextField";
 import CreatedBy from "../../Utils/createdBy";
 
-const EditQuestionPopup = ({
+const UpdateQuestion = ({
   importedQuestion,
   setImportedQuestion,
   openEditQuestion,
@@ -46,6 +46,7 @@ const EditQuestionPopup = ({
   closePopup,
   selectedQ,
 }) => {
+  console.log(selectedQ);
   const { guid } = useParams();
   const {
     register,
@@ -290,55 +291,58 @@ const EditQuestionPopup = ({
                       Multi Choice Question
                     </Typography>
                     <FormGroup>
-                      {choice.map((item, index) => (
-                        <div key={index}>
-                          <input
-                            type="hidden"
-                            name={`order[${index}]`}
-                            value={item}
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                name={`correct_answer[${index}]`}
-                                //checked={`correct_answer[${index}]` === "1"}
-                                checked={
-                                  `correct_answer[${index}]` === 1
-                                    ? true
-                                    : false
-                                }
-                                control={control}
-                                onChange={({ target: { checked } }) => {
-                                  setValue(
-                                    `correct_answer[${index}]`,
-                                    checked ? "1" : "0"
-                                  );
-                                }}
-                                className={`correct_answer[${index}]`}
-                                value={`choice ${index}`}
-                              />
-                            }
-                            label={`Choice ${index + 1}`}
-                          />
-
-                          <Box style={{ width: "100%", marginBottom: "16px" }}>
-                            <Editor
-                              control
+                      {choice &&
+                        choice.map((item, index) => (
+                          <div key={index}>
+                            <input
+                              type="hidden"
+                              name={`order[${index}]`}
                               value={item}
-                              name={`choice[${index}]`}
-                              init={{
-                                height: 250,
-                              }}
-                              onEditorChange={(content, editor) => {
-                                setValue(`choice[${index}]`, content);
-                              }}
                             />
-                          </Box>
-                          <FormHelperText error={Boolean(errorcheck)}>
-                            {errorcheck}
-                          </FormHelperText>
-                        </div>
-                      ))}
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name={`correct_answer[${index}]`}
+                                  //checked={`correct_answer[${index}]` === "1"}
+                                  checked={
+                                    `correct_answer[${index}]` === 1
+                                      ? true
+                                      : false
+                                  }
+                                  control={control}
+                                  onChange={({ target: { checked } }) => {
+                                    setValue(
+                                      `correct_answer[${index}]`,
+                                      checked ? "1" : "0"
+                                    );
+                                  }}
+                                  className={`correct_answer[${index}]`}
+                                  value={`choice ${index}`}
+                                />
+                              }
+                              label={`Choice ${index + 1}`}
+                            />
+
+                            <Box
+                              style={{ width: "100%", marginBottom: "16px" }}
+                            >
+                              <Editor
+                                control
+                                value={item}
+                                name={`choice[${index}]`}
+                                init={{
+                                  height: 250,
+                                }}
+                                onEditorChange={(content, editor) => {
+                                  setValue(`choice[${index}]`, content);
+                                }}
+                              />
+                            </Box>
+                            <FormHelperText error={Boolean(errorcheck)}>
+                              {errorcheck}
+                            </FormHelperText>
+                          </div>
+                        ))}
                       <Button
                         variant="outlined"
                         sx={{ width: "150px", mb: 5 }}
@@ -479,4 +483,4 @@ const EditQuestionPopup = ({
   );
 };
 
-export default EditQuestionPopup;
+export default UpdateQuestion;

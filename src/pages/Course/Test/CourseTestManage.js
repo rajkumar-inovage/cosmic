@@ -132,15 +132,18 @@ const CourseTestManage = () => {
 
   const navigate = useNavigate();
   const [testDeleted, setTestDeleted] = useState(null);
+  var formdata = new FormData();
   const handleDeletetest = async () => {
+    formdata.append("tests[0]", selectedTestId);
     const requestOptions = {
-      method: "DELETE",
-      headers: myHeaders,
-      redirect: "follow",
+      method: 'POST',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
     };
     try {
       const res = await fetch(
-        `${BASE_URL}/tests/delete/${guid}`,
+        `${BASE_URL}/course/delete_tests/${queryValue}`,
         requestOptions
       );
       const statusResult = await res.json();
@@ -150,7 +153,7 @@ const CourseTestManage = () => {
       }
       setDeleteConfirmOpen(false);
       setTimeout(() => {
-        navigate(`/test/list`);
+        navigate(`/course/${queryValue}/test/list`);
       }, 1000);
     } catch (error) {
       console.error(error);

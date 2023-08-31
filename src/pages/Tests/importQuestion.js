@@ -14,7 +14,7 @@ import { serialize } from "object-to-formdata";
 import ReactHtmlParser from "react-html-parser";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import EditIcon from "@mui/icons-material/Edit";
-import EditQuestionPopup from "../../components/Test/editQuestionPopup";
+import UpdateQuestion from "../../components/Test/updateQuestion";
 import BASE_URL from "../../Utils/baseUrl";
 import token from "../../Utils/token";
 import Network from "../../Utils/network";
@@ -43,13 +43,11 @@ const ImportQuestion = () => {
   const [selectedQuestionId, setSelectedQuestionId] = useState("");
   const [questionDetails, setQuestionDetails] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const handleOpen = (questionNumber, question) => {
+  const handleOpen = (q_id) => {
     setOpenEditQuestion(true);
-    setSelectedQuestionId(questionNumber);
-    setQuestionDetails(questionNumber);
+    setSelectedQuestionId(q_id);
+    setQuestionDetails(q_id);
   };
-
-  console.log(openEditQuestion)
 
   // Upload file in question
   const handleFileChange = (e) => {
@@ -113,66 +111,90 @@ const ImportQuestion = () => {
   };
   const sampleFileUrl = "/path/to/sample/file.txt";
   const [selectedQ, setSelectedQ] = useState(undefined);
-  //console.log(importedQuestion)
-  
-  const Question = ({ questionData, questionNumber }) => {
-    const { question, parent_id, choice, question_type, correct_answer } = questionData;
-  console.log(questionData)
+
+  const Question = ({ allQues, qData, questionNumber, q_id }) => {
+    const { question, parent_id, choice, question_type, correct_answer } =
+      qData;
     // Render parent question or child question
     if (parent_id === 0 && question_type === "comp") {
       // Render parent directions
-      return <Box className="parent-q"><strong>{question}</strong></Box>;
+      return (
+        <Box className="parent-q">
+          <strong>{question}</strong>
+          <Button
+            onClick={() => {
+              handleOpen(q_id);
+              setSelectedQ(allQues && Object.values(allQues)[q_id - 1]);
+            }}
+          >
+            <EditIcon />
+          </Button>
+        </Box>
+      );
     } else {
       // Render child question
       return (
         <Box className="child-q" sx={{ mb: 3, mt: 2 }}>
-          <Box sx={{ display: "flex", alignItems:"center", fontWeight:500 }}>
-                      {questionNumber}. {ReactHtmlParser(question)}
-                      <Button
-                        onClick={() => {
-                          handleOpen(questionNumber);
-                          setSelectedQ(
-                            questionData &&
-                              Object.values(questionData)[questionNumber]
-                          );
-                        }}
-                      >
-                        <EditIcon />
-                      </Button>
-                    </Box>
-          
-          <ol style={{ listStyleType: "lower-alpha", paddingLeft: "20px", marginTop: "10px" }}>
-            {choice && choice.map((item, i) => (
-              <li
-                style={{ color: correct_answer[i] === 1 ? "#A6CD4E" : "" }}
-                key={i}
-              >
-                {ReactHtmlParser(item)}
-              </li>
-            ))}
+          <Box sx={{ display: "flex", alignItems: "center", fontWeight: 500 }}>
+            {questionNumber}. {ReactHtmlParser(question)}
+            <Button
+              onClick={() => {
+                handleOpen(q_id);
+                setSelectedQ(allQues && Object.values(allQues)[q_id - 1]);
+              }}
+            >
+              <EditIcon />
+            </Button>
+          </Box>
+
+          <ol
+            style={{
+              listStyleType: "lower-alpha",
+              paddingLeft: "20px",
+              marginTop: "10px",
+            }}
+          >
+            {choice &&
+              choice.map((item, i) => (
+                <li
+                  style={{ color: correct_answer[i] === 1 ? "#A6CD4E" : "" }}
+                  key={i}
+                >
+                  {ReactHtmlParser(item)}
+                </li>
+              ))}
           </ol>
         </Box>
       );
     }
   };
-  
+
   const QuestionList = ({ questionData }) => {
     let childQuestionCounter = 0;
-  
+
     return (
       <Box className="demo2">
         {questionData &&
-          Object.values(questionData).map((questionData, index) => {
-            if (questionData.parent_id === 0 && questionData.question_type === "comp") {
+          Object.values(questionData).map((qData, index) => {
+            if (qData.parent_id === 0 && qData.question_type === "comp") {
               // Render parent directions
-              return <Question key={index} questionData={questionData} />;
+              return (
+                <Question
+                  key={index}
+                  allQues={questionData}
+                  q_id={index + 1}
+                  qData={qData}
+                />
+              );
             } else {
               // Increment child question counter and render child question
               childQuestionCounter++;
               return (
                 <Question
                   key={index}
-                  questionData={questionData}
+                  q_id={index + 1}
+                  qData={qData}
+                  allQues={questionData}
                   questionNumber={`Q${childQuestionCounter}`}
                 />
               );
@@ -181,7 +203,6 @@ const ImportQuestion = () => {
       </Box>
     );
   };
-  console.log(selectedQ)
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -246,7 +267,9 @@ const ImportQuestion = () => {
                   />
                   Import File
                 </label>
-                <Box sx={{mt:1}}>{selectedFile ? selectedFile : "No file selected"}</Box>
+                <Box sx={{ mt: 1 }}>
+                  {selectedFile ? selectedFile : "No file selected"}
+                </Box>
                 <Box
                   sx={{
                     minWidth: "150px",
@@ -263,7 +286,15 @@ const ImportQuestion = () => {
                       </Grid>
                     ) : (
                       <Grid item>
-                        <Button variant="contained" type="submit" sx={{pointerEvents:selectedFile !== null ? "auto" : "none", opacity:selectedFile !== null ? "1" : "0.5"}}>
+                        <Button
+                          variant="contained"
+                          type="submit"
+                          sx={{
+                            pointerEvents:
+                              selectedFile !== null ? "auto" : "none",
+                            opacity: selectedFile !== null ? "1" : "0.5",
+                          }}
+                        >
                           Upload & Preview
                         </Button>
                       </Grid>
@@ -280,20 +311,21 @@ const ImportQuestion = () => {
           </Grid>
           <Grid container spacing={2} sx={{ mt: 0 }}>
             <Grid item>
-            <QuestionList questionData={importedQuestion} />
-          </Grid>
+              <QuestionList questionData={importedQuestion} />
+            </Grid>
           </Grid>
         </Box>
       </Box>
 
-      <EditQuestionPopup
-        openEditQuestion={selectedQ}
+      <UpdateQuestion
+        openEditQuestion={selectedQ !== undefined}
         closePopup={() => {
           setSelectedQ(undefined);
         }}
         setOpenEditQuestion={setOpenEditQuestion}
-        questionDetails={questionDetails + 1}
+        questionDetails={questionDetails}
         importedQuestion={importedQuestion}
+        setImportedQuestion={setImportedQuestion}
         selectedQ={selectedQ}
       />
     </>

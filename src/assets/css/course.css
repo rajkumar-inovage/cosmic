@@ -4,11 +4,14 @@
   }
   .enroll-date {
     width: 100%;
-    padding:10px;
+    padding:15px 10px;
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 5px;
   }
   .enroll-date-outer .MuiPaper-elevation{
     overflow-y:inherit;
+  }
+  .react-datepicker-popper {
+    z-index: 999;
   }
 }

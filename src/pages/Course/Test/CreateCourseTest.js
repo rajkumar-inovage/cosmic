@@ -13,6 +13,7 @@ import {
   Link,
   Snackbar,
   Alert,
+  Tooltip
 } from "@mui/material";
 import { Helmet } from "react-helmet";
 import { useForm, Controller } from "react-hook-form";
@@ -25,9 +26,25 @@ import FormEditorField from "../../../components/Common/formEditorField";
 import SidebarLeft from "../../../components/Sidebar/SidebarLeft";
 
 // Date Time picker
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { tooltipClasses } from "@mui/material/Tooltip";
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#f5f5f9",
+    color: "rgba(0, 0, 0, 0.87)",
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: "1px solid #dadde9",
+  },
+}));
 
 const CreateCourseTest = () => {
   const { courseGuid } = useParams();
@@ -95,7 +112,7 @@ const CreateCourseTest = () => {
           navigate(`/course/test/manage/${newTestID}?ci=${courseGuid}`)
         }, 3000);
       } else {
-        setErrorValue(result.message.end_date || result.message.start_date || result.message.title || result.message.type || result.message.details || result.message.created_by)
+        setErrorValue(result.message.end_date? "END DATE INVALID" : "" || result.message.start_date? "START DATE INVALID" : "" || result.message.title || result.message.type || result.message.details || result.message.created_by)
         setIsTestCreated(false);
         setTimeout(() => {
           setAlertOpen(false);
@@ -194,7 +211,7 @@ const CreateCourseTest = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6} sx={{ mt: 2 }}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <Controller
                         name="start_date"
                         control={control}
@@ -204,17 +221,40 @@ const CreateCourseTest = () => {
                           <DateTimePicker
                             sx={{ width: "100%" }}
                             {...field}
-                            label="Start Date"
-                            showTodayButton
+                            label="Start Date*"
+                            //showTodayButton
                             error={!!errors.start_date}
                             helperText={errors.start_date?.message}
                           />
                         )}
                       />
-                    </LocalizationProvider>
+                    </LocalizationProvider> */}
+                    <label>Start Date</label>
+                  <Controller
+                    fullWidth
+                    name="start_date"
+                    control={control}
+                    defaultValue={null}
+                    render={({ field }) => (
+                      <DatePicker
+                        className="enroll-date"
+                        sx={{ width: "100%" }}
+                        {...field}
+                        selected={field.value}
+                        onChange={(date) => {
+                          field.onChange(date);
+                        }}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        dateFormat="yyyy-MM-dd HH:mm:ss"
+                        placeholderText="YYYY-MM-DD HH:mm:ss" // Add the placeholder
+                      />
+                    )}
+                  />
                   </Grid>
                   <Grid item xs={12} md={6} sx={{ mt: 2 }}>
-                    <LocalizationProvider
+                    {/* <LocalizationProvider
                       dateAdapter={AdapterDayjs}
                     >
                       <Controller
@@ -226,19 +266,60 @@ const CreateCourseTest = () => {
                           <DateTimePicker
                             sx={{ width: "100%" }}
                             {...field}
-                            label="End Date"
-                            showTodayButton
+                            label="End Date*"
+                            //showTodayButton
                             error={!!errors.end_date}
                             helperText={errors.end_date?.message}
                           />
                         )}
                       />
-                    </LocalizationProvider>
+                    </LocalizationProvider> */}
+                    <label>End Date</label>
+                  <Controller
+                    fullWidth
+                    name="end_date"
+                    control={control}
+                    defaultValue={null}
+                    render={({ field }) => (
+                      <DatePicker
+                        className="enroll-date"
+                        sx={{ width: "100%" }}
+                        {...field}
+                        selected={field.value}
+                        onChange={(date) => {
+                          field.onChange(date);
+                        }}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        dateFormat="yyyy-MM-dd HH:mm:ss"
+                        placeholderText="YYYY-MM-DD HH:mm:ss" // Add the placeholder
+                      />
+                    )}
+                  />
                   </Grid>
                   <Grid item xs={12}>
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}> 
                     <InputLabel htmlFor="test-details" sx={{ my: 1 }}>
-                      Details
+                      Description
                     </InputLabel>
+                    <HtmlTooltip
+                            className="dashboard-tooltip"
+                            title={
+                              <React.Fragment>
+                                <Typography color="inherit">
+                                  We can add sort description about test.<br />
+                                  If you want to add questions and manage test, those all features is available on next step.
+                                </Typography>
+                              </React.Fragment>
+                            }
+                            placement="right-start"
+                          >
+                            <InfoOutlinedIcon
+                              sx={{ color: "#B8B8B8", ml: 2, mb: 1 }}
+                            />
+                          </HtmlTooltip>
+                    </Box>
                     <FormEditorField
                       id="test-details"
                       control={control}
