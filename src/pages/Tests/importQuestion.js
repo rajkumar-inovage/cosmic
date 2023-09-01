@@ -54,6 +54,7 @@ const ImportQuestion = () => {
     const selectedFile = e.target.files[0];
     setValueStep1("userfile", selectedFile);
     setSelectedFile(selectedFile.name);
+    setImportedQuestion(null)
   };
   // End Upload file
 
@@ -63,7 +64,6 @@ const ImportQuestion = () => {
   const [testGuid, setTestGuid] = useState("");
   myHeaders.append("Authorization", `Bearer ${token}`);
   myHeaders.append("Network", `${Network}`);
-
   // Save questions
   const handleFormSubmit = async (data) => {
     try {

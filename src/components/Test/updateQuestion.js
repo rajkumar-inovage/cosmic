@@ -130,30 +130,51 @@ const UpdateQuestion = ({
 
   // Update Question
 
-  const handleQuestionUpdate = (data) => {
-    const updatedQuestions = {};
-    Object.values(importedQuestion).forEach((question, i) => {
-      if (i === selectedQIndex - 1) {
-        // When updating the question, increment the index by 1
-        updatedQuestions[i + 1] = {
-          ...question,
-          question: data.question,
-          order: i + 1,
-        };
-      } else {
-        // When not updating the question, just keep the original order
-        updatedQuestions[i + 1] = {
-          ...question,
-          order: question.order || i + 1,
-        };
-      }
-    });
+  // const handleQuestionUpdate = (data) => {
+  //   const updatedQuestions = {};
+  //   Object.values(importedQuestion).map((question, i) => {
+  //     if (i === selectedQIndex - 1) {
+  //       // When updating the question, increment the index by 1
+  //       updatedQuestions[i + 1] = {
+  //         ...question,
+  //         question: data.question,
+  //         order: i + 1,
+  //       };
+  //     } else {
+  //       // When not updating the question, just keep the original order
+  //       updatedQuestions[i + 1] = {
+  //         ...question,
+  //         order: question.order || i + 1,
+  //       };
+  //     }
+  //   });
 
+  //   setImportedQuestion(updatedQuestions);
+  //   setTimeout(() => {
+  //     closePopup();
+  //   }, 1000);
+  // };
+
+
+  const handleQuestionUpdate = (data) => {
+    const updatedQuestions = { ...importedQuestion };
+  
+    if (selectedQIndex in updatedQuestions) {
+      updatedQuestions[selectedQIndex] = {
+        ...updatedQuestions[selectedQIndex],
+        question: data.question,
+        choice: data.choice, // Update the choice property
+        correct_answer: data.correct_answer, // Update the correct_answer property
+        order: selectedQIndex,
+      };
+    }
+  
     setImportedQuestion(updatedQuestions);
     setTimeout(() => {
       closePopup();
     }, 1000);
   };
+  
 
   return (
     <>
