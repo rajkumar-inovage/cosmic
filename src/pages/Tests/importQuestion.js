@@ -87,7 +87,7 @@ const ImportQuestion = () => {
           reset(questionsAll);
         }
       } else {
-        const formData = serialize({ questions: data });
+        const formData = serialize({ questions: importedQuestion });
         var requestOptions = {
           method: "POST",
           headers: myHeaders,
@@ -109,6 +109,7 @@ const ImportQuestion = () => {
       throw new Error(`Failed to post status: ${error.message}`);
     }
   };
+
   const sampleFileUrl = "/path/to/sample/file.txt";
   const [selectedQ, setSelectedQ] = useState(undefined);
 
@@ -120,7 +121,7 @@ const ImportQuestion = () => {
       // Render parent directions
       return (
         <Box className="parent-q">
-          <strong>{question}</strong>
+          <strong>{ReactHtmlParser(question)}</strong>
           <Button
             onClick={() => {
               handleOpen(q_id);
@@ -168,12 +169,12 @@ const ImportQuestion = () => {
       );
     }
   };
-
+  //const [questionData, setQuestionData] = useState("")
   const QuestionList = ({ questionData }) => {
     let childQuestionCounter = 0;
 
     return (
-      <Box className="demo2">
+      <Box>
         {questionData &&
           Object.values(questionData).map((qData, index) => {
             if (qData.parent_id === 0 && qData.question_type === "comp") {
@@ -203,6 +204,7 @@ const ImportQuestion = () => {
       </Box>
     );
   };
+
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -327,6 +329,7 @@ const ImportQuestion = () => {
         importedQuestion={importedQuestion}
         setImportedQuestion={setImportedQuestion}
         selectedQ={selectedQ}
+        selectedQIndex={questionDetails}
       />
     </>
   );

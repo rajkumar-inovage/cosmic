@@ -184,10 +184,12 @@ const AllCourses = () => {
                               {course.created_by}
                             </h4>
                             <Button
+                              className="custom-button"
                               variant="contained"
                               component={Link}
                               to={`/course/manage/${course.guid}`}
                               fullWidth
+                              sx={{ maxHeight: "45px" }}
                             >
                               Manage Course
                             </Button>

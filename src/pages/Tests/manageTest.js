@@ -105,7 +105,10 @@ const ManageTest = () => {
         body: formdata,
         redirect: "follow",
       };
-      const res = await fetch(`${BASE_URL}/tests/attempts/${guid}`, requestOption);
+      const res = await fetch(
+        `${BASE_URL}/tests/attempts/${guid}`,
+        requestOption
+      );
       const result = await res.json();
       setMyAttempts(result && result.payload);
     };
@@ -196,15 +199,16 @@ const ManageTest = () => {
   //   const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
   //   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   // }
-  
+
   function formatDurationToHHMMSS(minutes) {
-    const hours = Math.floor(minutes / 60).toString().padStart(2, '0');
-    const minutesFormatted = (minutes % 60).toString().padStart(2, '0');
-    const seconds = '00';
+    const hours = Math.floor(minutes / 60)
+      .toString()
+      .padStart(2, "0");
+    const minutesFormatted = (minutes % 60).toString().padStart(2, "0");
+    const seconds = "00";
     return `${hours}:${minutesFormatted}:${seconds}`;
   }
   const formattedTime = formatDurationToHHMMSS(AllMinutes);
-console.log(myAttempts)
   return (
     <>
       <Helmet>
@@ -402,7 +406,9 @@ console.log(myAttempts)
                       color: "#ffffff",
                     }}
                   >
-                    {test.settings && test.settings.num_attempts === 0 ? "No limit" : test.settings && test.settings.num_attempts }
+                    {test.settings && test.settings.num_attempts === 0
+                      ? "No limit"
+                      : test.settings && test.settings.num_attempts}
                   </Typography>
                   <Box
                     variant="p"
@@ -420,8 +426,8 @@ console.log(myAttempts)
 
             <Grid container spacing={3} sx={{ mt: 5 }}>
               <Grid item xs={12} md={6}>
-                <Box sx={{height:"100%"}}>
-                  <Card sx={{ p: 4, height:"100%"}}>
+                <Box sx={{ height: "100%" }}>
+                  <Card sx={{ p: 4, height: "100%" }}>
                     <Typography
                       variant="h2"
                       style={{
@@ -495,8 +501,8 @@ console.log(myAttempts)
                 </Box>
               </Grid>
               <Grid item xs={12} md={6}>
-                <Box sx={{height:"100%"}}>
-                  <Card sx={{ p: 4, height:"100%" }}>
+                <Box sx={{ height: "100%" }}>
+                  <Card sx={{ p: 4, height: "100%" }}>
                     <Typography
                       variant="h2"
                       style={{
@@ -562,11 +568,15 @@ console.log(myAttempts)
                               display: "flex",
                               alignItems: "center",
                               pointerEvents:
-                              test.settings && test.settings.num_attempts < 0 || myAttempts && myAttempts.remaining <= 0
+                                (test.settings &&
+                                  test.settings.num_attempts < 0) ||
+                                (myAttempts && myAttempts.remaining <= 0)
                                   ? "none"
                                   : "auto",
                               opacity:
-                              test.settings && test.settings.num_attempts < 0 || myAttempts && myAttempts.remaining <= 0
+                                (test.settings &&
+                                  test.settings.num_attempts < 0) ||
+                                (myAttempts && myAttempts.remaining <= 0)
                                   ? "0.5"
                                   : "1",
                             }}
@@ -581,7 +591,8 @@ console.log(myAttempts)
                             title={
                               <React.Fragment>
                                 <Typography color="inherit">
-                                  You can take test if test published, and your attempts remaining
+                                  You can take test if test published, and your
+                                  attempts remaining
                                 </Typography>
                               </React.Fragment>
                             }
@@ -716,43 +727,50 @@ console.log(myAttempts)
                   </Card>
                 </Box>
               </Grid>
-              {test && test.type !== "practice" && test && test.type !== "quiz" ? (<Grid item xs={12} md={6}>
-                <Box sx={{height:"100%"}}>
-                  <Card sx={{ p: 4, height:"100%" }}>
-                    <Typography
-                      variant="h2"
-                      style={{
-                        fontSize: "24px",
-                        lineHeight: "34px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      Enrollments
-                    </Typography>
-                    <Box>
-                      <List>
-                        <ListItem sx={{ pl: 0 }}>
-                          <Link
-                            href={`/test/enrollments/${guid}`}
-                            color="inherit"
-                            underline="none"
-                            sx={{ display: "flex", alignItems: "center" }}
-                          >
-                            <ListItemIcon>
-                              <CheckCircleIcon />
-                            </ListItemIcon>
-                            <ListItemText>All Enrollments</ListItemText>
-                          </Link>
-                        </ListItem>
-                      </List>
-                    </Box>
-                  </Card>
-                </Box>
-              </Grid>) : ""}
-              
+              {test &&
+              test.type !== "practice" &&
+              test &&
+              test.type !== "quiz" ? (
+                <Grid item xs={12} md={6}>
+                  <Box sx={{ height: "100%" }}>
+                    <Card sx={{ p: 4, height: "100%" }}>
+                      <Typography
+                        variant="h2"
+                        style={{
+                          fontSize: "24px",
+                          lineHeight: "34px",
+                          fontWeight: "500",
+                        }}
+                      >
+                        Enrollments
+                      </Typography>
+                      <Box>
+                        <List>
+                          <ListItem sx={{ pl: 0 }}>
+                            <Link
+                              href={`/test/enrollments/${guid}`}
+                              color="inherit"
+                              underline="none"
+                              sx={{ display: "flex", alignItems: "center" }}
+                            >
+                              <ListItemIcon>
+                                <CheckCircleIcon />
+                              </ListItemIcon>
+                              <ListItemText>All Enrollments</ListItemText>
+                            </Link>
+                          </ListItem>
+                        </List>
+                      </Box>
+                    </Card>
+                  </Box>
+                </Grid>
+              ) : (
+                ""
+              )}
+
               <Grid item xs={12} md={6}>
-                <Box sx={{height:"100%" }}>
-                  <Card sx={{ p: 4, height:"100%" }}>
+                <Box sx={{ height: "100%" }}>
+                  <Card sx={{ p: 4, height: "100%" }}>
                     <Typography
                       variant="h2"
                       style={{

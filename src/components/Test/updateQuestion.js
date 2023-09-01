@@ -45,8 +45,8 @@ const UpdateQuestion = ({
   questionDetails,
   closePopup,
   selectedQ,
+  selectedQIndex,
 }) => {
-  console.log(selectedQ);
   const { guid } = useParams();
   const {
     register,
@@ -63,21 +63,18 @@ const UpdateQuestion = ({
       question_type: "mcmc",
       choice: [],
       correct_answer: [],
-      order: [0],
-      order: [1],
-      order: [2],
-      order: [3],
-      order: [4],
+      order: [0, 1, 2, 3, 4], // Use an array to store order values
       feedback: "",
       answer_feedback: "",
-      created_by: { CreatedBy },
+      created_by: CreatedBy, // Removed unnecessary curly braces
       parent_id: undefined,
       marks: "1",
       neg_marks: "0",
       time: "0",
+      currIndex: selectedQIndex,
     },
   });
-  const { userfile, question_type, parent_id, choice } = watch();
+  const { userfile, question_type, parent_id, choice, currIndex } = watch();
   // Style
   const StyledFormControl = styled(FormControl)({
     marginBottom: "16px",
@@ -134,14 +131,28 @@ const UpdateQuestion = ({
   // Update Question
 
   const handleQuestionUpdate = (data) => {
-    const updatedQuestions = Object.values(importedQuestion).map((question) => {
-      if (question.id === data.index) {
-        return { ...question, question: data.question };
+    const updatedQuestions = {};
+    Object.values(importedQuestion).forEach((question, i) => {
+      if (i === selectedQIndex - 1) {
+        // When updating the question, increment the index by 1
+        updatedQuestions[i + 1] = {
+          ...question,
+          question: data.question,
+          order: i + 1,
+        };
+      } else {
+        // When not updating the question, just keep the original order
+        updatedQuestions[i + 1] = {
+          ...question,
+          order: question.order || i + 1,
+        };
       }
-      return question;
     });
 
     setImportedQuestion(updatedQuestions);
+    setTimeout(() => {
+      closePopup();
+    }, 1000);
   };
 
   return (
@@ -177,6 +188,11 @@ const UpdateQuestion = ({
           <Fragment>
             <form onSubmit={handleSubmit(handleQuestionUpdate)}>
               <input type="hidden" name="created_by" defaultValue={CreatedBy} />
+              <input
+                type="hidden"
+                name="currIndex"
+                defaultValue={selectedQIndex}
+              />
               <Box style={{ mt: 5, width: "100%", marginBottom: "16px" }}>
                 <label
                   htmlFor="question"
@@ -301,19 +317,35 @@ const UpdateQuestion = ({
                             />
                             <FormControlLabel
                               control={
+                                // <Checkbox
+                                //   name={`correct_answer[${index}]`}
+                                //   //checked={`correct_answer[${index}]` === "1"}
+                                //   checked={
+                                //     `correct_answer[${index}]` === 1
+                                //       ? true
+                                //       : false
+                                //   }
+                                //   control={control}
+                                //   onChange={({ target: { checked } }) => {
+                                //     setValue(
+                                //       `correct_answer[${index}]`,
+                                //       checked ? "1" : "0"
+                                //     );
+                                //   }}
+                                //   className={`correct_answer[${index}]`}
+                                //   value={`choice ${index}`}
+                                // />
                                 <Checkbox
                                   name={`correct_answer[${index}]`}
-                                  //checked={`correct_answer[${index}]` === "1"}
                                   checked={
-                                    `correct_answer[${index}]` === 1
+                                    watch(`correct_answer[${index}]`) === 1
                                       ? true
                                       : false
                                   }
-                                  control={control}
                                   onChange={({ target: { checked } }) => {
                                     setValue(
                                       `correct_answer[${index}]`,
-                                      checked ? "1" : "0"
+                                      checked ? 1 : 0
                                     );
                                   }}
                                   className={`correct_answer[${index}]`}

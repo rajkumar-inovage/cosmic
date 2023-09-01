@@ -153,14 +153,14 @@ const EditQuestion = () => {
     );
   }, [choice]);
 
-   // Upload file in question
-   const [file, setFile] = useState(null);
-   const handleFileChange = (e) => {
-     if (e.target.files.length > 0) {
-       const [selectedFile] = e.target.files;
-       setValue("userfile", selectedFile); 
-     }
-   }
+  // Upload file in question
+  const [file, setFile] = useState(null);
+  const handleFileChange = (e) => {
+    if (e.target.files.length > 0) {
+      const [selectedFile] = e.target.files;
+      setValue("userfile", selectedFile);
+    }
+  };
   // End Upload file
   // Search Parent ID
   const handleSearchChange = (event) => {
@@ -233,11 +233,14 @@ const EditQuestion = () => {
         setIsTestCreated(true);
         setTimeout(() => {
           setIsTestCreated(false);
-          //window.location.reload();
+          window.location.reload();
         }, 1000);
         reset();
       } catch (error) {
         setIsTestCreated(false);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       }
     }
   };
@@ -259,11 +262,21 @@ const EditQuestion = () => {
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
               {mtValue ? (
-                <Button variant="contained" component={Link} href={`/course/${mtValue}/test/list`} className="custom-button">
-                    Cancel
+                <Button
+                  variant="contained"
+                  component={Link}
+                  href={`/course/${mtValue}/test/list`}
+                  className="custom-button"
+                >
+                  Cancel
                 </Button>
               ) : (
-                <Button variant="contained" component={Link} href="/test/list" className="custom-button">
+                <Button
+                  variant="contained"
+                  component={Link}
+                  href={`/test/preview-test/${guid}`}
+                  className="custom-button"
+                >
                   Cancel
                 </Button>
               )}
@@ -629,7 +642,11 @@ const EditQuestion = () => {
                         ""
                       )}
 
-                      <Button variant="contained" type="submit" className="custom-button">
+                      <Button
+                        variant="contained"
+                        type="submit"
+                        className="custom-button"
+                      >
                         Update Question
                       </Button>
                     </form>
