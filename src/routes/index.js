@@ -36,9 +36,9 @@ import ManageCourse from "../pages/Course/ManageCourse";
 import Courses from "../pages/Course";
 import CreateCourse from "../pages/Course/CreateCourse";
 import UpdateCourse from "../pages/Course/UpdateCourse";
-import Lesson from "../pages/Course/Lesson";
-import CreateLesson from "../pages/Course/Lesson/CreateLesson";
-import OrganizeLesson from "../pages/Course/Lesson/OrganizeLesson";
+import Lesson from "../pages/Course/Subject";
+import CreateLesson from "../pages/Course/Subject/Lesson/CreateLesson";
+import OrganizeLesson from "../pages/Course/Subject/Lesson/OrganizeLesson";
 import Test from "../pages/Course/Test";
 import Categories from "../pages/Tests/Categories";
 import AllCategoryTests from "../pages/Tests/Categories/AllCategoryTests";
@@ -60,6 +60,8 @@ import Students from "../pages/Users/Students";
 import Settings from "../pages/Auth/Settings/Index";
 import RedirectLogic from "../components/Redirect/RedirectLogic";
 import MyAccount from "../../src/pages/Auth/MyAccount"
+import Subjects from "../pages/Course/Subject";
+import CreateSubject from "../pages/Course/Subject/CreateSubject";
 
 
 const AppRouter = () => {
@@ -79,7 +81,10 @@ const AppRouter = () => {
         <Route path={"/test/create"} element={<CreateTest />} />
         <Route path={"/test/edit/:guid"} element={<EditTest />} />
         <Route path={"/test/add-question/:guid"} element={<AddQuestion />} />
-        <Route path={"/test/edit-question/:guid/:qid"} element={<EditQuestion />} />
+        <Route
+          path={"/test/edit-question/:guid/:qid"}
+          element={<EditQuestion />}
+        />
         <Route path={"/test/all-questions/:guid"} element={<AllQuestions />} />
         <Route path={"/test/edit-question/:guid"} element={<EditQuestion />} />
         <Route
@@ -94,17 +99,23 @@ const AppRouter = () => {
         <Route path={"/test/setting/:guid"} element={<TestSetting />} />
         <Route path={"/test/report/:guid"} element={<SubmissionReports />} />
         <Route path={"/test/submission-report/:guid"} element={<Report />} />
-        <Route path={"/test/all-submissions/:guid"} element={<AllSubmissions />} />
+        <Route
+          path={"/test/all-submissions/:guid"}
+          element={<AllSubmissions />}
+        />
         <Route path={"/test/category/list"} element={<Categories />} />
-        <Route path={"/test/category/tests/:guid"} element={<AllCategoryTests />} />
-        <Route path={"/test/category/link-test/:guid"} element={<LinkTestCategory />} />
+        <Route
+          path={"/test/category/tests/:guid"}
+          element={<AllCategoryTests />}
+        />
+        <Route
+          path={"/test/category/link-test/:guid"}
+          element={<LinkTestCategory />}
+        />
         <Route path={"/online-classes"} element={<OnlineClasses />} />
         <Route path={"/class/create"} element={<CreateMeeting />} />
         <Route path={"/class/edit/:meetingGuid"} element={<EditMeeting />} />
-        <Route
-          path={"/class/share/:meetingGuid"}
-          element={<ShareMeeting />}
-        />
+        <Route path={"/class/share/:meetingGuid"} element={<ShareMeeting />} />
         <Route
           path={"/test/report/test-id/student-id"}
           element={<StudentReport />}
@@ -118,11 +129,26 @@ const AppRouter = () => {
         <Route path={"/course/list"} element={<Courses />} />
         <Route path={"/course/create"} element={<CreateCourse />} />
         <Route path={"/course/test/edit/:guid"} element={<CourseTestEdit />} />
-        <Route path={"/course/test/add-question/:guid"} element={<AddCourseTestQues />} />
-        <Route path={"/course/test/edit-question/:guid/:qid"} element={<CourseEditQuestion />} />
-        <Route path={"/course/test/preview/:guid"} element={<CourseTestPreview />} />
-        <Route path={"/course/test/preview/:guid"} element={<PreviewTestCourse />} />
-        <Route path={"/course/test/manage/:guid"} element={<CourseTestManage />} />
+        <Route
+          path={"/course/test/add-question/:guid"}
+          element={<AddCourseTestQues />}
+        />
+        <Route
+          path={"/course/test/edit-question/:guid/:qid"}
+          element={<CourseEditQuestion />}
+        />
+        <Route
+          path={"/course/test/preview/:guid"}
+          element={<CourseTestPreview />}
+        />
+        <Route
+          path={"/course/test/preview/:guid"}
+          element={<PreviewTestCourse />}
+        />
+        <Route
+          path={"/course/test/manage/:guid"}
+          element={<CourseTestManage />}
+        />
         <Route path={"/course/update/:courseGuid"} element={<UpdateCourse />} />
         <Route path={"/course/:courseGuid/lessons"} element={<Lesson />} />
         <Route
@@ -139,10 +165,7 @@ const AppRouter = () => {
           path={"/course/:courseGuid/test/create"}
           element={<CreateCourseTest />}
         />
-        <Route
-          path={"/course/:courseGuid/class/list"}
-          element={<Meetings />}
-        />
+        <Route path={"/course/:courseGuid/class/list"} element={<Meetings />} />
         <Route
           path={"/course/:courseGuid/class/add"}
           element={<AddCourseMeeting />}
@@ -156,6 +179,9 @@ const AppRouter = () => {
           element={<EnrolledUsers />}
         />
         <Route path={"/course/:courseGuid/enroll"} element={<EnrollUsers />} />
+        <Route path={"/course/:courseGuid/subjects"} element={<Subjects />} />
+        <Route path={"/course/:courseGuid/subject/create"} element={<CreateSubject />} />
+
         <Route path={"/user/students"} element={<Students />} />
         <Route path={"/auth/settings"} element={<Settings />} />
         <Route path={"auth/my-account"} element={<MyAccount />} />

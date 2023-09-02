@@ -280,8 +280,8 @@ const ManageCourse = () => {
                   </Typography>
                 </Grid>
                 {/* Lessons */}
-                {/* <Grid item xs={12} md={6}>
-                  <Card sx={{ p: 4 }}>
+                <Grid item xs={12} md={6}>
+                  <Card sx={{ p: 4, height:"100%" }}>
                     <Typography
                       variant="h2"
                       style={{
@@ -290,13 +290,13 @@ const ManageCourse = () => {
                         fontWeight: "500",
                       }}
                     >
-                      Lessons
+                      Subjects
                     </Typography>
                     <Box>
                       <List>
                         <ListItem sx={{ pl: 0 }}>
                           <Link
-                            href={`/course/${courseGuid}/lessons`}
+                            href={`/course/${courseGuid}/subjects`}
                             color="inherit"
                             underline="none"
                             sx={{ display: "flex", alignItems: "center" }}
@@ -304,13 +304,13 @@ const ManageCourse = () => {
                             <ListItemIcon>
                               <PlayLessonIcon />
                             </ListItemIcon>
-                            <ListItemText>All Lessons</ListItemText>
+                            <ListItemText>All Subjects</ListItemText>
                           </Link>
                         </ListItem>
                         <Divider variant="" component="li" />
                         <ListItem sx={{ pl: 0 }}>
                           <Link
-                            href={`/course/${courseGuid}/lesson/create`}
+                            href={`/course/${courseGuid}/subject/create`}
                             color="inherit"
                             underline="none"
                             sx={{ display: "flex", alignItems: "center" }}
@@ -318,27 +318,13 @@ const ManageCourse = () => {
                             <ListItemIcon>
                               <ControlPointIcon />
                             </ListItemIcon>
-                            <ListItemText>Add Lesson</ListItemText>
-                          </Link>
-                        </ListItem>
-                        <Divider variant="" component="li" />
-                        <ListItem sx={{ pl: 0 }}>
-                          <Link
-                            href={`/course/${courseGuid}/lesson/organize`}
-                            color="inherit"
-                            underline="none"
-                            sx={{ display: "flex", alignItems: "center" }}
-                          >
-                            <ListItemIcon>
-                              <ListAltIcon />
-                            </ListItemIcon>
-                            <ListItemText>Organize Lessons</ListItemText>
+                            <ListItemText>Create New Subject</ListItemText>
                           </Link>
                         </ListItem>
                       </List>
                     </Box>
                   </Card>
-                </Grid> */}
+                </Grid>
                 {/* Tests */}
                 <Grid item xs={12} md={6}>
                   <Card sx={{ p: 4 }}>
@@ -393,36 +379,6 @@ const ManageCourse = () => {
                               <QuizIcon />
                             </ListItemIcon>
                             <ListItemText>All Course Tests</ListItemText>
-                          </Link>
-                        </ListItem>
-                      </List>
-                    </Box>
-                    </Card>
-                    {/* Enrollments */}
-                  <Card sx={{ p: 4, mt: 3 }}>
-                    <Typography
-                      variant="h2"
-                      style={{
-                        fontSize: "24px",
-                        lineHeight: "34px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      Enrollments
-                    </Typography>
-                    <Box>
-                      <List>
-                        <ListItem sx={{ pl: 0 }}>
-                          <Link
-                            href={`/course/${courseGuid}/enrolled-users`}
-                            color="inherit"
-                            underline="none"
-                            sx={{ display: "flex", alignItems: "center" }}
-                          >
-                            <ListItemIcon>
-                              <CheckCircleIcon />
-                            </ListItemIcon>
-                            <ListItemText>All Enrolled Users</ListItemText>
                           </Link>
                         </ListItem>
                       </List>
@@ -487,9 +443,11 @@ const ManageCourse = () => {
                         </ListItem>
                       </List>
                     </Box>
-                    </Card>
-                     {/* Settings */}
-                     <Card sx={{ p: 4,mt: 3 }}>
+                  </Card>
+                </Grid>
+                {/* Settings */}
+                <Grid item xs={12} md={6}>
+                  <Card sx={{ p: 4 }}>
                     <Typography
                       variant="h2"
                       style={{
@@ -556,8 +514,8 @@ const ManageCourse = () => {
                             </ListItemIcon>
                             <ListItemText>Edit Course</ListItemText>
                           </Link>
-                            <HtmlTooltip
-                              className="dashboard-tooltip"
+                          <HtmlTooltip
+                            className="dashboard-tooltip"
                             title={
                               <React.Fragment>
                                 <Typography color="inherit">
@@ -601,8 +559,8 @@ const ManageCourse = () => {
                             <ListItemText>Archive Course</ListItemText>
                           </Box>
 
-                            <HtmlTooltip
-                              className="dashboard-tooltip"
+                          <HtmlTooltip
+                            className="dashboard-tooltip"
                             title={
                               <React.Fragment>
                                 <Typography color="inherit">
@@ -621,7 +579,38 @@ const ManageCourse = () => {
                       </List>
                     </Box>
                   </Card>
-                  
+                </Grid>
+                {/* Enrollments */}
+                <Grid item xs={12} md={6}>
+                  <Card sx={{ p: 4, mt: 3 }}>
+                    <Typography
+                      variant="h2"
+                      style={{
+                        fontSize: "24px",
+                        lineHeight: "34px",
+                        fontWeight: "500",
+                      }}
+                    >
+                      Enrollments
+                    </Typography>
+                    <Box>
+                      <List>
+                        <ListItem sx={{ pl: 0 }}>
+                          <Link
+                            href={`/course/${courseGuid}/enrolled-users`}
+                            color="inherit"
+                            underline="none"
+                            sx={{ display: "flex", alignItems: "center" }}
+                          >
+                            <ListItemIcon>
+                              <CheckCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText>All Enrolled Users</ListItemText>
+                          </Link>
+                        </ListItem>
+                      </List>
+                    </Box>
+                  </Card>
                 </Grid>
               </Grid>
             </Box>
