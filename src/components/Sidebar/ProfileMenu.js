@@ -74,9 +74,7 @@ const ProfileMenu = () => {
       if (result.success === true) {
         localStorage.setItem("token", "");
         setIsUserloggedOut(true);
-        setTimeout(() => {
-          navigate(`/auth/login`);
-        }, 3000);
+        navigate(`/auth/login`);
       } else {
         setIsUserloggedOut(false);
       }

@@ -24,17 +24,17 @@ import FormEditorField from "../../../components/Common/formEditorField";
 import SidebarLeft from "../../../components/Sidebar/SidebarLeft";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 
-const CreateSubject = () => {
+const UpdateSubject = () => {
   const { courseGuid } = useParams();
   const [alertOpen, setAlertOpen] = useState(null);
   const [isCourseCreated, setIsCourseCreated] = useState(null);
-    const [inputValue, setInputValue] = useState("");
-    const [valueLength, setValueLength] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [valueLength, setValueLength] = useState("");
   const [isInputValid, setInputValid] = useState(true);
   const [titleValid, setTitleValid] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isTextareaValid, setTextareaValid] = useState(false);
-  const [isTitleLengthValid,setIsTitleLengthValid] = useState(false)
+  const [isTitleLengthValid, setIsTitleLengthValid] = useState(false);
   const [fileError, setFileError] = useState(null);
   const [filename, setFilename] = useState(null);
   const navigate = useNavigate();
@@ -48,40 +48,39 @@ const CreateSubject = () => {
     defaultValues: {
       title: "",
       description: "",
-      userfile:undefined,
+      userfile: undefined,
       created_by: CreatedBy,
     },
   });
   const { title } = watch();
-// Validation on character Length
-   const handleInputChange = (event) => {
-     const newValue = event.target.value;
-     setTitleValid(newValue.length);
-     const truncatedValue = newValue.slice(0, 35);
-     setInputValue(truncatedValue);
-     setValue("title", truncatedValue);
-     setValueLength(truncatedValue.length);
-     const isValid = truncatedValue.length >= 3 && truncatedValue.length <= 35;
-     setInputValid(isValid);
-     if (truncatedValue.length === 35) {
-       setInputValid(false);
-     }
+  // Validation on character Length
+  const handleInputChange = (event) => {
+    const newValue = event.target.value;
+    setTitleValid(newValue.length);
+    const truncatedValue = newValue.slice(0, 35);
+    setInputValue(truncatedValue);
+    setValue("title", truncatedValue);
+    setValueLength(truncatedValue.length);
+    const isValid = truncatedValue.length >= 3 && truncatedValue.length <= 35;
+    setInputValid(isValid);
+    if (truncatedValue.length === 35) {
+      setInputValid(false);
+    }
   };
   // /Validation on file size
-   const handleFileChange = (e) => {
-     const [selectedFile] = e.target.files;
-     if (selectedFile) {
-       if (selectedFile.size > 300 * 1024 * 1024) {
-         setFileError("File size should be less than 300MB.");
-         setFilename(null);
-       } else {
-         setFileError("");
-         setFilename(selectedFile.name);
-         setValue("userfile", selectedFile);
-       }
-     }
+  const handleFileChange = (e) => {
+    const [selectedFile] = e.target.files;
+    if (selectedFile) {
+      if (selectedFile.size > 300 * 1024 * 1024) {
+        setFileError("File size should be less than 300MB.");
+        setFilename(null);
+      } else {
+        setFileError("");
+        setFilename(selectedFile.name);
+        setValue("userfile", selectedFile);
+      }
+    }
   };
-  
 
   // Authentication
   var myHeaders = new Headers();
@@ -91,22 +90,19 @@ const CreateSubject = () => {
   const handleFormSubmit = async (data) => {
     if (data.description.length >= 107) {
       setTextareaValid(true);
-    } else if(titleValid < 3 || titleValid > 35){
+    } else if (titleValid < 3 || titleValid > 35) {
       setIsTitleLengthValid(true);
-    }
-    else {
+    } else {
       console.log(data);
       setTextareaValid(false);
       setIsTitleLengthValid(false);
     }
-
   };
-  
 
   return (
     <>
       <Helmet>
-        <title>Create Subject</title>
+        <title>Edit Subject</title>
       </Helmet>
       <Box sx={{ display: "flex" }}>
         <SidebarLeft />
@@ -120,7 +116,7 @@ const CreateSubject = () => {
           <Grid container spacing={2} sx={{ my: 1 }}>
             <Grid item xs={6}>
               <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 600 }}>
-                Create Subject
+                Edit Subject
               </Typography>
             </Grid>
             <Grid item xs={6} sx={{ textAlign: "right" }}>
@@ -213,7 +209,7 @@ const CreateSubject = () => {
                   sx={{ mt: 5 }}
                   className="custom-button"
                 >
-                  Create
+                  Update
                 </Button>
               </form>
             </Grid>
@@ -223,4 +219,4 @@ const CreateSubject = () => {
     </>
   );
 };
-export default CreateSubject;
+export default UpdateSubject;

@@ -37,8 +37,8 @@ import Courses from "../pages/Course";
 import CreateCourse from "../pages/Course/CreateCourse";
 import UpdateCourse from "../pages/Course/UpdateCourse";
 import Lesson from "../pages/Course/Subject";
+import Lessons from "../pages/Course/Subject/Lesson";
 import CreateLesson from "../pages/Course/Subject/Lesson/CreateLesson";
-import OrganizeLesson from "../pages/Course/Subject/Lesson/OrganizeLesson";
 import Test from "../pages/Course/Test";
 import Categories from "../pages/Tests/Categories";
 import AllCategoryTests from "../pages/Tests/Categories/AllCategoryTests";
@@ -62,10 +62,12 @@ import RedirectLogic from "../components/Redirect/RedirectLogic";
 import MyAccount from "../../src/pages/Auth/MyAccount"
 import Subjects from "../pages/Course/Subject";
 import CreateSubject from "../pages/Course/Subject/CreateSubject";
+import UpdateSubject from "../pages/Course/Subject/UpdateSubject";
 
 
 const AppRouter = () => {
   return (
+    // <Router basename="/dev">
     <Router>
       <RedirectLogic />
       <Routes>
@@ -156,8 +158,12 @@ const AppRouter = () => {
           element={<CreateLesson />}
         />
         <Route
-          path={"/course/:courseGuid/lesson/organize"}
-          element={<OrganizeLesson />}
+          path={"/course/:courseGuid/:subjectId/lessons"}
+          element={<Lessons />}
+        />
+        <Route
+          path={"/course/:courseGuid/:subjectId/lesson/create"}
+          element={<CreateLesson />}
         />
         <Route path={"/course/:courseGuid/test/list"} element={<Test />} />
         <Route path={"/course/:courseGuid/test/add"} element={<AddTests />} />
@@ -180,7 +186,14 @@ const AppRouter = () => {
         />
         <Route path={"/course/:courseGuid/enroll"} element={<EnrollUsers />} />
         <Route path={"/course/:courseGuid/subjects"} element={<Subjects />} />
-        <Route path={"/course/:courseGuid/subject/create"} element={<CreateSubject />} />
+        <Route
+          path={"/course/:courseGuid/subject/create"}
+          element={<CreateSubject />}
+        />
+        <Route
+          path={"/course/:courseGuid/subject/edit"}
+          element={<UpdateSubject />}
+        />
 
         <Route path={"/user/students"} element={<Students />} />
         <Route path={"/auth/settings"} element={<Settings />} />
