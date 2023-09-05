@@ -69,6 +69,7 @@ import Subjects from '../pages/Course/Subject';
 import CreateSubject from '../pages/Course/Subject/CreateSubject';
 import UpdateSubject from '../pages/Course/Subject/UpdateSubject';
 import SingleSubject from '../pages/Course/Subject/SingleSubject';
+import CreateContent from 'pages/Course/Subject/Content/CreateContent';
 
 const AppRouter = () => {
   return (
@@ -77,135 +78,139 @@ const AppRouter = () => {
       <RedirectLogic />
       <Routes>
         {/* <Route path={"/"} element={<Loader />} /> */}
-        <Route path='/' element={<Navigate to='/dashboard' />} />
-        <Route path={'/dashboard'} element={<HomePage />} />
-        <Route path={'/auth/login'} element={<Login />} />
-        <Route path={'/auth/register'} element={<Register />} />
-        <Route path={'/auth/forgot-password'} element={<ForgotPassword />} />
-        <Route path={'/auth/create-password'} element={<CreatePassword />} />
-        <Route path={'/test/list'} element={<Tests />} />
-        <Route path={'/test/create'} element={<CreateTest />} />
-        <Route path={'/test/edit/:guid'} element={<EditTest />} />
-        <Route path={'/test/add-question/:guid'} element={<AddQuestion />} />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route path={"/dashboard"} element={<HomePage />} />
+        <Route path={"/auth/login"} element={<Login />} />
+        <Route path={"/auth/register"} element={<Register />} />
+        <Route path={"/auth/forgot-password"} element={<ForgotPassword />} />
+        <Route path={"/auth/create-password"} element={<CreatePassword />} />
+        <Route path={"/test/list"} element={<Tests />} />
+        <Route path={"/test/create"} element={<CreateTest />} />
+        <Route path={"/test/edit/:guid"} element={<EditTest />} />
+        <Route path={"/test/add-question/:guid"} element={<AddQuestion />} />
         <Route
-          path={'/test/edit-question/:guid/:qid'}
+          path={"/test/edit-question/:guid/:qid"}
           element={<EditQuestion />}
         />
-        <Route path={'/test/all-questions/:guid'} element={<AllQuestions />} />
-        <Route path={'/test/edit-question/:guid'} element={<EditQuestion />} />
+        <Route path={"/test/all-questions/:guid"} element={<AllQuestions />} />
+        <Route path={"/test/edit-question/:guid"} element={<EditQuestion />} />
         <Route
-          path={'/test/import-question/:guid'}
+          path={"/test/import-question/:guid"}
           element={<ImportQuestion />}
         />
-        <Route path={'/test/preview-test/:guid'} element={<PreviewTest />} />
-        <Route path={'/test/manage/:guid'} element={<ManageTest />} />
-        <Route path={'/test/enrollments/:guid'} element={<Enrollments />} />
-        <Route path={'/test/enroll/:guid'} element={<EnrollTest />} />
-        <Route path={'/test/take-test/:guid'} element={<TakeTest />} />
-        <Route path={'/test/setting/:guid'} element={<TestSetting />} />
-        <Route path={'/test/report/:guid'} element={<SubmissionReports />} />
-        <Route path={'/test/submission-report/:guid'} element={<Report />} />
+        <Route path={"/test/preview-test/:guid"} element={<PreviewTest />} />
+        <Route path={"/test/manage/:guid"} element={<ManageTest />} />
+        <Route path={"/test/enrollments/:guid"} element={<Enrollments />} />
+        <Route path={"/test/enroll/:guid"} element={<EnrollTest />} />
+        <Route path={"/test/take-test/:guid"} element={<TakeTest />} />
+        <Route path={"/test/setting/:guid"} element={<TestSetting />} />
+        <Route path={"/test/report/:guid"} element={<SubmissionReports />} />
+        <Route path={"/test/submission-report/:guid"} element={<Report />} />
         <Route
-          path={'/test/all-submissions/:guid'}
+          path={"/test/all-submissions/:guid"}
           element={<AllSubmissions />}
         />
-        <Route path={'/test/category/list'} element={<Categories />} />
+        <Route path={"/test/category/list"} element={<Categories />} />
         <Route
-          path={'/test/category/tests/:guid'}
+          path={"/test/category/tests/:guid"}
           element={<AllCategoryTests />}
         />
         <Route
-          path={'/test/category/link-test/:guid'}
+          path={"/test/category/link-test/:guid"}
           element={<LinkTestCategory />}
         />
-        <Route path={'/online-classes'} element={<OnlineClasses />} />
-        <Route path={'/class/create'} element={<CreateMeeting />} />
-        <Route path={'/class/edit/:meetingGuid'} element={<EditMeeting />} />
-        <Route path={'/class/share/:meetingGuid'} element={<ShareMeeting />} />
+        <Route path={"/online-classes"} element={<OnlineClasses />} />
+        <Route path={"/class/create"} element={<CreateMeeting />} />
+        <Route path={"/class/edit/:meetingGuid"} element={<EditMeeting />} />
+        <Route path={"/class/share/:meetingGuid"} element={<ShareMeeting />} />
         <Route
-          path={'/test/report/test-id/student-id'}
+          path={"/test/report/test-id/student-id"}
           element={<StudentReport />}
         />
-        <Route path={'/student/dashboard'} element={<Dashboard />} />
-        <Route path={'/user/list'} element={<Users />} />
-        <Route path={'/user/create'} element={<CreateUser />} />
-        <Route path={'/user/view/:userGuid'} element={<ViewUser />} />
-        <Route path={'/user/edit/:userGuid'} element={<EditUser />} />
-        <Route path={'/course/manage/:courseGuid'} element={<ManageCourse />} />
-        <Route path={'/course/list'} element={<Courses />} />
-        <Route path={'/course/create'} element={<CreateCourse />} />
-        <Route path={'/course/test/edit/:guid'} element={<CourseTestEdit />} />
+        <Route path={"/student/dashboard"} element={<Dashboard />} />
+        <Route path={"/user/list"} element={<Users />} />
+        <Route path={"/user/create"} element={<CreateUser />} />
+        <Route path={"/user/view/:userGuid"} element={<ViewUser />} />
+        <Route path={"/user/edit/:userGuid"} element={<EditUser />} />
+        <Route path={"/course/manage/:courseGuid"} element={<ManageCourse />} />
+        <Route path={"/course/list"} element={<Courses />} />
+        <Route path={"/course/create"} element={<CreateCourse />} />
+        <Route path={"/course/test/edit/:guid"} element={<CourseTestEdit />} />
         <Route
-          path={'/course/test/add-question/:guid'}
+          path={"/course/test/add-question/:guid"}
           element={<AddCourseTestQues />}
         />
         <Route
-          path={'/course/test/edit-question/:guid/:qid'}
+          path={"/course/test/edit-question/:guid/:qid"}
           element={<CourseEditQuestion />}
         />
         <Route
-          path={'/course/test/preview/:guid'}
+          path={"/course/test/preview/:guid"}
           element={<CourseTestPreview />}
         />
         <Route
-          path={'/course/test/preview/:guid'}
+          path={"/course/test/preview/:guid"}
           element={<PreviewTestCourse />}
         />
         <Route
-          path={'/course/test/manage/:guid'}
+          path={"/course/test/manage/:guid"}
           element={<CourseTestManage />}
         />
-        <Route path={'/course/update/:courseGuid'} element={<UpdateCourse />} />
+        <Route path={"/course/update/:courseGuid"} element={<UpdateCourse />} />
         <Route
-          path={'/course/:courseGuid/lesson/create'}
+          path={"/course/:courseGuid/lesson/create"}
           element={<CreateLesson />}
         />
         <Route
-          path={'/course/:courseGuid/:subjectId/lessons'}
+          path={"/course/:courseGuid/:subjectId/lessons"}
           element={<Lessons />}
         />
         <Route
-          path={'/course/:courseGuid/subject/:subjectTitle'}
+          path={"/course/:courseGuid/subject/:subjectID/preview"}
           element={<SingleSubject />}
         />
         <Route
-          path={'/course/:courseGuid/:subjectId/lesson/create'}
+          path={"/course/:courseGuid/:subjectId/lesson/create"}
           element={<CreateLesson />}
         />
-        <Route path={'/course/:courseGuid/test/list'} element={<Test />} />
-        <Route path={'/course/:courseGuid/test/add'} element={<AddTests />} />
         <Route
-          path={'/course/:courseGuid/test/create'}
+          path={"/course/:courseGuid/subject/:subjectID/content/create"}
+          element={<CreateContent />}
+        />
+        <Route path={"/course/:courseGuid/test/list"} element={<Test />} />
+        <Route path={"/course/:courseGuid/test/add"} element={<AddTests />} />
+        <Route
+          path={"/course/:courseGuid/test/create"}
           element={<CreateCourseTest />}
         />
-        <Route path={'/course/:courseGuid/class/list'} element={<Meetings />} />
+        <Route path={"/course/:courseGuid/class/list"} element={<Meetings />} />
         <Route
-          path={'/course/:courseGuid/class/add'}
+          path={"/course/:courseGuid/class/add"}
           element={<AddCourseMeeting />}
         />
         <Route
-          path={'/course/:courseGuid/class/create'}
+          path={"/course/:courseGuid/class/create"}
           element={<CreateCourseMeeting />}
         />
         <Route
-          path={'/course/:courseGuid/enrolled-users'}
+          path={"/course/:courseGuid/enrolled-users"}
           element={<EnrolledUsers />}
         />
-        <Route path={'/course/:courseGuid/enroll'} element={<EnrollUsers />} />
-        <Route path={'/course/:courseGuid/subjects'} element={<Subjects />} />
+        <Route path={"/course/:courseGuid/enroll"} element={<EnrollUsers />} />
+        <Route path={"/course/:courseGuid/subjects"} element={<Subjects />} />
         <Route
-          path={'/course/:courseGuid/subject/create'}
+          path={"/course/:courseGuid/subject/create"}
           element={<CreateSubject />}
         />
         <Route
-          path={'/course/:courseGuid/subject/edit'}
+          path={"/course/:courseGuid/subject/edit"}
           element={<UpdateSubject />}
         />
 
-        <Route path={'/user/students'} element={<Students />} />
-        <Route path={'/auth/settings'} element={<Settings />} />
-        <Route path={'auth/my-account'} element={<MyAccount />} />
-        <Route path='*' element={<NotFound />} />
+        <Route path={"/user/students"} element={<Students />} />
+        <Route path={"/auth/settings"} element={<Settings />} />
+        <Route path={"auth/my-account"} element={<MyAccount />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
