@@ -27,7 +27,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 const CreateSubject = () => {
   const { courseGuid } = useParams();
   const [alertOpen, setAlertOpen] = useState(null);
-  const [isCourseCreated, setIsCourseCreated] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(null);
     const [inputValue, setInputValue] = useState("");
     const [valueLength, setValueLength] = useState("");
   const [isInputValid, setInputValid] = useState(true);
@@ -96,8 +96,13 @@ const CreateSubject = () => {
     }
     else {
       console.log(data);
+      setAlertOpen(true);
+      setIsSuccess(true);
       setTextareaValid(false);
       setIsTitleLengthValid(false);
+      setTimeout(() => {
+        setAlertOpen(false);
+      }, 1000);
     }
 
   };
@@ -110,6 +115,18 @@ const CreateSubject = () => {
       </Helmet>
       <Box sx={{ display: "flex" }}>
         <SidebarLeft />
+        <Snackbar
+          open={alertOpen}
+          autoHideDuration={2000}
+          onClose={() => setIsSuccess(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert severity={isSuccess === true ? "success" : "warning"}>
+            {isSuccess === true
+              ? "Subject created Successfully"
+              : "Subject creation failled!"}
+          </Alert>
+        </Snackbar>
         <Box sx={{ flexGrow: 1, p: 3 }}>
           <Grid
             container
